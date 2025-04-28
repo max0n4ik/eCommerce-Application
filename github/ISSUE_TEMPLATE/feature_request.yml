@@ -1,0 +1,32 @@
+name: ✨ Feature Request
+description: Suggest a new feature or improvement
+title: 'feature:'
+labels: ['feature']
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 🚀 Branch naming convention
+        Use the following format for branch naming:
+        ```
+        feat/RSS-ECOMM-<sprint-number>_<issue-number>
+        ```
+        Example: `feat/RSS-ECOMM-2_123`
+
+  - type: input
+    attributes:
+      label: Short summary
+      description: Briefly describe the feature you're suggesting
+      placeholder: 'Add Router to project'
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Additional details (optional)
+      description: Provide any additional context, screenshots, or mockups
+      placeholder: 'This feature ...'
+    validations:
+      required: false

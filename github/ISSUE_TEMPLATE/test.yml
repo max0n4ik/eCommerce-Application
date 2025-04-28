@@ -1,0 +1,31 @@
+name: ✔️ Unit Test
+description: Add unit test for a component
+title: 'test:'
+labels: ['test']
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 🔬 Branch naming convention
+        Use the following format for branch naming:
+        ```
+        test/RSS-ECOMM-<sprint-number>_<issue-number>
+        ```
+        Example: `test/RSS-ECOMM-3_145`
+
+  - type: input
+    attributes:
+      label: What component is being tested
+      placeholder: 'Language selector'
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Additional details (optional)
+      description: What behavior is being tested
+      placeholder: '1. Default language is EN / 2. The language can be selected / 3. ...'
+    validations:
+      required: false

@@ -1,0 +1,32 @@
+name: ⚙️ Project settings / Configuration change
+description: Add / delete packages, modify configuration files
+title: 'config:'
+labels: ['configuration']
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 📦 Branch naming convention
+        Use the following format for branch naming:
+        ```
+        chore/RSS-ECOMM-<sprint-number>_<issue-number>
+        ```
+        Example: `chore/RSS-ECOMM-3_145`
+
+  - type: input
+    attributes:
+      label: Short summary
+      description: What package is being added / deleted / updated? What configuration is being changed?
+      placeholder: 'Add Ant Design'
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Additional details (optional)
+      description: Why do (not) we need this package? Why do we need this change?
+      placeholder: 'It will be used to ensure unity of component styles'
+    validations:
+      required: false

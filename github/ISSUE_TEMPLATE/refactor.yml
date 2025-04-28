@@ -1,0 +1,32 @@
+name: 🔄 Code Refactoring
+description: Improve code quality (without altering the code's external behavior)
+title: 'refactor:'
+labels: ['refactor']
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## ✏️ Branch naming convention
+        Use the following format for branch naming:
+        ```
+        refactor/RSS-ECOMM-<sprint-number>_<issue-number>
+        ```
+        Example: `refactor/RSS-ECOMM-3_145`
+
+  - type: input
+    attributes:
+      label: Short summary
+      description: How the code quality is being improved?
+      placeholder: 'Move the duplicated code to a separate module'
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Additional details (optional)
+      description: Detailed description
+      placeholder: 'Add utility function to encode a string into base64 format. It can be reused now'
+    validations:
+      required: false

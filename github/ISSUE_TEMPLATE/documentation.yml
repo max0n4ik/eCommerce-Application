@@ -1,0 +1,24 @@
+name: 📝 Documentation Task
+description: Suggest a task related to documentation
+title: 'docs:'
+labels: ['documentation']
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 📝 Branch naming convention
+        Use the following format for branch naming:
+        ```
+        docs/RSS-ECOMM-<sprint-number>_<issue-number>
+        ```
+        Example: `docs/RSS-3_145`
+
+  - type: input
+    attributes:
+      label: Short summary
+      description: What part of documentation needs work?
+      placeholder: 'Add setup guide for dev environment'
+    validations:
+      required: true

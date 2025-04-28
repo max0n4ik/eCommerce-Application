@@ -1,0 +1,32 @@
+name: 🐛 Bug Report
+description: Report a bug or unexpected behavior
+title: 'bugfix:'
+labels: ['bugfix']
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 🐞 Branch naming convention
+        Use the following format for branch naming:
+        ```
+        bugfix/RSS-ECOMM-<sprint-number>_<issue-number>
+        ```
+        Example: `bugfix/RSS-ECOMM-3_145`
+
+  - type: input
+    attributes:
+      label: Bug description
+      description: Describe the bug briefly
+      placeholder: 'Homepage crashes on login'
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Expected behavior
+      description: What did you expect to happen?
+      placeholder: 'Login form should appear'
+    validations:
+      required: false

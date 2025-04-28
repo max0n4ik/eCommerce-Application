@@ -1,0 +1,32 @@
+name: 🎨 Changes in styles
+description: Change the appearance and the positioning of the components
+title: 'style:'
+labels: ['style']
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 🖼️ Branch naming convention
+        Use the following format for branch naming:
+        ```
+        style/RSS-ECOMM-<sprint-number>_<issue-number>
+        ```
+        Example: `style/RSS-ECOMM-3_145`
+
+  - type: input
+    attributes:
+      label: Short summary
+      description: How the code quality is being improved?
+      placeholder: 'Move the duplicated code to a separate module'
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Additional details (optional)
+      description: Detailed description
+      placeholder: 'Add utility function to encode a string into base64 format. It can be reused now'
+    validations:
+      required: false
