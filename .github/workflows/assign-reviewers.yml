@@ -16,5 +16,5 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           assignees: ${{ github.actor }}
-          reviewers: max0n4ik, ElizabethMedvedeva, m-bond91
+          reviewers: max0n4ik, ElizabethMedvedeva, HelgaZhizhka
           max-num-of-reviewers: 2
