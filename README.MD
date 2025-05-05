@@ -22,3 +22,35 @@ This project is built using modern frontend tools:
 - 🧠 **TypeScript** — statically typed JavaScript  
 - 🎨 **CSS** — clean styling, no framework  
 - 🛒 **commercetools** — headless e-commerce backend  
+
+---
+## 🛠️ Local Setup Guide
+
+Follow these steps to set up and run the project locally on your machine:
+
+#### 1.📂**Clone the repository**
+```bash
+git clone https://github.com/max0n4ik/eCommerce-Application.git
+cd petal-and-pot
+```
+
+#### 2.📦**Install dependencies**
+```bash
+npm install -g pnpm
+pnpm install
+```
+#### 3.⚙️**Configure environment variables**
+Create a .env file in the root directory and add the following environment variables.
+
+#### 4.💻 **Run the development server**
+```bash
+pnpm run dev
+```
+#### 5.🧪 **Run tests**
+```bash
+pnpm run test
+```
+#### 6.🏗️**Build for production**
+```bash
+pnpm run build
+```
