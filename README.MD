@@ -54,3 +54,27 @@ pnpm run test
 ```bash
 pnpm run build
 ```
+
+---
+## 📜 Available Scripts
+
+#### 1. ✅ Runs ESLint to check for code quality issues.
+```bash
+pnpm run lint:fix
+```
+#### 2. 🎨 Runs Prettier to auto-format code according to the project's style guide.
+```bash
+pnpm run format
+```
+#### 3. 🧼 Removes dist/ and other generated files to reset the workspace.
+```bash
+pnpm run clean
+```
+#### 4. 🪝 Setup Git hooks
+```bash
+pnpm run prepare
+```
+#### 5. 🧪 Test Coverage
+```bash
+pnpm run test:coverage
+```
