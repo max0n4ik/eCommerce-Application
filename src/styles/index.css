@@ -1,5 +1,7 @@
 /* Импортируем кастомные классы — здесь можно описывать свои классы или utility-миксы. */
 @import './custom-classes/customClassElements.css';
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap');
 
 /* Подключаем Tailwind reset-стили (base), компоненты (components) и утилиты (utilities). */
 @tailwind base;
@@ -22,88 +24,114 @@ border-border -> подставляется значение из --border и т
 */
 @layer base {
   :root {
-    /* Фон страницы */
-    --background: 0 0% 100%; /* белый */
-
-    /* Основной цвет текста */
-    --foreground: 240 10% 3.9%; /* почти чёрный */
-
-    /* Карточки (например: карточки товара) */
-    --card: 0 0% 100%; /* белый */
-    --card-foreground: 240 10% 3.9%; /* текст на карточках */
-
-    /* Поповеры (tooltip, модалки) */
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
-
-    /* Основной цвет кнопок и акцентов */
-    --primary: 240 5.9% 10%; /* тёмно-серый */
-    --primary-foreground: 0 0% 98%; /* текст на primary */
-
-    /* Вторичный цвет (менее заметные элементы) */
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-
-    /* Мутные элементы (например: подсказки, disabled) */
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-
-    /* Акцентные цвета (например: ссылки, подчёркивание) */
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
-
-    /* Опасные состояния (ошибки, удаления) */
-    --destructive: 0 84.2% 60.2%; /* красный */
-    --destructive-foreground: 0 0% 98%; /* белый текст */
-
-    /* Границы, инпуты, ринг */
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 240 10% 3.9%;
-
-    /* Дополнительно: цвета для диаграмм */
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
-
-    /* Радиус скругления (используется в borderRadius) */
-    --radius: 0.5rem; /* 8px */
+    --background: oklch(94% 0.01 112.37deg);
+    --foreground: oklch(31% 0.01 84.57deg);
+    --card: oklch(94% 0.01 112.37deg);
+    --card-foreground: oklch(31% 0.01 84.57deg);
+    --popover: oklch(94% 0.01 112.37deg);
+    --popover-foreground: oklch(31% 0.01 84.57deg);
+    --primary: oklch(47% 0.05 164.39deg);
+    --primary-foreground: oklch(100% 0 0deg);
+    --secondary: oklch(92% 0.01 167.16deg);
+    --secondary-foreground: oklch(38% 0.04 165.64deg);
+    --muted: oklch(91% 0.02 106.71deg);
+    --muted-foreground: oklch(46% 0.03 92.72deg);
+    --accent: oklch(66% 0.1317 169.1235deg);
+    --accent-foreground: oklch(80% 0.1317 169.1235deg);
+    --destructive: oklch(58% 0.07 64.9deg);
+    --destructive-foreground: oklch(100% 0 0deg);
+    --border: oklch(86% 0.02 110.11deg);
+    --input: oklch(86% 0.02 110.11deg);
+    --ring: oklch(47% 0.05 164.39deg);
+    --chart-1: oklch(61% 0.06 163.7deg);
+    --chart-2: oklch(52% 0.05 164.51deg);
+    --chart-3: oklch(47% 0.05 164.39deg);
+    --chart-4: oklch(38% 0.04 165.64deg);
+    --chart-5: oklch(23% 0.02 168.57deg);
+    --sidebar: oklch(91% 0.02 106.71deg);
+    --sidebar-foreground: oklch(31% 0.01 84.57deg);
+    --sidebar-primary: oklch(47% 0.05 164.39deg);
+    --sidebar-primary-foreground: oklch(100% 0 0deg);
+    --sidebar-accent: oklch(86% 0.02 165.76deg);
+    --sidebar-accent-foreground: oklch(38% 0.04 165.64deg);
+    --sidebar-border: oklch(86% 0.02 110.11deg);
+    --sidebar-ring: oklch(47% 0.05 164.39deg);
+    --font-sans: montserrat, sans-serif;
+    --font-serif: merriweather, serif;
+    --font-mono: source code pro, monospace;
+    --radius: 0.5rem;
+    --shadow-2xs: 0 1px 3px 0px hsl(0deg 0% 10.2% / 5%);
+    --shadow-xs: 0 1px 3px 0px hsl(0deg 0% 10.2% / 5%);
+    --shadow-sm:
+      0 1px 3px 0px hsl(0deg 0% 10.2% / 10%), 0 1px 2px -1px hsl(0deg 0% 10.2% / 10%);
+    --shadow:
+      0 1px 3px 0px hsl(0deg 0% 10.2% / 10%), 0 1px 2px -1px hsl(0deg 0% 10.2% / 10%);
+    --shadow-md:
+      0 1px 3px 0px hsl(0deg 0% 10.2% / 10%), 0 2px 4px -1px hsl(0deg 0% 10.2% / 10%);
+    --shadow-lg:
+      0 1px 3px 0px hsl(0deg 0% 10.2% / 10%), 0 4px 6px -1px hsl(0deg 0% 10.2% / 10%);
+    --shadow-xl:
+      0 1px 3px 0px hsl(0deg 0% 10.2% / 10%), 0 8px 10px -1px hsl(0deg 0% 10.2% / 10%);
+    --shadow-2xl: 0 1px 3px 0px hsl(0deg 0% 10.2% / 25%);
   }
 
   /* 
   ==========================================
   Тёмная тема (активируется если в стили добавлен класс 'dark')
   Цвета аналогичные, но под тёмную тему.
-  Пример <div class="bg-white text-black dark:bg-black dark:text-white">...
+  Пример, установить родительскому контейнеру класс 'dark' <div class="dark">...
   ==========================================
   */
   .dark {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 240 5.9% 10%;
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
+    --background: oklch(26% 0.01 176.3deg);
+    --foreground: oklch(91% 0.01 106.64deg);
+    --card: oklch(32% 0.01 164.31deg);
+    --card-foreground: oklch(91% 0.01 106.64deg);
+    --popover: oklch(32% 0.01 164.31deg);
+    --popover-foreground: oklch(91% 0.01 106.64deg);
+    --primary: oklch(61% 0.06 163.7deg);
+    --primary-foreground: oklch(23% 0.02 168.57deg);
+    --secondary: oklch(38% 0.01 164.47deg);
+    --secondary-foreground: oklch(86% 0.01 157.06deg);
+    --muted: oklch(32% 0.01 164.31deg);
+    --muted-foreground: oklch(83% 0.02 110.61deg);
+    --accent: oklch(52% 0.05 164.51deg);
+    --accent-foreground: oklch(91% 0.01 106.64deg);
+    --destructive: oklch(58% 0.07 64.9deg);
+    --destructive-foreground: oklch(91% 0.01 106.64deg);
+    --border: oklch(38% 0.01 164.47deg);
+    --input: oklch(38% 0.01 164.47deg);
+    --ring: oklch(61% 0.06 163.7deg);
+    --chart-1: oklch(72% 0.05 164.55deg);
+    --chart-2: oklch(67% 0.06 164.27deg);
+    --chart-3: oklch(61% 0.06 163.7deg);
+    --chart-4: oklch(57% 0.06 164.35deg);
+    --chart-5: oklch(52% 0.05 164.51deg);
+    --sidebar: oklch(26% 0.01 176.3deg);
+    --sidebar-foreground: oklch(91% 0.01 106.64deg);
+    --sidebar-primary: oklch(61% 0.06 163.7deg);
+    --sidebar-primary-foreground: oklch(23% 0.02 168.57deg);
+    --sidebar-accent: oklch(52% 0.05 164.51deg);
+    --sidebar-accent-foreground: oklch(91% 0.01 106.64deg);
+    --sidebar-border: oklch(38% 0.01 164.47deg);
+    --sidebar-ring: oklch(61% 0.06 163.7deg);
+    --font-sans: montserrat, sans-serif;
+    --font-serif: merriweather, serif;
+    --font-mono: source code pro, monospace;
+    --radius: 0.5rem;
+    --shadow-2xs: 0 1px 3px 0px hsl(0deg 0% 10.2% / 5%);
+    --shadow-xs: 0 1px 3px 0px hsl(0deg 0% 10.2% / 5%);
+    --shadow-sm:
+      0 1px 3px 0px hsl(0deg 0% 10.2% / 10%), 0 1px 2px -1px hsl(0deg 0% 10.2% / 10%);
+    --shadow:
+      0 1px 3px 0px hsl(0deg 0% 10.2% / 10%), 0 1px 2px -1px hsl(0deg 0% 10.2% / 10%);
+    --shadow-md:
+      0 1px 3px 0px hsl(0deg 0% 10.2% / 10%), 0 2px 4px -1px hsl(0deg 0% 10.2% / 10%);
+    --shadow-lg:
+      0 1px 3px 0px hsl(0deg 0% 10.2% / 10%), 0 4px 6px -1px hsl(0deg 0% 10.2% / 10%);
+    --shadow-xl:
+      0 1px 3px 0px hsl(0deg 0% 10.2% / 10%), 0 8px 10px -1px hsl(0deg 0% 10.2% / 10%);
+    --shadow-2xl: 0 1px 3px 0px hsl(0deg 0% 10.2% / 25%);
   }
 }
 
