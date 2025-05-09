@@ -7,20 +7,29 @@ export default {
       center: true,
       padding: '2rem',
       screens: {
-        sm: '640px',
-        md: '768px',
-        lg: '1024px',
-        xl: '1280px',
-        '2xl': '1440px',
-        '3xl': '1650px',
+        '4xl': '1920px',
       },
     },
     extend: {
-      borderRadius: {
-        lg: 'var(--radius)',
-        md: 'calc(var(--radius) - 2px)',
-        sm: 'calc(var(--radius) - 4px)',
+      fontFamily: {
+        sans: ['Inter', 'sans-serif'],
+        serif: ['"Noto Serif"', 'serif'],
       },
+      borderRadius: {
+        lg: '70px',
+        md: '26px',
+        sm: '20px',
+        xs: '2px',
+      },
+      screens: {
+        sm: { min: '360px', max: '425px' },
+        md: { min: '426px', max: '768px' },
+        lg: { min: '769px', max: '1024px' },
+        xl: { min: '1025px', max: '1440px' },
+        '2xl': { min: '1441px', max: '1599px' },
+        '3xl': { min: '1600px', max: '1920px' },
+      },
+      //цвета дефолтные не меняла
       colors: {
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
