@@ -12,7 +12,7 @@ import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
   {
-    ignores: ['node_modules', 'dist'],
+    ignores: ['node_modules', 'dist', 'vite.config.ts'],
     linterOptions: {
       noInlineConfig: true,
       reportUnusedDisableDirectives: true
