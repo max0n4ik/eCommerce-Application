@@ -63,15 +63,20 @@ border-border -> подставляется значение из --border и т
     --shadow-2xs: 0 1px 3px 0px hsl(0deg 0% 10.2% / 5%);
     --shadow-xs: 0 1px 3px 0px hsl(0deg 0% 10.2% / 5%);
     --shadow-sm:
-      0 1px 3px 0px hsl(0deg 0% 10.2% / 10%), 0 1px 2px -1px hsl(0deg 0% 10.2% / 10%);
+      0 1px 3px 0px hsl(0deg 0% 10.2% / 10%),
+      0 1px 2px -1px hsl(0deg 0% 10.2% / 10%);
     --shadow:
-      0 1px 3px 0px hsl(0deg 0% 10.2% / 10%), 0 1px 2px -1px hsl(0deg 0% 10.2% / 10%);
+      0 1px 3px 0px hsl(0deg 0% 10.2% / 10%),
+      0 1px 2px -1px hsl(0deg 0% 10.2% / 10%);
     --shadow-md:
-      0 1px 3px 0px hsl(0deg 0% 10.2% / 10%), 0 2px 4px -1px hsl(0deg 0% 10.2% / 10%);
+      0 1px 3px 0px hsl(0deg 0% 10.2% / 10%),
+      0 2px 4px -1px hsl(0deg 0% 10.2% / 10%);
     --shadow-lg:
-      0 1px 3px 0px hsl(0deg 0% 10.2% / 10%), 0 4px 6px -1px hsl(0deg 0% 10.2% / 10%);
+      0 1px 3px 0px hsl(0deg 0% 10.2% / 10%),
+      0 4px 6px -1px hsl(0deg 0% 10.2% / 10%);
     --shadow-xl:
-      0 1px 3px 0px hsl(0deg 0% 10.2% / 10%), 0 8px 10px -1px hsl(0deg 0% 10.2% / 10%);
+      0 1px 3px 0px hsl(0deg 0% 10.2% / 10%),
+      0 8px 10px -1px hsl(0deg 0% 10.2% / 10%);
     --shadow-2xl: 0 1px 3px 0px hsl(0deg 0% 10.2% / 25%);
   }
 
@@ -98,7 +103,7 @@ border-border -> подставляется значение из --border и т
     --accent: oklch(52% 0.05 164.51deg);
     --accent-foreground: oklch(91% 0.01 106.64deg);
     --destructive: oklch(58% 0.07 64.9deg);
-    --destructive-foreground: oklch(91% 0.01 106.64deg);
+    --destructive-foreground: oklch(91% 0.07 106.64deg);
     --border: oklch(38% 0.01 164.47deg);
     --input: oklch(38% 0.01 164.47deg);
     --ring: oklch(61% 0.06 163.7deg);
@@ -122,15 +127,20 @@ border-border -> подставляется значение из --border и т
     --shadow-2xs: 0 1px 3px 0px hsl(0deg 0% 10.2% / 5%);
     --shadow-xs: 0 1px 3px 0px hsl(0deg 0% 10.2% / 5%);
     --shadow-sm:
-      0 1px 3px 0px hsl(0deg 0% 10.2% / 10%), 0 1px 2px -1px hsl(0deg 0% 10.2% / 10%);
+      0 1px 3px 0px hsl(0deg 0% 10.2% / 10%),
+      0 1px 2px -1px hsl(0deg 0% 10.2% / 10%);
     --shadow:
-      0 1px 3px 0px hsl(0deg 0% 10.2% / 10%), 0 1px 2px -1px hsl(0deg 0% 10.2% / 10%);
+      0 1px 3px 0px hsl(0deg 0% 10.2% / 10%),
+      0 1px 2px -1px hsl(0deg 0% 10.2% / 10%);
     --shadow-md:
-      0 1px 3px 0px hsl(0deg 0% 10.2% / 10%), 0 2px 4px -1px hsl(0deg 0% 10.2% / 10%);
+      0 1px 3px 0px hsl(0deg 0% 10.2% / 10%),
+      0 2px 4px -1px hsl(0deg 0% 10.2% / 10%);
     --shadow-lg:
-      0 1px 3px 0px hsl(0deg 0% 10.2% / 10%), 0 4px 6px -1px hsl(0deg 0% 10.2% / 10%);
+      0 1px 3px 0px hsl(0deg 0% 10.2% / 10%),
+      0 4px 6px -1px hsl(0deg 0% 10.2% / 10%);
     --shadow-xl:
-      0 1px 3px 0px hsl(0deg 0% 10.2% / 10%), 0 8px 10px -1px hsl(0deg 0% 10.2% / 10%);
+      0 1px 3px 0px hsl(0deg 0% 10.2% / 10%),
+      0 8px 10px -1px hsl(0deg 0% 10.2% / 10%);
     --shadow-2xl: 0 1px 3px 0px hsl(0deg 0% 10.2% / 25%);
   }
 }
