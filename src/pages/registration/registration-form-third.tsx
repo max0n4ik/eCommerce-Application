@@ -2,6 +2,7 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/pages/registration/button';
 import { Input } from '@/pages/registration/input';
 import { Label } from '@/pages/registration/label';
+import { useState } from 'react';
 type Props = {
   onNext: () => void;
 };
@@ -11,6 +12,19 @@ export function RegistrationFormThird({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<'form'> & Props): React.JSX.Element {
+  const [useDefault, setUseDefault] = useState(false);
+  const [useAsBilling, setUseAsBilling] = useState(false);
+  const handleUseDefaultChange = () => {
+    const newValue = !useDefault;
+    setUseDefault(newValue);
+    if (newValue) setUseAsBilling(false);
+  };
+
+  const handleUseAsBillingChange = () => {
+    const newValue = !useAsBilling;
+    setUseAsBilling(newValue);
+    if (newValue) setUseDefault(false);
+  };
   return (
     <form className={cn('flex flex-col gap-6', className)} {...props}>
       <div className="flex flex-col items-center gap-2 text-center">
@@ -57,11 +71,23 @@ export function RegistrationFormThird({
         </div>
         <div>
           <div className="flex gap-5">
-            <Input id="use-default" type="checkbox" className="w-3 h-3" />
+            <Input
+              id="use-default"
+              type="checkbox"
+              className="w-3 h-3"
+              checked={useDefault}
+              onChange={handleUseDefaultChange}
+            />
             <Label id="use-default">Use as default</Label>
           </div>
           <div className="flex gap-5">
-            <Input id="use-default" type="checkbox" className="w-3 h-3" />
+            <Input
+              id="use-default"
+              type="checkbox"
+              className="w-3 h-3"
+              checked={useAsBilling}
+              onChange={handleUseAsBillingChange}
+            />
             <Label id="use-as-billing">Use this address as billing</Label>
           </div>
         </div>
