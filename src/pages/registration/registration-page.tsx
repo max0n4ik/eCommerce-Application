@@ -21,8 +21,8 @@ export default function RegistrationPage(): React.JSX.Element {
         <div className="flex flex-1 items-center justify-center">
           <div className="w-full max-w-xs">
             {/* <RegistrationFormFirst /> */}
-            <RegistrationFormSecond />
-            {/* <RegistrationFormThird /> */}
+            {/* <RegistrationFormSecond /> */}
+            <RegistrationFormThird />
             {/* <RegistrationFormFourth /> */}
           </div>
         </div>

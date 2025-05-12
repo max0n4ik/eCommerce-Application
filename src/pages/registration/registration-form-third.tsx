@@ -51,7 +51,16 @@ export function RegistrationFormThird({
             />
           </div>
         </div>
-
+        <div>
+          <div className="flex gap-5">
+            <Input id="use-default" type="checkbox" className="w-3 h-3" />
+            <Label id="use-default">Use as default</Label>
+          </div>
+          <div className="flex gap-5">
+            <Input id="use-default" type="checkbox" className="w-3 h-3" />
+            <Label id="use-as-billing">Use this address as billing</Label>
+          </div>
+        </div>
         <Button type="button" className="w-full">
           Next
         </Button>
