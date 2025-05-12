@@ -18,7 +18,7 @@ const FormSchema = z.object({
 export function RegistrationFormSecond({
   className,
   ...props
-}: React.ComponentPropsWithoutRef<'form'>) {
+}: React.ComponentPropsWithoutRef<'form'>): React.JSX.Element {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   });
@@ -28,6 +28,9 @@ export function RegistrationFormSecond({
       <form className={cn('flex flex-col gap-6', className)} {...props}>
         <div className="flex flex-col items-center gap-2 text-center">
           <h1 className="text-2xl font-bold capitalize">Registration</h1>
+          <p className="text-balance text-sm text-muted-foreground">
+            Enter your Credentials to access your account
+          </p>
         </div>
         <div className="grid gap-6">
           <div className="grid gap-2">
@@ -60,7 +63,7 @@ export function RegistrationFormSecond({
         </div>
         <div className="text-center text-sm">
           Have an account?{' '}
-          <a href="#" className="underline underline-offset-4">
+          <a href="e" className="underline underline-offset-4">
             Sign in
           </a>
         </div>

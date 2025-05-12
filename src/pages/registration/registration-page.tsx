@@ -1,7 +1,9 @@
+import { RegistrationFormFirst } from './registration-form-first';
+import { RegistrationFormFourth } from './registration-form-fourth';
 import { RegistrationFormSecond } from './registration-form-second';
-import { RegistrationForm } from './registration-form';
+import { RegistrationFormThird } from './registration-form-third';
 
-export default function RegistrationPage() {
+export default function RegistrationPage(): React.JSX.Element {
   return (
     <div className="grid min-h-svh lg:grid-cols-2">
       <div className="flex flex-col gap-4 p-6 md:p-10">
@@ -18,7 +20,10 @@ export default function RegistrationPage() {
         </div>
         <div className="flex flex-1 items-center justify-center">
           <div className="w-full max-w-xs">
+            {/* <RegistrationFormFirst /> */}
             <RegistrationFormSecond />
+            {/* <RegistrationFormThird /> */}
+            {/* <RegistrationFormFourth /> */}
           </div>
         </div>
       </div>

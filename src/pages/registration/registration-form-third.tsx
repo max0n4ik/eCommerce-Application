@@ -3,35 +3,55 @@ import { Button } from '@/pages/registration/button';
 import { Input } from '@/pages/registration/input';
 import { Label } from '@/pages/registration/label';
 
-export function RegistrationForm({
+export function RegistrationFormThird({
   className,
   ...props
-}: React.ComponentPropsWithoutRef<'form'>) {
+}: React.ComponentPropsWithoutRef<'form'>): React.JSX.Element {
   return (
     <form className={cn('flex flex-col gap-6', className)} {...props}>
       <div className="flex flex-col items-center gap-2 text-center">
-        <h1 className="text-2xl font-bold capitalize">Get started now</h1>
+        <h1 className="text-2xl font-bold capitalize">Registration</h1>
         <p className="text-balance text-sm text-muted-foreground">
-          Enter your Credentials to access your account
+          Enter your Shipping address
         </p>
       </div>
       <div className="grid gap-6">
         <div className="grid gap-2">
-          <Label htmlFor="email">Email address</Label>
-          <Input id="email" type="email" placeholder="m@example.com" required />
+          <Label htmlFor="email">Country</Label>
+          <Input id="country" type="text" placeholder="Country" required />
         </div>
         <div className="grid gap-2">
           <div className="flex items-center">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password">City</Label>
           </div>
-          <Input id="password" type="password" required />
+          <Input id="city" type="text" placeholder="City" required />
         </div>
         <div className="grid gap-2">
           <div className="flex items-center">
-            <Label htmlFor="password">Repeat password</Label>
+            <Label htmlFor="password">Street</Label>
           </div>
-          <Input id="password" type="password" required />
+          <Input id="street" type="text" placeholder="Street" required />
         </div>
+        <div className="flex gap-5">
+          <div className="grid gap-2">
+            <div className="flex items-center">
+              <Label htmlFor="password">House</Label>
+            </div>
+            <Input id="house" type="text" placeholder="House" required />
+          </div>
+          <div className="grid gap-2">
+            <div className="flex items-center">
+              <Label htmlFor="password">Post code</Label>
+            </div>
+            <Input
+              id="poste-code"
+              type="number"
+              placeholder="Post code"
+              required
+            />
+          </div>
+        </div>
+
         <Button type="button" className="w-full">
           Next
         </Button>
@@ -43,7 +63,7 @@ export function RegistrationForm({
       </div>
       <div className="text-center text-sm">
         Have an account?{' '}
-        <a href="#" className="underline underline-offset-4">
+        <a href="e" className="underline underline-offset-4">
           Sign in
         </a>
       </div>

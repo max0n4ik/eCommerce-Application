@@ -16,7 +16,7 @@ import {
 } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
 
-export function BirthdayCalendar(form) {
+export function BirthdayCalendar(form): React.JSX.Element {
   console.log(form);
   return (
     <FormField
