@@ -9,6 +9,9 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/pages/registration/button';
 import { Input } from '@/pages/registration/input';
 import { Label } from '@/pages/registration/label';
+type Props = {
+  onNext: () => void;
+};
 
 const FormSchema = z.object({
   dob: z.date({
@@ -16,9 +19,10 @@ const FormSchema = z.object({
   }),
 });
 export function RegistrationFormSecond({
+  onNext,
   className,
   ...props
-}: React.ComponentPropsWithoutRef<'form'>): React.JSX.Element {
+}: React.ComponentPropsWithoutRef<'form'> & Props): React.JSX.Element {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   });
@@ -29,7 +33,7 @@ export function RegistrationFormSecond({
         <div className="flex flex-col items-center gap-2 text-center">
           <h1 className="text-2xl font-bold capitalize">Registration</h1>
           <p className="text-balance text-sm text-muted-foreground">
-            Enter your Credentials to access your account
+            Enter your Credentials to create your account
           </p>
         </div>
         <div className="grid gap-6">
@@ -52,7 +56,7 @@ export function RegistrationFormSecond({
             <Label htmlFor="name">Birthday</Label>
             <BirthdayCalendar form={form.control} />
           </div>
-          <Button type="button" className="w-full">
+          <Button type="button" className="w-full" onClick={onNext}>
             Next
           </Button>
           <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">

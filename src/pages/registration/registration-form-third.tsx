@@ -2,11 +2,15 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/pages/registration/button';
 import { Input } from '@/pages/registration/input';
 import { Label } from '@/pages/registration/label';
+type Props = {
+  onNext: () => void;
+};
 
 export function RegistrationFormThird({
+  onNext,
   className,
   ...props
-}: React.ComponentPropsWithoutRef<'form'>): React.JSX.Element {
+}: React.ComponentPropsWithoutRef<'form'> & Props): React.JSX.Element {
   return (
     <form className={cn('flex flex-col gap-6', className)} {...props}>
       <div className="flex flex-col items-center gap-2 text-center">
@@ -61,7 +65,7 @@ export function RegistrationFormThird({
             <Label id="use-as-billing">Use this address as billing</Label>
           </div>
         </div>
-        <Button type="button" className="w-full">
+        <Button type="button" className="w-full" onClick={onNext}>
           Next
         </Button>
         <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
