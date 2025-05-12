@@ -8,7 +8,7 @@ import NotFound from '@/pages/not-found/not-found';
 import { Registration } from '@/pages/registration';
 import { ROUTES } from '@/utils/constantes';
 
-const App = (): React.JSX.Element => {
+export default function App(): React.JSX.Element {
   return (
     <BrowserRouter>
       <Layout>
@@ -22,6 +22,4 @@ const App = (): React.JSX.Element => {
       </Layout>
     </BrowserRouter>
   );
-};
-
-export default App;
+}

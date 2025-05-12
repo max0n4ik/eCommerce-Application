@@ -1,5 +1,3 @@
-const Registration = (): React.JSX.Element => {
+export default function Registration(): React.JSX.Element {
   return <div>Registration</div>;
-};
-
-export default Registration;
+}

@@ -6,7 +6,7 @@ interface Props {
   children: React.ReactNode;
 }
 
-const Layout = ({ children }: Props): React.JSX.Element => {
+export default function Layout({ children }: Props): React.JSX.Element {
   return (
     <div className="p-4">
       <nav className="mb-4">
@@ -18,6 +18,4 @@ const Layout = ({ children }: Props): React.JSX.Element => {
       <main>{children}</main>
     </div>
   );
-};
-
-export default Layout;
+}
