@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { authenticate, schema } from '@/lib/actions';
 import { cn } from '@/lib/utils';
+import { ROUTES } from '@/utils/constantes';
 
 export default function LoginForm({
   className,
@@ -80,15 +81,6 @@ export default function LoginForm({
           )}
         </div>
         <div className="grid gap-2">
-          <div className="flex items-center">
-            <Label htmlFor="password">Password</Label>
-            <a
-              href="/forgot-password"
-              className="ml-auto text-sm underline-offset-4 hover:underline"
-            >
-              Forgot your password?
-            </a>
-          </div>
           <div className="relative">
             <Input
               id="password"
@@ -138,7 +130,7 @@ export default function LoginForm({
       <div className="text-center text-sm">
         Don&apos;t have an account?{' '}
         <a
-          href="/registration"
+          href={ROUTES.REGISTRATION}
           className="text-accent hover:text-accent-foreground"
         >
           Sign up
