@@ -42,7 +42,7 @@ export function RegistrationFormFirst({
   } = useForm<FormData>({
     resolver: zodResolver(formSchema),
   });
-  const onSubmit = (data: FormData) => {
+  const onSubmit = (data: FormData): void => {
     console.log('form data submitted', data);
     onNext();
   };

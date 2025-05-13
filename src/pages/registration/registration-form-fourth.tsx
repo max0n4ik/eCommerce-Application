@@ -1,4 +1,4 @@
-import { zodResolver } from '@hookform/resolvers/zod';
+import React from 'react';
 import { z } from 'zod';
 
 import { allowedCountries, postalCodePatterns } from './const-for-validation';
@@ -39,20 +39,43 @@ export function RegistrationFormFourth({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<'form'>): React.JSX.Element {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const [formData, setFormData] = React.useState({
+    country: '',
+    city: '',
+    street: '',
+    house: '',
+    postalCode: '',
   });
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = form;
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
-    console.log('Submitted billing address:', data);
+  const [errors, setErrors] = React.useState<{ [key: string]: string }>({});
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+  const validateForm = (): boolean => {
+    const result = formSchema.safeParse(formData);
+    if (!result.success) {
+      const newErrors: { [key: string]: string } = {};
+      result.error.errors.forEach((err) => {
+        newErrors[err.path[0]] = err.message;
+      });
+      setErrors(newErrors);
+      return false;
+    }
+    setErrors({});
+    return true;
+  };
+  const onSubmit = (e: React.FormEvent): void => {
+    e.preventDefault();
+    if (validateForm()) {
+      console.log('Submitted billing address:', formData);
+    }
   };
   return (
     <form
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={onSubmit}
       className={cn('flex flex-col gap-6', className)}
       {...props}
     >
@@ -70,10 +93,11 @@ export function RegistrationFormFourth({
             type="text"
             placeholder="Country"
             required
-            {...register('country')}
+            value={formData.country}
+            onChange={handleChange}
           />
           {errors.country && (
-            <p className="text-sm text-red-500">{errors.country.message}</p>
+            <p className="text-sm text-red-500">{errors.country}</p>
           )}
         </div>
         <div className="grid gap-2">
@@ -85,11 +109,10 @@ export function RegistrationFormFourth({
             type="text"
             placeholder="City"
             required
-            {...register('city')}
+            value={formData.city}
+            onChange={handleChange}
           />
-          {errors.city && (
-            <p className="text-sm text-red-500">{errors.city.message}</p>
-          )}
+          {errors.city && <p className="text-sm text-red-500">{errors.city}</p>}
         </div>
         <div className="grid gap-2">
           <div className="flex items-center">
@@ -100,10 +123,11 @@ export function RegistrationFormFourth({
             type="text"
             placeholder="Street"
             required
-            {...register('street')}
+            value={formData.street}
+            onChange={handleChange}
           />
           {errors.street && (
-            <p className="text-sm text-red-500">{errors.street.message}</p>
+            <p className="text-sm text-red-500">{errors.street}</p>
           )}
         </div>
         <div className="flex gap-5">
@@ -116,10 +140,11 @@ export function RegistrationFormFourth({
               type="text"
               placeholder="House"
               required
-              {...register('house')}
+              value={formData.house}
+              onChange={handleChange}
             />
             {errors.house && (
-              <p className="text-sm text-red-500">{errors.house.message}</p>
+              <p className="text-sm text-red-500">{errors.house}</p>
             )}
           </div>
           <div className="grid gap-2">
@@ -131,12 +156,11 @@ export function RegistrationFormFourth({
               type="text"
               placeholder="Post code"
               required
-              {...register('postalCode')}
+              value={formData.postalCode}
+              onChange={handleChange}
             />
             {errors.postalCode && (
-              <p className="text-sm text-red-500">
-                {errors.postalCode.message}
-              </p>
+              <p className="text-sm text-red-500">{errors.postalCode}</p>
             )}
           </div>
         </div>

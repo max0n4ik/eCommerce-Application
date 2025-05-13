@@ -1,10 +1,8 @@
-import { zodResolver } from '@hookform/resolvers/zod';
 import * as React from 'react';
-import { useForm } from 'react-hook-form';
+import { useState } from 'react';
 import { z } from 'zod';
 
-import { BirthdayCalendar } from '@/components/ui/calendar/brithday';
-import { Form } from '@/components/ui/form';
+import { BirthdayCalendar } from '@/components/ui/calendar/birthday';
 import { cn } from '@/lib/utils';
 import { Button } from '@/pages/registration/button';
 import { Input } from '@/pages/registration/input';
@@ -16,21 +14,26 @@ type Props = {
 const FormSchema = z.object({
   name: z.string().min(1, 'Name must be at least 1 character'),
   lastName: z.string().min(1, 'Last name must be at least 1 character'),
-  dob: z.date({
-    required_error: 'A date of birth is required.',
-  }),
-  // .refine(
-  //   (dob) => {
-  //     const today = new Date();
-  //     const thirteenYearsAgo = new Date(
-  //       today.getFullYear() - 13,
-  //       today.getMonth(),
-  //       today.getDate()
-  //     );
-  //     return dob <= thirteenYearsAgo;
-  //   },
-  //   { message: 'You must be at least 13 years old' }
-  // ),
+  dob: z
+    .date()
+    .nullable()
+    .refine(
+      (dob) => {
+        if (dob) {
+          const today = new Date();
+          const thirteenYearsAgo = new Date(
+            today.getFullYear() - 13,
+            today.getMonth(),
+            today.getDate()
+          );
+          return dob <= thirteenYearsAgo;
+        }
+        return false;
+      },
+      {
+        message: 'You must be at least 13 years old',
+      }
+    ),
 });
 type FormData = z.infer<typeof FormSchema>;
 
@@ -39,80 +42,103 @@ export function RegistrationFormSecond({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<'form'> & Props): React.JSX.Element {
-  const form = useForm<FormData>({
-    resolver: zodResolver(FormSchema),
+  const [formData, setFormData] = useState<FormData>({
+    name: '',
+    lastName: '',
+    dob: null,
   });
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = form;
-  const onSubmit = (data: FormData) => {
-    console.log('form data submitted', data);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = (e: React.FormEvent): void => {
+    e.preventDefault();
+
+    const validation = FormSchema.safeParse(formData);
+    if (!validation.success) {
+      const newErrors: Record<string, string> = {};
+      validation.error.errors.forEach((err) => {
+        newErrors[err.path[0]] = err.message;
+      });
+      setErrors(newErrors);
+      return;
+    }
+
+    console.log('form data submitted', formData);
     onNext();
   };
   return (
-    <Form {...form}>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className={cn('flex flex-col gap-6', className)}
-        {...props}
-      >
-        <div className="flex flex-col items-center gap-2 text-center">
-          <h1 className="text-2xl font-bold capitalize">Registration</h1>
-          <p className="text-balance text-sm text-muted-foreground">
-            Enter your Credentials to create your account
-          </p>
+    <form
+      onSubmit={handleSubmit}
+      className={cn('flex flex-col gap-6', className)}
+      {...props}
+    >
+      <div className="flex flex-col items-center gap-2 text-center">
+        <h1 className="text-2xl font-bold capitalize">Registration</h1>
+        <p className="text-balance text-sm text-muted-foreground">
+          Enter your Credentials to create your account
+        </p>
+      </div>
+      <div className="grid gap-6">
+        <div className="grid gap-2">
+          <Label htmlFor="name">Name</Label>
+          <Input
+            id="name"
+            type="text"
+            placeholder="Name"
+            value={formData.name}
+            onChange={handleChange}
+            required
+          />
+          {errors.name && <p className="text-sm text-red-500">{errors.name}</p>}
         </div>
-        <div className="grid gap-6">
-          <div className="grid gap-2">
-            <Label htmlFor="name">Name</Label>
-            <Input
-              id="name"
-              type="text"
-              placeholder="Name"
-              {...register('name')}
-              required
-            />
-            {errors.name && (
-              <p className="text-sm text-red-500">{errors.name.message}</p>
-            )}
+        <div className="grid gap-2">
+          <div className="flex items-center">
+            <Label htmlFor="last-name">Last name</Label>
           </div>
-          <div className="grid gap-2">
-            <div className="flex items-center">
-              <Label htmlFor="last-name">Last name</Label>
-            </div>
-            <Input
-              id="last-name"
-              type="text"
-              placeholder="Last name"
-              {...register('lastName')}
-              required
-            />
-            {errors.lastName && (
-              <p className="text-sm text-red-500">{errors.lastName.message}</p>
-            )}
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="name">Birthday</Label>
-            <BirthdayCalendar form={form.control} />
-          </div>
-          <Button type="submit" className="w-full">
-            Next
-          </Button>
-          <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
-            <span className="relative z-10 bg-background px-2 text-muted-foreground">
-              or
-            </span>
-          </div>
+          <Input
+            id="last-name"
+            type="text"
+            placeholder="Last name"
+            value={formData.lastName}
+            onChange={handleChange}
+            required
+          />
+          {errors.lastName && (
+            <p className="text-sm text-red-500">{errors.lastName}</p>
+          )}
         </div>
-        <div className="text-center text-sm">
-          Have an account?{' '}
-          <a href="e" className="underline underline-offset-4">
-            Sign in
-          </a>
+        <div className="grid gap-2">
+          <Label htmlFor="name">Birthday</Label>
+          <BirthdayCalendar
+            name="dob"
+            defaultValue={formData.dob}
+            onChange={(date: Date | null) =>
+              setFormData((prevData) => ({ ...prevData, dob: date }))
+            }
+          />
         </div>
-      </form>
-    </Form>
+        <Button type="submit" className="w-full">
+          Next
+        </Button>
+        <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
+          <span className="relative z-10 bg-background px-2 text-muted-foreground">
+            or
+          </span>
+        </div>
+      </div>
+      <div className="text-center text-sm">
+        Have an account?{' '}
+        <a href="e" className="underline underline-offset-4">
+          Sign in
+        </a>
+      </div>
+    </form>
   );
 }
