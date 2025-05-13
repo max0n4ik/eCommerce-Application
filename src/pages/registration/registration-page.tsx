@@ -7,8 +7,8 @@ import { RegistrationFormThird } from './registration-form-third';
 
 export default function RegistrationPage(): React.JSX.Element {
   const [step, setStep] = useState(1);
-  const handleText = () => setStep((prev) => prev + 1);
-  const renderStep = () => {
+  const handleText = (): void => setStep((prev) => prev + 1);
+  const renderStep = (): React.JSX.Element | null => {
     switch (step) {
       case 1: {
         return <RegistrationFormFirst onNext={handleText} />;

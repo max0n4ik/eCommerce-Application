@@ -57,18 +57,18 @@ export function RegistrationFormThird({
     handleSubmit,
     formState: { errors },
   } = form;
-  const handleUseDefaultChange = () => {
+  const handleUseDefaultChange = (): void => {
     const newValue = !useDefault;
     setUseDefault(newValue);
     if (newValue) setUseAsBilling(false);
   };
 
-  const handleUseAsBillingChange = () => {
+  const handleUseAsBillingChange = (): void => {
     const newValue = !useAsBilling;
     setUseAsBilling(newValue);
     if (newValue) setUseDefault(false);
   };
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
+  const onSubmit = (data: z.infer<typeof formSchema>): void => {
     console.log('Form data:', data);
     onNext();
   };

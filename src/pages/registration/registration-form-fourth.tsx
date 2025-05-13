@@ -35,10 +35,15 @@ const formSchema = z
     }
   });
 
+interface RegistrationFormFourthProps {
+  onNext: () => void;
+  className?: string;
+}
+
 export function RegistrationFormFourth({
   className,
   ...props
-}: React.ComponentPropsWithoutRef<'form'>): React.JSX.Element {
+}: RegistrationFormFourthProps): React.JSX.Element {
   const [formData, setFormData] = React.useState({
     country: '',
     city: '',
