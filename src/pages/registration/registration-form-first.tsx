@@ -92,7 +92,7 @@ export function RegistrationFormFirst({
             <Label htmlFor="password">Repeat password</Label>
           </div>
           <Input
-            id="password"
+            id="repeatPassword"
             type="password"
             placeholder="Repeat password"
             required
