@@ -16,22 +16,21 @@ type Props = {
 const FormSchema = z.object({
   name: z.string().min(1, 'Name must be at least 1 character'),
   lastName: z.string().min(1, 'Last name must be at least 1 character'),
-  dob: z
-    .date({
-      required_error: 'A date of birth is required.',
-    })
-    .refine(
-      (dob) => {
-        const today = new Date();
-        const thirteenYearsAgo = new Date(
-          today.getFullYear() - 13,
-          today.getMonth(),
-          today.getDate()
-        );
-        return dob <= thirteenYearsAgo;
-      },
-      { message: 'You must be at least 13 years old' }
-    ),
+  dob: z.date({
+    required_error: 'A date of birth is required.',
+  }),
+  // .refine(
+  //   (dob) => {
+  //     const today = new Date();
+  //     const thirteenYearsAgo = new Date(
+  //       today.getFullYear() - 13,
+  //       today.getMonth(),
+  //       today.getDate()
+  //     );
+  //     return dob <= thirteenYearsAgo;
+  //   },
+  //   { message: 'You must be at least 13 years old' }
+  // ),
 });
 type FormData = z.infer<typeof FormSchema>;
 
