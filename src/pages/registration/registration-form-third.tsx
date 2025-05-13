@@ -1,73 +1,19 @@
-import { cn } from '@/lib/utils';
-import { Button } from '@/pages/registration/button';
-import { Input } from '@/pages/registration/input';
-import { Label } from '@/pages/registration/label';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+
+import { allowedCountries, postalCodePatterns } from './const-for-validation';
+
+import { cn } from '@/lib/utils';
+import { Button } from '@/pages/registration/button';
+import { Input } from '@/pages/registration/input';
+import { Label } from '@/pages/registration/label';
+
 type Props = {
   onNext: () => void;
 };
-const allowedCountries = new Set([
-  'Austria',
-  'Belgium',
-  'Bulgaria',
-  'Croatia',
-  'Cyprus',
-  'Czech Republic',
-  'Denmark',
-  'Estonia',
-  'Finland',
-  'France',
-  'Germany',
-  'Greece',
-  'Hungary',
-  'Ireland',
-  'Italy',
-  'Latvia',
-  'Lithuania',
-  'Luxembourg',
-  'Malta',
-  'Netherlands',
-  'Poland',
-  'Portugal',
-  'Romania',
-  'Slovakia',
-  'Slovenia',
-  'Spain',
-  'Sweden',
-]);
 
-const postalCodePatterns: Record<string, RegExp> = {
-  Austria: /^\d{4}$/,
-  Belgium: /^\d{4}$/,
-  Bulgaria: /^\d{4}$/,
-  Croatia: /^\d{5}$/,
-  Cyprus: /^\d{4}$/,
-  'Czech Republic': /^\d{3}\s?\d{2}$/,
-  Denmark: /^\d{4}$/,
-  Estonia: /^\d{5}$/,
-  Finland: /^\d{5}$/,
-  France: /^\d{5}$/,
-  Germany: /^\d{5}$/,
-  Greece: /^\d{5}$/,
-  Hungary: /^\d{4}$/,
-  Ireland: /^[A-Za-z]\d[\dA-Za-z]?\s?\d[A-Za-z]{2}$/,
-  Italy: /^\d{5}$/,
-  Latvia: /^\d{4}$/,
-  Lithuania: /^\d{5}$/,
-  Luxembourg: /^\d{4}$/,
-  Malta: /^[A-Z]{3}\s?\d{4}$/,
-  Netherlands: /^\d{4}\s?[A-Z]{2}$/,
-  Poland: /^\d{2}-\d{3}$/,
-  Portugal: /^\d{4}-\d{3}$/,
-  Romania: /^\d{6}$/,
-  Slovakia: /^\d{3}\s?\d{2}$/,
-  Slovenia: /^\d{4}$/,
-  Spain: /^\d{5}$/,
-  Sweden: /^\d{3}\s?\d{2}$/,
-};
 const formSchema = z
   .object({
     country: z
@@ -204,7 +150,7 @@ export function RegistrationFormThird({
             </div>
             <Input
               id="poste-code"
-              type="number"
+              type="text"
               placeholder="Post code"
               required
               {...register('postalCode')}
