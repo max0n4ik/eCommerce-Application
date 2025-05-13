@@ -6,7 +6,6 @@ export default {
     container: {
       center: true,
       padding: '2rem',
-
     },
     extend: {
       colors: {

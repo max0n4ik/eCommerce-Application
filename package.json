@@ -17,7 +17,7 @@
     "format:check": "prettier --list-different --ignore-unknown .",
     "lint:styles": "stylelint \"**/*.css\"",
     "lint:styles:fix": "stylelint \"**/*.css\" --fix",
-    "prepare": "husky && chmod ug+x .husky/*"
+    "prepare": "husky"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,json,css,scss,md}": "pnpm run format",
@@ -33,7 +33,8 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.6.0",
-    "tailwind-merge": "^3.2.0"
+    "tailwind-merge": "^3.2.0",
+    "zod": "^3.24.4"
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.27.1",
@@ -43,8 +44,8 @@
     "@testing-library/jest-dom": "^6.6.3",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
-    "@typescript-eslint/eslint-plugin": "^6.21.0",
-    "@typescript-eslint/parser": "^6.21.0",
+    "@typescript-eslint/eslint-plugin": "^8.32.1",
+    "@typescript-eslint/parser": "^8.32.1",
     "@vitejs/plugin-react": "^4.3.4",
     "autoprefixer": "^10.4.21",
     "cross-env": "^7.0.3",
