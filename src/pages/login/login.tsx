@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { LoginForm } from '@/components/login-form';
+import LoginForm from '@/components/login-form/login-form';
 
 export default function LoginPage(): React.JSX.Element {
   return (

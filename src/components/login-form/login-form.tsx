@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label';
 import { authenticate, schema } from '@/lib/actions';
 import { cn } from '@/lib/utils';
 
-export function LoginForm({
+export default function LoginForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<'form'>): React.JSX.Element {
@@ -137,7 +137,10 @@ export function LoginForm({
 
       <div className="text-center text-sm">
         Don&apos;t have an account?{' '}
-        <a href="/signup" className="text-accent hover:text-accent-foreground">
+        <a
+          href="/registration"
+          className="text-accent hover:text-accent-foreground"
+        >
           Sign up
         </a>
       </div>
