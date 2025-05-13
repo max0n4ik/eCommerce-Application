@@ -2,11 +2,11 @@ import * as React from 'react';
 import { useState } from 'react';
 import { z } from 'zod';
 
+import { Button } from '@/components/ui/button';
 import { BirthdayCalendar } from '@/components/ui/calendar/birthday';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
-import { Button } from '@/pages/registration/button';
-import { Input } from '@/pages/registration/input';
-import { Label } from '@/pages/registration/label';
 type Props = {
   onNext: () => void;
 };
@@ -91,6 +91,7 @@ export function RegistrationFormSecond({
           <Input
             id="name"
             type="text"
+            name="name"
             placeholder="Name"
             value={formData.name}
             onChange={handleChange}
@@ -105,6 +106,7 @@ export function RegistrationFormSecond({
           <Input
             id="last-name"
             type="text"
+            name="lastName"
             placeholder="Last name"
             value={formData.lastName}
             onChange={handleChange}

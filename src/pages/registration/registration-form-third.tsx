@@ -5,10 +5,10 @@ import { z } from 'zod';
 
 import { allowedCountries, postalCodePatterns } from './const-for-validation';
 
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
-import { Button } from '@/pages/registration/button';
-import { Input } from '@/pages/registration/input';
-import { Label } from '@/pages/registration/label';
 
 type Props = {
   onNext: () => void;

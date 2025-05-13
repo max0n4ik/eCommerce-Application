@@ -2,10 +2,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
-import { Button } from '@/pages/registration/button';
-import { Input } from '@/pages/registration/input';
-import { Label } from '@/pages/registration/label';
 
 type Props = {
   onNext: () => void;

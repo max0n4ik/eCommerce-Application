@@ -3,7 +3,7 @@ import { CalendarIcon } from 'lucide-react';
 import { useState } from 'react';
 import { useFormStatus } from 'react-dom';
 
-import { Button } from '@/components/ui/calendar/button';
+import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar/calendar';
 import {
   Popover,

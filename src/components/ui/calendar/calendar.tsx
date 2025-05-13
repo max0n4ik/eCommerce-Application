@@ -3,7 +3,7 @@ import * as React from 'react';
 import type { DayPickerSingleProps } from 'react-day-picker';
 import { DayPicker } from 'react-day-picker';
 
-import { buttonVariants } from '@/components/ui/calendar/button';
+import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
 interface IconProps extends React.ComponentPropsWithoutRef<'svg'> {
