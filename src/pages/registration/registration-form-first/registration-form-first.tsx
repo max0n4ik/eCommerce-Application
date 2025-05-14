@@ -115,7 +115,7 @@ export default function RegistrationFormFirst({
         </div>
         <div className="grid gap-2">
           <div className="flex items-center">
-            <Label htmlFor="password">Repeat password</Label>
+            <Label htmlFor="confirmPassword">Repeat password</Label>
           </div>
           <Input
             id="confirmPassword"

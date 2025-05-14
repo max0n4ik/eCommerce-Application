@@ -106,10 +106,10 @@ export default function RegistrationFormSecond({
         </div>
         <div className="grid gap-2">
           <div className="flex items-center">
-            <Label htmlFor="last-name">Last name</Label>
+            <Label htmlFor="lastName">Last name</Label>
           </div>
           <Input
-            id="last-name"
+            id="lastName"
             type="text"
             name="lastName"
             placeholder="Last name"
@@ -123,7 +123,7 @@ export default function RegistrationFormSecond({
           )}
         </div>
         <div className="grid gap-2">
-          <Label htmlFor="name">Birthday</Label>
+          <Label htmlFor="dob">Birthday</Label>
           <BirthdayCalendar
             name="dob"
             defaultValue={formData.dob}

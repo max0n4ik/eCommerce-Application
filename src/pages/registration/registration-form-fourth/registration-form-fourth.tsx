@@ -95,7 +95,7 @@ export default function RegistrationFormFourth({
       </div>
       <div className="grid gap-6">
         <div className="grid gap-2">
-          <Label htmlFor="email">Country</Label>
+          <Label htmlFor="country">Country</Label>
           <Input
             id="country"
             type="text"
@@ -112,7 +112,7 @@ export default function RegistrationFormFourth({
         </div>
         <div className="grid gap-2">
           <div className="flex items-center">
-            <Label htmlFor="password">City</Label>
+            <Label htmlFor="city">City</Label>
           </div>
           <Input
             id="city"
@@ -130,7 +130,7 @@ export default function RegistrationFormFourth({
         </div>
         <div className="grid gap-2">
           <div className="flex items-center">
-            <Label htmlFor="password">Street</Label>
+            <Label htmlFor="street">Street</Label>
           </div>
           <Input
             id="street"
@@ -149,7 +149,7 @@ export default function RegistrationFormFourth({
         <div className="flex gap-5">
           <div className="grid gap-2">
             <div className="flex items-center">
-              <Label htmlFor="password">House</Label>
+              <Label htmlFor="house">House</Label>
             </div>
             <Input
               id="house"
@@ -167,10 +167,10 @@ export default function RegistrationFormFourth({
           </div>
           <div className="grid gap-2">
             <div className="flex items-center">
-              <Label htmlFor="password">Post code</Label>
+              <Label htmlFor="postalCode">Post code</Label>
             </div>
             <Input
-              id="poste-code"
+              id="postalCode"
               type="text"
               name="postalCode"
               placeholder="Post code"
