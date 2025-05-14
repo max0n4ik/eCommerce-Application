@@ -1,6 +1,7 @@
 import { Eye, EyeOff } from 'lucide-react';
 import { useActionState, useState } from 'react';
 import { useFormStatus } from 'react-dom';
+import { Link } from 'react-router-dom';
 import { z } from 'zod';
 
 import { Button } from '@/components/ui/button';
@@ -129,12 +130,12 @@ export default function LoginForm({
 
       <div className="text-center text-sm">
         Don&apos;t have an account?{' '}
-        <a
-          href={ROUTES.REGISTRATION}
+        <Link
+          to={ROUTES.REGISTRATION}
           className="text-accent hover:text-accent-foreground"
         >
-          Sign up
-        </a>
+          Sign Up
+        </Link>
       </div>
     </form>
   );
