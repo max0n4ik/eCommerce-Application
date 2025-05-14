@@ -6,9 +6,6 @@ export default {
     container: {
       center: true,
       padding: '2rem',
-      screens: {
-        '4xl': '1920px',
-      },
     },
     extend: {
       fontFamily: {

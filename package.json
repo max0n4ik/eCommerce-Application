@@ -17,7 +17,7 @@
     "format:check": "prettier --list-different --ignore-unknown .",
     "lint:styles": "stylelint \"**/*.css\"",
     "lint:styles:fix": "stylelint \"**/*.css\" --fix",
-    "prepare": "husky && chmod ug+x .husky/*"
+    "prepare": "husky"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,json,css,scss,md}": "pnpm run format",
@@ -25,9 +25,7 @@
     "*.css": "pnpm run lint:styles:fix"
   },
   "dependencies": {
-    "@hookform/resolvers": "^5.0.1",
     "@radix-ui/react-label": "^2.1.6",
-    "@radix-ui/react-popover": "^1.1.13",
     "@radix-ui/react-slot": "^1.2.2",
     "@radix-ui/react-toast": "^1.2.13",
     "class-variance-authority": "^0.7.1",
@@ -37,9 +35,9 @@
     "react": "^19.0.0",
     "react-day-picker": "8.10.1",
     "react-dom": "^19.0.0",
+    "react-router-dom": "^7.6.0",
     "tailwind-merge": "^3.2.0",
-    "zod": "^3.24.4",
-    "react-router-dom": "^7.6.0"
+    "zod": "^3.24.4"
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.27.1",
