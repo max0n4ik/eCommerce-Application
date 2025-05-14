@@ -149,8 +149,8 @@ export default function RegistrationFormFourth({
           </div>
         </div>
         <div className="flex gap-5">
-          <Input id="use-default" type="checkbox" className="w-3 h-3" />
-          <Label id="use-default">Use as default</Label>
+          <Input id="useDefault" type="checkbox" className="w-3 h-3" />
+          <Label htmlFor="useDefault">Use as default</Label>
         </div>
         <Button type="submit" className="w-full">
           Sign up

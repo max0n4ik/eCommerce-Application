@@ -187,7 +187,7 @@ export default function RegistrationFormThird({
               checked={useAsBilling}
               onChange={handleUseAsBillingChange}
             />
-            <Label htmlFor="useUsBilling">Use this address as billing</Label>
+            <Label htmlFor="useAsBilling">Use this address as billing</Label>
           </div>
         </div>
         <Button type="submit" className="w-full">
