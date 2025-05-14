@@ -96,6 +96,7 @@ export function RegistrationFormFourth({
           <Input
             id="country"
             type="text"
+            name="country"
             placeholder="Country"
             required
             value={formData.country}
@@ -114,6 +115,7 @@ export function RegistrationFormFourth({
           <Input
             id="city"
             type="text"
+            name="city"
             placeholder="City"
             required
             value={formData.city}
@@ -132,6 +134,7 @@ export function RegistrationFormFourth({
           <Input
             id="street"
             type="text"
+            name="street"
             placeholder="Street"
             required
             value={formData.street}
@@ -151,6 +154,7 @@ export function RegistrationFormFourth({
             <Input
               id="house"
               type="text"
+              name="house"
               placeholder="House"
               required
               value={formData.house}
@@ -169,6 +173,7 @@ export function RegistrationFormFourth({
             <Input
               id="poste-code"
               type="text"
+              name="postalCode"
               placeholder="Post code"
               required
               value={formData.postalCode}
