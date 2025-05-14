@@ -1,79 +1,70 @@
-import * as React from 'react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { z } from 'zod';
 
 import { Button } from '@/components/ui/button';
-import { BirthdayCalendar } from '@/components/ui/calendar/birthday';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { ROUTES } from '@/utils/constantes';
+
 type Props = {
   onNext: () => void;
 };
 
-const FormSchema = z.object({
-  name: z.string().min(1, 'Name must be at least 1 character'),
-  lastName: z.string().min(1, 'Last name must be at least 1 character'),
-  dob: z
-    .date()
-    .nullable()
-    .refine(
-      (dob) => {
-        if (dob) {
-          const today = new Date();
-          const thirteenYearsAgo = new Date(
-            today.getFullYear() - 13,
-            today.getMonth(),
-            today.getDate()
-          );
-          return dob <= thirteenYearsAgo;
-        }
-        return false;
-      },
-      {
-        message: 'You must be at least 13 years old',
-      }
-    ),
-});
-type FormData = z.infer<typeof FormSchema>;
+const formSchema = z
+  .object({
+    email: z.string().email('Invalid email address, (e.g., example@email.com)'),
+    password: z
+      .string()
+      .min(8, 'Password must be at least 8 characters')
+      .regex(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).*$/,
+        'Must contain at least 1 uppercase letter, 1 lowercase letter, and 1 number'
+      ),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: 'Password do not match',
+    path: ['confirmPassword'],
+  });
 
-export function RegistrationFormSecond({
+export default function RegistrationFormFirst({
   onNext,
   className,
   ...props
 }: React.ComponentPropsWithoutRef<'form'> & Props): React.JSX.Element {
-  const [formData, setFormData] = useState<FormData>({
-    name: '',
-    lastName: '',
-    dob: null,
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    confirmPassword: '',
   });
+
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
+    setFormData((prev) => ({
+      ...prev,
       [name]: value,
     }));
   };
-
   const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
+    const result = formSchema.safeParse(formData);
 
-    const validation = FormSchema.safeParse(formData);
-    if (!validation.success) {
+    if (result.success) {
+      setErrors({});
+      console.log('form data submitted', formData);
+      onNext();
+    } else {
       const newErrors: Record<string, string> = {};
-      validation.error.errors.forEach((err) => {
-        newErrors[err.path[0]] = err.message;
-      });
+      for (const issue of result.error.issues) {
+        const key = issue.path[0] as string;
+        newErrors[key] = issue.message;
+      }
       setErrors(newErrors);
-      return;
     }
-
-    console.log('form data submitted', formData);
-    onNext();
   };
   return (
     <form
@@ -82,57 +73,66 @@ export function RegistrationFormSecond({
       {...props}
     >
       <div className="flex flex-col items-center gap-2 text-center">
-        <h1 className="text-2xl font-bold capitalize">Registration</h1>
+        <h1 className="text-2xl font-bold capitalize">Get started now</h1>
         <p className="text-balance text-sm text-muted-foreground">
           Enter your Credentials to create your account
         </p>
       </div>
       <div className="grid gap-6">
         <div className="grid gap-2">
-          <Label htmlFor="name">Name</Label>
+          <Label htmlFor="email">Email</Label>
           <Input
-            id="name"
-            type="text"
-            name="name"
-            placeholder="Name"
-            value={formData.name}
+            id="email"
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={formData.email}
             onChange={handleChange}
             required
           />
-          {errors.name && (
+          {errors.email && (
             <p className="text-sm font-medium text-destructive">
-              {errors.name}
+              {errors.email}
             </p>
           )}
         </div>
         <div className="grid gap-2">
           <div className="flex items-center">
-            <Label htmlFor="last-name">Last name</Label>
+            <Label htmlFor="password">Password</Label>
           </div>
           <Input
-            id="last-name"
-            type="text"
-            name="lastName"
-            placeholder="Last name"
-            value={formData.lastName}
-            onChange={handleChange}
+            id="password"
+            type="password"
+            name="password"
+            placeholder="Password"
             required
+            value={formData.password}
+            onChange={handleChange}
           />
-          {errors.lastName && (
+          {errors.password && (
             <p className="text-sm font-medium text-destructive">
-              {errors.lastName}
+              {errors.password}
             </p>
           )}
         </div>
         <div className="grid gap-2">
-          <Label htmlFor="name">Birthday</Label>
-          <BirthdayCalendar
-            name="dob"
-            defaultValue={formData.dob}
-            onChange={(date: Date | null) =>
-              setFormData((prevData) => ({ ...prevData, dob: date }))
-            }
+          <div className="flex items-center">
+            <Label htmlFor="password">Repeat password</Label>
+          </div>
+          <Input
+            id="confirmPassword"
+            type="password"
+            name="confirmPassword"
+            placeholder="Repeat password"
+            required
+            value={formData.confirmPassword}
+            onChange={handleChange}
           />
+          {errors.confirmPassword && (
+            <p className="text-sm font-medium text-destructive">
+              {errors.confirmPassword}
+            </p>
+          )}
         </div>
         <Button type="submit" className="w-full">
           Next

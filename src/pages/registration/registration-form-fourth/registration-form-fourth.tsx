@@ -2,17 +2,13 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { z } from 'zod';
 
-import { allowedCountries, postalCodePatterns } from './const-for-validation';
+import { allowedCountries, postalCodePatterns } from '../const-for-validation';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { ROUTES } from '@/utils/constantes';
-
-type Props = {
-  onNext: () => void;
-};
 
 const formSchema = z
   .object({
@@ -41,11 +37,14 @@ const formSchema = z
     }
   });
 
-export function RegistrationFormThird({
-  onNext,
+interface RegistrationFormFourthProps {
+  className?: string;
+}
+
+export default function RegistrationFormFourth({
   className,
   ...props
-}: React.ComponentPropsWithoutRef<'form'> & Props): React.JSX.Element {
+}: RegistrationFormFourthProps): React.JSX.Element {
   const [formData, setFormData] = React.useState({
     country: '',
     city: '',
@@ -54,36 +53,19 @@ export function RegistrationFormThird({
     postalCode: '',
   });
   const [errors, setErrors] = React.useState<{ [key: string]: string }>({});
-
-  const [useDefault, setUseDefault] = React.useState(false);
-  const [useAsBilling, setUseAsBilling] = React.useState(false);
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
+    setFormData((prevData) => ({
+      ...prevData,
       [name]: value,
     }));
-  };
-
-  const handleUseDefaultChange = (): void => {
-    setUseDefault((prev) => {
-      if (!prev) setUseAsBilling(false);
-      return !prev;
-    });
-  };
-  const handleUseAsBillingChange = (): void => {
-    const newValue = !useAsBilling;
-    setUseAsBilling(newValue);
-    if (newValue) setUseDefault(false);
   };
   const validateForm = (): boolean => {
     const result = formSchema.safeParse(formData);
     if (!result.success) {
       const newErrors: { [key: string]: string } = {};
       result.error.errors.forEach((err) => {
-        const field = err.path[0] as string;
-        newErrors[field] = err.message;
+        newErrors[err.path[0]] = err.message;
       });
       setErrors(newErrors);
       return false;
@@ -91,15 +73,12 @@ export function RegistrationFormThird({
     setErrors({});
     return true;
   };
-
   const onSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
     if (validateForm()) {
       console.log('Submitted billing address:', formData);
     }
-    onNext();
   };
-
   return (
     <form
       onSubmit={onSubmit}
@@ -109,7 +88,7 @@ export function RegistrationFormThird({
       <div className="flex flex-col items-center gap-2 text-center">
         <h1 className="text-2xl font-bold capitalize">Registration</h1>
         <p className="text-balance text-sm text-muted-foreground">
-          Enter your Shipping address
+          Enter your Billing address
         </p>
       </div>
       <div className="grid gap-6">
@@ -208,30 +187,12 @@ export function RegistrationFormThird({
             )}
           </div>
         </div>
-        <div>
-          <div className="flex gap-5">
-            <Input
-              id="use-default"
-              type="checkbox"
-              className="w-3 h-3"
-              checked={useDefault}
-              onChange={handleUseDefaultChange}
-            />
-            <Label id="use-default">Use as default</Label>
-          </div>
-          <div className="flex gap-5">
-            <Input
-              id="use-default"
-              type="checkbox"
-              className="w-3 h-3"
-              checked={useAsBilling}
-              onChange={handleUseAsBillingChange}
-            />
-            <Label id="use-as-billing">Use this address as billing</Label>
-          </div>
+        <div className="flex gap-5">
+          <Input id="use-default" type="checkbox" className="w-3 h-3" />
+          <Label id="use-default">Use as default</Label>
         </div>
         <Button type="submit" className="w-full">
-          Next
+          Sign up
         </Button>
         <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
           <span className="relative z-10 bg-background px-2 text-muted-foreground">
