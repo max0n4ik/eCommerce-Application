@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React from 'react';
 import { z } from 'zod';
 
 import { allowedCountries, postalCodePatterns } from './const-for-validation';
@@ -44,35 +44,63 @@ export function RegistrationFormThird({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<'form'> & Props): React.JSX.Element {
-  const [useDefault, setUseDefault] = useState(false);
-  const [useAsBilling, setUseAsBilling] = useState(false);
-
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const [formData, setFormData] = React.useState({
+    country: '',
+    city: '',
+    street: '',
+    house: '',
+    postalCode: '',
   });
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = form;
-  const handleUseDefaultChange = (): void => {
-    const newValue = !useDefault;
-    setUseDefault(newValue);
-    if (newValue) setUseAsBilling(false);
+  const [errors, setErrors] = React.useState<{ [key: string]: string }>({});
+
+  const [useDefault, setUseDefault] = React.useState(false);
+  const [useAsBilling, setUseAsBilling] = React.useState(false);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
+  const handleUseDefaultChange = (): void => {
+    setUseDefault((prev) => {
+      if (!prev) setUseAsBilling(false);
+      return !prev;
+    });
+  };
   const handleUseAsBillingChange = (): void => {
     const newValue = !useAsBilling;
     setUseAsBilling(newValue);
     if (newValue) setUseDefault(false);
   };
-  const onSubmit = (data: z.infer<typeof formSchema>): void => {
-    console.log('Form data:', data);
+  const validateForm = (): boolean => {
+    const result = formSchema.safeParse(formData);
+    if (!result.success) {
+      const newErrors: { [key: string]: string } = {};
+      result.error.errors.forEach((err) => {
+        const field = err.path[0] as string;
+        newErrors[field] = err.message;
+      });
+      setErrors(newErrors);
+      return false;
+    }
+    setErrors({});
+    return true;
+  };
+
+  const onSubmit = (e: React.FormEvent): void => {
+    e.preventDefault();
+    if (validateForm()) {
+      console.log('Submitted billing address:', formData);
+    }
     onNext();
   };
+
   return (
     <form
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={onSubmit}
       className={cn('flex flex-col gap-6', className)}
       {...props}
     >
@@ -88,13 +116,15 @@ export function RegistrationFormThird({
           <Input
             id="country"
             type="text"
+            name="country"
             placeholder="Country"
             required
-            {...register('country')}
+            value={formData.country}
+            onChange={handleChange}
           />
           {errors.country && (
             <p className="text-sm font-medium text-destructive">
-              {errors.country.message}
+              {errors.country}
             </p>
           )}
         </div>
@@ -105,13 +135,15 @@ export function RegistrationFormThird({
           <Input
             id="city"
             type="text"
+            name="city"
             placeholder="City"
             required
-            {...register('city')}
+            value={formData.city}
+            onChange={handleChange}
           />
           {errors.city && (
             <p className="text-sm font-medium text-destructive">
-              {errors.city.message}
+              {errors.city}
             </p>
           )}
         </div>
@@ -122,13 +154,15 @@ export function RegistrationFormThird({
           <Input
             id="street"
             type="text"
+            name="street"
             placeholder="Street"
             required
-            {...register('street')}
+            value={formData.street}
+            onChange={handleChange}
           />
           {errors.street && (
             <p className="text-sm font-medium text-destructive">
-              {errors.street.message}
+              {errors.street}
             </p>
           )}
         </div>
@@ -140,13 +174,15 @@ export function RegistrationFormThird({
             <Input
               id="house"
               type="text"
+              name="house"
               placeholder="House"
               required
-              {...register('house')}
+              value={formData.house}
+              onChange={handleChange}
             />
             {errors.house && (
               <p className="text-sm font-medium text-destructive">
-                {errors.house.message}
+                {errors.house}
               </p>
             )}
           </div>
@@ -157,13 +193,15 @@ export function RegistrationFormThird({
             <Input
               id="poste-code"
               type="text"
+              name="postalCode"
               placeholder="Post code"
               required
-              {...register('postalCode')}
+              value={formData.postalCode}
+              onChange={handleChange}
             />
             {errors.postalCode && (
               <p className="text-sm font-medium text-destructive">
-                {errors.postalCode.message}
+                {errors.postalCode}
               </p>
             )}
           </div>
