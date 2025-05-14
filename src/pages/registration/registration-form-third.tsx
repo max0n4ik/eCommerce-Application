@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { z } from 'zod';
 
 import { allowedCountries, postalCodePatterns } from './const-for-validation';
@@ -7,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
+import { ROUTES } from '@/utils/constantes';
 
 type Props = {
   onNext: () => void;
@@ -239,9 +241,13 @@ export function RegistrationFormThird({
       </div>
       <div className="text-center text-sm">
         Have an account?{' '}
-        <a href="e" className="underline underline-offset-4">
+        <Link
+          to={ROUTES.LOGIN}
+          className="text-accent hover:text-accent-foreground"
+        >
+          {' '}
           Sign in
-        </a>
+        </Link>
       </div>
     </form>
   );

@@ -5,7 +5,7 @@ import { RegistrationFormFourth } from './registration-form-fourth';
 import { RegistrationFormSecond } from './registration-form-second';
 import { RegistrationFormThird } from './registration-form-third';
 
-export default function RegistrationPage(): React.JSX.Element {
+export default function Registration(): React.JSX.Element {
   const [step, setStep] = useState(1);
   const handleText = (): void => setStep((prev) => prev + 1);
   const renderStep = (): React.JSX.Element | null => {
@@ -31,15 +31,10 @@ export default function RegistrationPage(): React.JSX.Element {
     <div className="grid min-h-svh lg:grid-cols-2">
       <div className="flex flex-col gap-4 p-6 md:p-10">
         <div className="flex justify-center gap-2 md:justify-start">
-          <a
-            href="e"
-            className="flex items-center gap-1 font-['Noto_Serif'] font-medium text-lg "
-          >
-            <div className="flex h-6 w-6 items-center justify-center rounded-md text-primary-foreground">
-              <img src="src/assets/images/logo.png" alt="logo" />
-            </div>
-            Petal & Pot.
-          </a>
+          <div className="flex h-6 w-6 items-center justify-center rounded-md text-primary-foreground">
+            <img src="src/assets/images/logo.png" alt="logo" />
+          </div>
+          Petal & Pot.
         </div>
         <div className="flex flex-1 items-center justify-center">
           <div className="w-full max-w-xs">{renderStep()}</div>

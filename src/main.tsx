@@ -1,8 +1,9 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
+import App from './components/app/app';
+
 import './styles/index.css';
-import RegistrationPage from './pages/registration/registration-page';
 
 const rootElement =
   document.querySelector('#root') ??
@@ -15,6 +16,6 @@ const rootElement =
 
 createRoot(rootElement).render(
   <StrictMode>
-    <RegistrationPage />
+    <App />
   </StrictMode>
 );
