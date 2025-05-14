@@ -88,7 +88,6 @@ export default function RegistrationFormFirst({
             placeholder="Email"
             value={formData.email}
             onChange={handleChange}
-            required
           />
           {errors.email && (
             <p className="text-sm font-medium text-destructive">
@@ -105,7 +104,6 @@ export default function RegistrationFormFirst({
             type="password"
             name="password"
             placeholder="Password"
-            required
             value={formData.password}
             onChange={handleChange}
           />
@@ -124,7 +122,6 @@ export default function RegistrationFormFirst({
             type="password"
             name="confirmPassword"
             placeholder="Repeat password"
-            required
             value={formData.confirmPassword}
             onChange={handleChange}
           />

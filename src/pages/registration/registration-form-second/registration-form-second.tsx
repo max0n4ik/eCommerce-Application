@@ -97,7 +97,6 @@ export default function RegistrationFormSecond({
             placeholder="Name"
             value={formData.name}
             onChange={handleChange}
-            required
           />
           {errors.name && (
             <p className="text-sm font-medium text-destructive">
@@ -116,7 +115,6 @@ export default function RegistrationFormSecond({
             placeholder="Last name"
             value={formData.lastName}
             onChange={handleChange}
-            required
           />
           {errors.lastName && (
             <p className="text-sm font-medium text-destructive">

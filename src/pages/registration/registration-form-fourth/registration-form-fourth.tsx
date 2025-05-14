@@ -101,7 +101,6 @@ export default function RegistrationFormFourth({
             type="text"
             name="country"
             placeholder="Country"
-            required
             value={formData.country}
             onChange={handleChange}
           />
@@ -120,7 +119,6 @@ export default function RegistrationFormFourth({
             type="text"
             name="city"
             placeholder="City"
-            required
             value={formData.city}
             onChange={handleChange}
           />
@@ -139,7 +137,6 @@ export default function RegistrationFormFourth({
             type="text"
             name="street"
             placeholder="Street"
-            required
             value={formData.street}
             onChange={handleChange}
           />
@@ -159,7 +156,6 @@ export default function RegistrationFormFourth({
               type="text"
               name="house"
               placeholder="House"
-              required
               value={formData.house}
               onChange={handleChange}
             />
@@ -178,7 +174,6 @@ export default function RegistrationFormFourth({
               type="text"
               name="postalCode"
               placeholder="Post code"
-              required
               value={formData.postalCode}
               onChange={handleChange}
             />
