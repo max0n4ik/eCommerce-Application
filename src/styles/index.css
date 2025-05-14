@@ -37,8 +37,8 @@ border-border -> подставляется значение из --border и т
     --muted: oklch(91% 0.02 106.71deg);
     --muted-foreground: oklch(46% 0.03 92.72deg);
     --accent: oklch(66% 0.1317 169.1235deg);
-    --accent-foreground: oklch(80% 0.1317 169.1235deg);
-    --destructive: oklch(58% 0.07 64.9deg);
+    --accent-foreground: oklch(94% 0.01 112.37deg);
+    --destructive: oklch(58% 0.1677 23.29deg);
     --destructive-foreground: oklch(100% 0 0deg);
     --border: oklch(86% 0.02 110.11deg);
     --input: oklch(86% 0.02 110.11deg);
@@ -103,7 +103,7 @@ border-border -> подставляется значение из --border и т
     --accent: oklch(52% 0.05 164.51deg);
     --accent-foreground: oklch(91% 0.01 106.64deg);
     --destructive: oklch(58% 0.07 64.9deg);
-    --destructive-foreground: oklch(91% 0.01 106.64deg);
+    --destructive-foreground: oklch(91% 0.07 106.64deg);
     --border: oklch(38% 0.01 164.47deg);
     --input: oklch(38% 0.01 164.47deg);
     --ring: oklch(61% 0.06 163.7deg);

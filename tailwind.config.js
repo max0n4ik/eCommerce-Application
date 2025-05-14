@@ -6,29 +6,8 @@ export default {
     container: {
       center: true,
       padding: '2rem',
-      screens: {
-        '4xl': '1920px',
-      },
     },
     extend: {
-      fontFamily: {
-        sans: ['Inter', 'sans-serif'],
-        serif: ['Noto Serif', 'serif'],
-      },
-      borderRadius: {
-        lg: '70px',
-        md: '26px',
-        sm: '20px',
-        xs: '2px',
-      },
-      screens: {
-        sm: { min: '360px', max: '425px' },
-        md: { min: '426px', max: '768px' },
-        lg: { min: '769px', max: '1024px' },
-        xl: { min: '1025px', max: '1440px' },
-        '2xl': { min: '1441px', max: '1599px' },
-        '3xl': { min: '1600px', max: '1920px' },
-      },
       colors: {
         background: 'var(--background)',
         foreground: 'var(--foreground)',
