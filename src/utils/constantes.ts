@@ -1,3 +1,5 @@
+import type { RegistrationAddress } from './types';
+
 export const ROUTES = {
   HOME: '/',
   CART: '/cart',
@@ -65,4 +67,11 @@ export const postalCodePatterns: Record<string, RegExp> = {
   Slovenia: /^\d{4}$/,
   Spain: /^\d{5}$/,
   Sweden: /^\d{3}\s?\d{2}$/,
+};
+export const defaultAddressForm: RegistrationAddress = {
+  country: '',
+  city: '',
+  street: '',
+  house: '',
+  postalCode: '',
 };

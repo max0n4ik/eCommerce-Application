@@ -1,60 +1,23 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { z } from 'zod';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
-import {
-  allowedCountries,
-  postalCodePatterns,
-  ROUTES,
-} from '@/utils/constantes';
+import { defaultAddressForm, ROUTES } from '@/utils/constantes';
+import type { Props, RegistrationAddress } from '@/utils/types';
+import { registrationAddressSchema } from '@/utils/validations';
 
-type Props = {
-  onNext: () => void;
-};
-
-const formSchema = z
-  .object({
-    country: z
-      .string()
-      .min(1, 'Name must be at least 1 character')
-      .refine((value) => allowedCountries.has(value), {
-        message: 'Country must be from the European Union',
-      }),
-    city: z
-      .string()
-      .min(1, 'City must contain at least one character ')
-      .regex(/^[A-Za-z\s-]+$/, 'City must contain only letters'),
-    street: z.string().min(1, 'Street must contain at least one character'),
-    house: z.string().min(1, 'House is required'),
-    postalCode: z.string().min(1, 'Postal code is required'),
-  })
-  .superRefine((data, ctx) => {
-    const pattern = postalCodePatterns[data.country];
-    if (pattern && !pattern.test(data.postalCode)) {
-      ctx.addIssue({
-        path: ['postalCode'],
-        message: 'Invalid postal code format for the selected country',
-        code: z.ZodIssueCode.custom,
-      });
-    }
-  });
+const formSchema = registrationAddressSchema;
 
 export default function RegistrationFormThird({
   onNext,
   className,
   ...props
 }: React.ComponentPropsWithoutRef<'form'> & Props): React.JSX.Element {
-  const [formData, setFormData] = React.useState({
-    country: '',
-    city: '',
-    street: '',
-    house: '',
-    postalCode: '',
-  });
+  const [formData, setFormData] =
+    React.useState<RegistrationAddress>(defaultAddressForm);
   const [errors, setErrors] = React.useState<{ [key: string]: string }>({});
 
   const [useDefault, setUseDefault] = React.useState(false);
@@ -98,8 +61,8 @@ export default function RegistrationFormThird({
     e.preventDefault();
     if (validateForm()) {
       console.log('Submitted billing address:', formData);
+      onNext();
     }
-    onNext();
   };
 
   return (
@@ -208,23 +171,23 @@ export default function RegistrationFormThird({
         <div>
           <div className="flex gap-5">
             <Input
-              id="use-default"
+              id="useDefault"
               type="checkbox"
               className="w-3 h-3"
               checked={useDefault}
               onChange={handleUseDefaultChange}
             />
-            <Label id="use-default">Use as default</Label>
+            <Label htmlFor="useDefault">Use as default</Label>
           </div>
           <div className="flex gap-5">
             <Input
-              id="use-default"
+              id="useAseBilling"
               type="checkbox"
               className="w-3 h-3"
               checked={useAsBilling}
               onChange={handleUseAsBillingChange}
             />
-            <Label id="use-as-billing">Use this address as billing</Label>
+            <Label htmlFor="useUsBilling">Use this address as billing</Label>
           </div>
         </div>
         <Button type="submit" className="w-full">

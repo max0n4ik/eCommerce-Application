@@ -1,40 +1,23 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { z } from 'zod';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { ROUTES } from '@/utils/constantes';
-
-type Props = {
-  onNext: () => void;
-};
-
-const formSchema = z
-  .object({
-    email: z.string().email('Invalid email address, (e.g., example@email.com)'),
-    password: z
-      .string()
-      .min(8, 'Password must be at least 8 characters')
-      .regex(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).*$/,
-        'Must contain at least 1 uppercase letter, 1 lowercase letter, and 1 number'
-      ),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: 'Password do not match',
-    path: ['confirmPassword'],
-  });
+import type { Props } from '@/utils/types';
+import {
+  validateRegistrationCredentials,
+  type RegistrationCredentials,
+} from '@/utils/validations';
 
 export default function RegistrationFormFirst({
   onNext,
   className,
   ...props
 }: React.ComponentPropsWithoutRef<'form'> & Props): React.JSX.Element {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<RegistrationCredentials>({
     email: '',
     password: '',
     confirmPassword: '',
@@ -49,23 +32,17 @@ export default function RegistrationFormFirst({
       [name]: value,
     }));
   };
+
   const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
-    const result = formSchema.safeParse(formData);
+    const { isValid, errors } = validateRegistrationCredentials(formData);
+    setErrors(errors);
+    if (!isValid) return;
 
-    if (result.success) {
-      setErrors({});
-      console.log('form data submitted', formData);
-      onNext();
-    } else {
-      const newErrors: Record<string, string> = {};
-      for (const issue of result.error.issues) {
-        const key = issue.path[0] as string;
-        newErrors[key] = issue.message;
-      }
-      setErrors(newErrors);
-    }
+    console.log('form data submitted', formData);
+    onNext();
   };
+
   return (
     <form
       onSubmit={handleSubmit}
@@ -96,9 +73,7 @@ export default function RegistrationFormFirst({
           )}
         </div>
         <div className="grid gap-2">
-          <div className="flex items-center">
-            <Label htmlFor="password">Password</Label>
-          </div>
+          <Label htmlFor="password">Password</Label>
           <Input
             id="password"
             type="password"
@@ -114,9 +89,7 @@ export default function RegistrationFormFirst({
           )}
         </div>
         <div className="grid gap-2">
-          <div className="flex items-center">
-            <Label htmlFor="confirmPassword">Repeat password</Label>
-          </div>
+          <Label htmlFor="confirmPassword">Repeat password</Label>
           <Input
             id="confirmPassword"
             type="password"
@@ -146,7 +119,6 @@ export default function RegistrationFormFirst({
           to={ROUTES.LOGIN}
           className="text-accent hover:text-accent-foreground"
         >
-          {' '}
           Sign in
         </Link>
       </div>

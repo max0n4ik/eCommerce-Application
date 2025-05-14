@@ -1,59 +1,23 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { z } from 'zod';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
-import {
-  allowedCountries,
-  postalCodePatterns,
-  ROUTES,
-} from '@/utils/constantes';
-
-const formSchema = z
-  .object({
-    country: z
-      .string()
-      .min(1, 'Name must be at least 1 character')
-      .refine((value) => allowedCountries.has(value), {
-        message: 'Country must be from the European Union',
-      }),
-    city: z
-      .string()
-      .min(1, 'City must contain at least one character ')
-      .regex(/^[A-Za-z\s-]+$/, 'City must contain only letters'),
-    street: z.string().min(1, 'Street must contain at least one character'),
-    house: z.string().min(1, 'House is required'),
-    postalCode: z.string().min(1, 'Postal code is required'),
-  })
-  .superRefine((data, ctx) => {
-    const pattern = postalCodePatterns[data.country];
-    if (pattern && !pattern.test(data.postalCode)) {
-      ctx.addIssue({
-        path: ['postalCode'],
-        message: 'Invalid postal code format for the selected country',
-        code: z.ZodIssueCode.custom,
-      });
-    }
-  });
-
-interface RegistrationFormFourthProps {
-  className?: string;
-}
+import { defaultAddressForm, ROUTES } from '@/utils/constantes';
+import type {
+  RegistrationAddress,
+  RegistrationFormFourthProps,
+} from '@/utils/types';
+import { registrationAddressSchema } from '@/utils/validations';
 
 export default function RegistrationFormFourth({
   className,
   ...props
 }: RegistrationFormFourthProps): React.JSX.Element {
-  const [formData, setFormData] = React.useState({
-    country: '',
-    city: '',
-    street: '',
-    house: '',
-    postalCode: '',
-  });
+  const [formData, setFormData] =
+    React.useState<RegistrationAddress>(defaultAddressForm);
   const [errors, setErrors] = React.useState<{ [key: string]: string }>({});
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.target;
@@ -63,7 +27,7 @@ export default function RegistrationFormFourth({
     }));
   };
   const validateForm = (): boolean => {
-    const result = formSchema.safeParse(formData);
+    const result = registrationAddressSchema.safeParse(formData);
     if (!result.success) {
       const newErrors: { [key: string]: string } = {};
       result.error.errors.forEach((err) => {

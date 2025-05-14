@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { z } from 'zod';
 
 import { Button } from '@/components/ui/button';
 import { BirthdayCalendar } from '@/components/ui/calendar/birthday';
@@ -9,42 +8,18 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { ROUTES } from '@/utils/constantes';
-type Props = {
-  onNext: () => void;
-};
-
-const FormSchema = z.object({
-  name: z.string().min(1, 'Name must be at least 1 character'),
-  lastName: z.string().min(1, 'Last name must be at least 1 character'),
-  dob: z
-    .date()
-    .nullable()
-    .refine(
-      (dob) => {
-        if (dob) {
-          const today = new Date();
-          const thirteenYearsAgo = new Date(
-            today.getFullYear() - 13,
-            today.getMonth(),
-            today.getDate()
-          );
-          return dob <= thirteenYearsAgo;
-        }
-        return false;
-      },
-      {
-        message: 'You must be at least 13 years old',
-      }
-    ),
-});
-type FormData = z.infer<typeof FormSchema>;
+import type { Props } from '@/utils/types';
+import {
+  validateUserFormData,
+  type RegistrationUser,
+} from '@/utils/validations';
 
 export default function RegistrationFormSecond({
   onNext,
   className,
   ...props
 }: React.ComponentPropsWithoutRef<'form'> & Props): React.JSX.Element {
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<RegistrationUser>({
     name: '',
     lastName: '',
     dob: null,
@@ -62,19 +37,12 @@ export default function RegistrationFormSecond({
   const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
 
-    const validation = FormSchema.safeParse(formData);
-    if (!validation.success) {
-      const newErrors: Record<string, string> = {};
-      validation.error.errors.forEach((err) => {
-        newErrors[err.path[0]] = err.message;
-      });
-      setErrors(newErrors);
-      return;
-    }
-
-    console.log('form data submitted', formData);
+    const { isValid, errors } = validateUserFormData(formData);
+    setErrors(errors);
+    if (!isValid) return;
     onNext();
   };
+
   return (
     <form
       onSubmit={handleSubmit}
@@ -105,9 +73,7 @@ export default function RegistrationFormSecond({
           )}
         </div>
         <div className="grid gap-2">
-          <div className="flex items-center">
-            <Label htmlFor="lastName">Last name</Label>
-          </div>
+          <Label htmlFor="lastName">Last name</Label>
           <Input
             id="lastName"
             type="text"
@@ -131,6 +97,9 @@ export default function RegistrationFormSecond({
               setFormData((prevData) => ({ ...prevData, dob: date }))
             }
           />
+          {errors.dob && (
+            <p className="text-sm font-medium text-destructive">{errors.dob}</p>
+          )}
         </div>
         <Button type="submit" className="w-full">
           Next
@@ -147,7 +116,6 @@ export default function RegistrationFormSecond({
           to={ROUTES.LOGIN}
           className="text-accent hover:text-accent-foreground"
         >
-          {' '}
           Sign in
         </Link>
       </div>
