@@ -69,7 +69,9 @@ export function RegistrationFormFirst({
             required
           />
           {errors.email && (
-            <p className="text-sm text-red-500">{errors.email.message}</p>
+            <p className="text-sm font-medium text-destructive">
+              {errors.email.message}
+            </p>
           )}
         </div>
         <div className="grid gap-2">
@@ -84,7 +86,9 @@ export function RegistrationFormFirst({
             {...register('password')}
           />
           {errors.password && (
-            <p className="text-sm text-red-500">{errors.password.message}</p>
+            <p className="text-sm font-medium text-destructive">
+              {errors.password.message}
+            </p>
           )}
         </div>
         <div className="grid gap-2">
@@ -99,7 +103,7 @@ export function RegistrationFormFirst({
             {...register('confirmPassword')}
           />
           {errors.confirmPassword && (
-            <p className="text-sm text-red-500">
+            <p className="text-sm font-medium text-destructive">
               {errors.confirmPassword.message}
             </p>
           )}

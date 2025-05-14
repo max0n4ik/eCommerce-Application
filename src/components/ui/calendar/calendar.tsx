@@ -20,17 +20,22 @@ function Calendar({
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
-      className={cn('p-3', className)}
+      className={cn('p-3 rounded-2xl shadow-md', className)}
+      captionLayout="dropdown"
+      fromYear={1900}
+      toYear={2025}
       classNames={{
-        months: 'flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0',
+        months: 'flex flex-col sm:flex-row gap-4',
         month: 'space-y-4',
-        caption: 'flex justify-center pt-1 relative items-center',
-        caption_label: 'text-sm font-medium',
-        nav: 'space-x-1 flex items-center',
+        caption: 'flex justify-center items-center relative pt-2',
+        caption_label: 'sr-only',
+        nav: 'flex items-center gap-1 absolute right-2 top-2',
         nav_button: cn(
           buttonVariants({ variant: 'outline' }),
           'h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100'
         ),
+        caption_dropdowns: 'flex gap-2 items-center justify-center',
+        vhidden: 'hidden',
         nav_button_previous: 'absolute left-1',
         nav_button_next: 'absolute right-1',
         table: 'w-full border-collapse space-y-1',

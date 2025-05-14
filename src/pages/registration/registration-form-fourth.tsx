@@ -102,7 +102,9 @@ export function RegistrationFormFourth({
             onChange={handleChange}
           />
           {errors.country && (
-            <p className="text-sm text-red-500">{errors.country}</p>
+            <p className="text-sm font-medium text-destructive">
+              {errors.country}
+            </p>
           )}
         </div>
         <div className="grid gap-2">
@@ -117,7 +119,11 @@ export function RegistrationFormFourth({
             value={formData.city}
             onChange={handleChange}
           />
-          {errors.city && <p className="text-sm text-red-500">{errors.city}</p>}
+          {errors.city && (
+            <p className="text-sm font-medium text-destructive">
+              {errors.city}
+            </p>
+          )}
         </div>
         <div className="grid gap-2">
           <div className="flex items-center">
@@ -132,7 +138,9 @@ export function RegistrationFormFourth({
             onChange={handleChange}
           />
           {errors.street && (
-            <p className="text-sm text-red-500">{errors.street}</p>
+            <p className="text-sm font-medium text-destructive">
+              {errors.street}
+            </p>
           )}
         </div>
         <div className="flex gap-5">
@@ -149,7 +157,9 @@ export function RegistrationFormFourth({
               onChange={handleChange}
             />
             {errors.house && (
-              <p className="text-sm text-red-500">{errors.house}</p>
+              <p className="text-sm font-medium text-destructive">
+                {errors.house}
+              </p>
             )}
           </div>
           <div className="grid gap-2">
@@ -165,7 +175,9 @@ export function RegistrationFormFourth({
               onChange={handleChange}
             />
             {errors.postalCode && (
-              <p className="text-sm text-red-500">{errors.postalCode}</p>
+              <p className="text-sm font-medium text-destructive">
+                {errors.postalCode}
+              </p>
             )}
           </div>
         </div>

@@ -1,6 +1,4 @@
-import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { allowedCountries, postalCodePatterns } from './const-for-validation';
@@ -95,7 +93,9 @@ export function RegistrationFormThird({
             {...register('country')}
           />
           {errors.country && (
-            <p className="text-sm text-red-500">{errors.country.message}</p>
+            <p className="text-sm font-medium text-destructive">
+              {errors.country.message}
+            </p>
           )}
         </div>
         <div className="grid gap-2">
@@ -110,7 +110,9 @@ export function RegistrationFormThird({
             {...register('city')}
           />
           {errors.city && (
-            <p className="text-sm text-red-500">{errors.city.message}</p>
+            <p className="text-sm font-medium text-destructive">
+              {errors.city.message}
+            </p>
           )}
         </div>
         <div className="grid gap-2">
@@ -125,7 +127,9 @@ export function RegistrationFormThird({
             {...register('street')}
           />
           {errors.street && (
-            <p className="text-sm text-red-500">{errors.street.message}</p>
+            <p className="text-sm font-medium text-destructive">
+              {errors.street.message}
+            </p>
           )}
         </div>
         <div className="flex gap-5">
@@ -141,7 +145,9 @@ export function RegistrationFormThird({
               {...register('house')}
             />
             {errors.house && (
-              <p className="text-sm text-red-500">{errors.house.message}</p>
+              <p className="text-sm font-medium text-destructive">
+                {errors.house.message}
+              </p>
             )}
           </div>
           <div className="grid gap-2">
@@ -156,7 +162,7 @@ export function RegistrationFormThird({
               {...register('postalCode')}
             />
             {errors.postalCode && (
-              <p className="text-sm text-red-500">
+              <p className="text-sm font-medium text-destructive">
                 {errors.postalCode.message}
               </p>
             )}

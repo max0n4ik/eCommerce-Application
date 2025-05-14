@@ -97,7 +97,11 @@ export function RegistrationFormSecond({
             onChange={handleChange}
             required
           />
-          {errors.name && <p className="text-sm text-red-500">{errors.name}</p>}
+          {errors.name && (
+            <p className="text-sm font-medium text-destructive">
+              {errors.name}
+            </p>
+          )}
         </div>
         <div className="grid gap-2">
           <div className="flex items-center">
@@ -113,7 +117,9 @@ export function RegistrationFormSecond({
             required
           />
           {errors.lastName && (
-            <p className="text-sm text-red-500">{errors.lastName}</p>
+            <p className="text-sm font-medium text-destructive">
+              {errors.lastName}
+            </p>
           )}
         </div>
         <div className="grid gap-2">
