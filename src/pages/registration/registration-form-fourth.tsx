@@ -36,7 +36,6 @@ const formSchema = z
   });
 
 interface RegistrationFormFourthProps {
-  onNext: () => void;
   className?: string;
 }
 

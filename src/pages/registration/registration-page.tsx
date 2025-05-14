@@ -20,7 +20,7 @@ export default function RegistrationPage(): React.JSX.Element {
         return <RegistrationFormThird onNext={handleText} />;
       }
       case 4: {
-        return <RegistrationFormFourth onNext={handleText} />;
+        return <RegistrationFormFourth />;
       }
       default: {
         return null;
