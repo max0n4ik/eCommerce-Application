@@ -5,6 +5,9 @@ import { RegistrationFormFourth } from './registration-form-fourth';
 import { RegistrationFormSecond } from './registration-form-second';
 import { RegistrationFormThird } from './registration-form-third';
 
+import gardenImage from '@/assets/images/garden.png';
+import logo from '@/assets/images/logo.png';
+
 export default function Registration(): React.JSX.Element {
   const [step, setStep] = useState(1);
   const handleNext = (): void => setStep((prev) => prev + 1);
@@ -32,7 +35,7 @@ export default function Registration(): React.JSX.Element {
       <div className="flex flex-col gap-4 p-6 md:p-10">
         <div className="flex justify-center gap-2 md:justify-start">
           <div className="flex h-6 w-6 items-center justify-center rounded-md text-primary-foreground">
-            <img src="src/assets/images/logo.png" alt="logo" />
+            <img src={logo} alt="logo" />
           </div>
           Petal & Pot.
         </div>
@@ -42,7 +45,7 @@ export default function Registration(): React.JSX.Element {
       </div>
       <div className="relative hidden bg-muted lg:block">
         <img
-          src="src/assets/images/garden.png"
+          src={gardenImage}
           alt="export"
           className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
         />
