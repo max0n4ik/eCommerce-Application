@@ -1,5 +1,4 @@
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
+import { useState } from 'react';
 import { z } from 'zod';
 
 import { Button } from '@/components/ui/button';
@@ -28,27 +27,46 @@ const formSchema = z
     path: ['confirmPassword'],
   });
 
-type FormData = z.infer<typeof formSchema>;
-
 export function RegistrationFormFirst({
   onNext,
   className,
   ...props
 }: React.ComponentPropsWithoutRef<'form'> & Props): React.JSX.Element {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormData>({
-    resolver: zodResolver(formSchema),
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    confirmPassword: '',
   });
-  const onSubmit = (data: FormData): void => {
-    console.log('form data submitted', data);
-    onNext();
+
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+  const handleSubmit = (e: React.FormEvent): void => {
+    e.preventDefault();
+    const result = formSchema.safeParse(formData);
+
+    if (result.success) {
+      setErrors({});
+      console.log('form data submitted', formData);
+      onNext();
+    } else {
+      const newErrors: Record<string, string> = {};
+      for (const issue of result.error.issues) {
+        const key = issue.path[0] as string;
+        newErrors[key] = issue.message;
+      }
+      setErrors(newErrors);
+    }
   };
   return (
     <form
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit}
       className={cn('flex flex-col gap-6', className)}
       {...props}
     >
@@ -64,13 +82,15 @@ export function RegistrationFormFirst({
           <Input
             id="email"
             type="email"
+            name="email"
             placeholder="Email"
-            {...register('email')}
+            value={formData.email}
+            onChange={handleChange}
             required
           />
           {errors.email && (
             <p className="text-sm font-medium text-destructive">
-              {errors.email.message}
+              {errors.email}
             </p>
           )}
         </div>
@@ -81,13 +101,15 @@ export function RegistrationFormFirst({
           <Input
             id="password"
             type="password"
+            name="password"
             placeholder="Password"
             required
-            {...register('password')}
+            value={formData.password}
+            onChange={handleChange}
           />
           {errors.password && (
             <p className="text-sm font-medium text-destructive">
-              {errors.password.message}
+              {errors.password}
             </p>
           )}
         </div>
@@ -96,15 +118,17 @@ export function RegistrationFormFirst({
             <Label htmlFor="password">Repeat password</Label>
           </div>
           <Input
-            id="repeatPassword"
+            id="confirmPassword"
             type="password"
+            name="confirmPassword"
             placeholder="Repeat password"
             required
-            {...register('confirmPassword')}
+            value={formData.confirmPassword}
+            onChange={handleChange}
           />
           {errors.confirmPassword && (
             <p className="text-sm font-medium text-destructive">
-              {errors.confirmPassword.message}
+              {errors.confirmPassword}
             </p>
           )}
         </div>

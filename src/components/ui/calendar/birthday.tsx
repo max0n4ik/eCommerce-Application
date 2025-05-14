@@ -38,7 +38,7 @@ export function BirthdayCalendar({
           <Button
             variant={'outline'}
             className={cn(
-              'w-full pl-3 text-left font-medium-inter',
+              'w-full pl-3 text-left hover:bg-muted hover:text-muted-foreground placeholder:text-muted-foreground',
               !date && 'text-muted-foreground'
             )}
             disabled={pending}
