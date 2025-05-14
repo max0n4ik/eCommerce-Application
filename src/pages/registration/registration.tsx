@@ -7,17 +7,17 @@ import { RegistrationFormThird } from './registration-form-third';
 
 export default function Registration(): React.JSX.Element {
   const [step, setStep] = useState(1);
-  const handleText = (): void => setStep((prev) => prev + 1);
+  const handleNext = (): void => setStep((prev) => prev + 1);
   const renderStep = (): React.JSX.Element | null => {
     switch (step) {
       case 1: {
-        return <RegistrationFormFirst onNext={handleText} />;
+        return <RegistrationFormFirst onNext={handleNext} />;
       }
       case 2: {
-        return <RegistrationFormSecond onNext={handleText} />;
+        return <RegistrationFormSecond onNext={handleNext} />;
       }
       case 3: {
-        return <RegistrationFormThird onNext={handleText} />;
+        return <RegistrationFormThird onNext={handleNext} />;
       }
       case 4: {
         return <RegistrationFormFourth />;
