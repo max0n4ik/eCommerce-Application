@@ -8,6 +8,10 @@ export default {
       padding: '2rem',
     },
     extend: {
+      fontFamily: {
+        sans: ['Inter', 'sans-serif'],
+        serif: ['Noto Serif', 'serif'],
+      },
       colors: {
         background: 'var(--background)',
         foreground: 'var(--foreground)',
