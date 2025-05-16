@@ -43,6 +43,11 @@ export default function Registration(): React.JSX.Element {
         </div>
         <div className="flex flex-col flex-1 items-center justify-center">
           <div className="w-full max-w-xs">{renderStep()}</div>
+          <div className="flex items-center text-sm text-gray-500 mt-6">
+            <div className="h-px bg-gray-300 w-[140px]" />
+            <span className="px-3">or</span>
+            <div className="h-px bg-gray-300 w-[140px]" />
+          </div>
           <div className="text-center text-sm">
             Have an account?{' '}
             <Link to={ROUTES.LOGIN} className="text-primary hover:text-accent">
