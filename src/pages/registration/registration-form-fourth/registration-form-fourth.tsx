@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { Button } from '@/components/ui/button';
+import { Tooltip } from '@/components/ui/error-message/error-message';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
@@ -58,7 +59,7 @@ export default function RegistrationFormFourth({
         </p>
       </div>
       <div className="grid gap-6">
-        <div className="grid gap-2">
+        <div className="grid gap-2 relative">
           <Label htmlFor="country">Country</Label>
           <Input
             id="country"
@@ -69,12 +70,12 @@ export default function RegistrationFormFourth({
             onChange={handleChange}
           />
           {errors.country && (
-            <p className="text-sm font-medium text-destructive">
-              {errors.country}
-            </p>
+            <div className="absolute left-0 top-full mt-1">
+              <Tooltip message={errors.country} />
+            </div>
           )}
         </div>
-        <div className="grid gap-2">
+        <div className="grid gap-2 relative">
           <div className="flex items-center">
             <Label htmlFor="city">City</Label>
           </div>
@@ -87,12 +88,12 @@ export default function RegistrationFormFourth({
             onChange={handleChange}
           />
           {errors.city && (
-            <p className="text-sm font-medium text-destructive">
-              {errors.city}
-            </p>
+            <div className="absolute left-0 top-full mt-1">
+              <Tooltip message={errors.city} />
+            </div>
           )}
         </div>
-        <div className="grid gap-2">
+        <div className="grid gap-2 relative">
           <div className="flex items-center">
             <Label htmlFor="street">Street</Label>
           </div>
@@ -105,13 +106,13 @@ export default function RegistrationFormFourth({
             onChange={handleChange}
           />
           {errors.street && (
-            <p className="text-sm font-medium text-destructive">
-              {errors.street}
-            </p>
+            <div className="absolute left-0 top-full mt-1">
+              <Tooltip message={errors.street} />
+            </div>
           )}
         </div>
         <div className="flex gap-5">
-          <div className="grid gap-2">
+          <div className="grid gap-2 relative">
             <div className="flex items-center">
               <Label htmlFor="house">House</Label>
             </div>
@@ -124,12 +125,12 @@ export default function RegistrationFormFourth({
               onChange={handleChange}
             />
             {errors.house && (
-              <p className="text-sm font-medium text-destructive">
-                {errors.house}
-              </p>
+              <div className="absolute left-0 top-full mt-1">
+                <Tooltip message={errors.house} />
+              </div>
             )}
           </div>
-          <div className="grid gap-2">
+          <div className="grid gap-2 relative">
             <div className="flex items-center">
               <Label htmlFor="postalCode">Post code</Label>
             </div>
@@ -142,9 +143,9 @@ export default function RegistrationFormFourth({
               onChange={handleChange}
             />
             {errors.postalCode && (
-              <p className="text-sm font-medium text-destructive">
-                {errors.postalCode}
-              </p>
+              <div className="absolute left-0 top-full mt-1">
+                <Tooltip message={errors.postalCode} />
+              </div>
             )}
           </div>
         </div>
@@ -163,10 +164,7 @@ export default function RegistrationFormFourth({
       </div>
       <div className="text-center text-sm">
         Have an account?{' '}
-        <Link
-          to={ROUTES.LOGIN}
-          className="text-accent hover:text-accent-foreground"
-        >
+        <Link to={ROUTES.LOGIN} className="text-primary hover:text-accent">
           {' '}
           Sign in
         </Link>

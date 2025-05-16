@@ -15,7 +15,7 @@ export const registrationAddressSchema = z
       .min(1, 'City must contain at least one character ')
       .regex(/^[A-Za-z\s-]+$/, 'City must contain only letters'),
     street: z.string().min(1, 'Street must contain at least one character'),
-    house: z.string().min(1, 'House is required'),
+    house: z.string().min(1, 'House № is required'),
     postalCode: z.string().min(1, 'Postal code is required'),
   })
   .superRefine((data, ctx) => {

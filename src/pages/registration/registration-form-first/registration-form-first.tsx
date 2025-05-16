@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { Button } from '@/components/ui/button';
+import { Tooltip } from '@/components/ui/error-message/error-message';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
@@ -56,7 +57,7 @@ export default function RegistrationFormFirst({
         </p>
       </div>
       <div className="grid gap-6">
-        <div className="grid gap-2">
+        <div className="grid gap-2 relative">
           <Label htmlFor="email">Email</Label>
           <Input
             id="email"
@@ -67,12 +68,12 @@ export default function RegistrationFormFirst({
             onChange={handleChange}
           />
           {errors.email && (
-            <p className="text-sm font-medium text-destructive">
-              {errors.email}
-            </p>
+            <div className="absolute left-0 top-full mt-1">
+              <Tooltip message={errors.email} />
+            </div>
           )}
         </div>
-        <div className="grid gap-2">
+        <div className="grid gap-2 relative">
           <Label htmlFor="password">Password</Label>
           <Input
             id="password"
@@ -83,12 +84,12 @@ export default function RegistrationFormFirst({
             onChange={handleChange}
           />
           {errors.password && (
-            <p className="text-sm font-medium text-destructive">
-              {errors.password}
-            </p>
+            <div className="absolute left-0 top-full mt-1">
+              <Tooltip message={errors.password} />
+            </div>
           )}
         </div>
-        <div className="grid gap-2">
+        <div className="grid gap-2 relative">
           <Label htmlFor="confirmPassword">Repeat password</Label>
           <Input
             id="confirmPassword"
@@ -99,9 +100,9 @@ export default function RegistrationFormFirst({
             onChange={handleChange}
           />
           {errors.confirmPassword && (
-            <p className="text-sm font-medium text-destructive">
-              {errors.confirmPassword}
-            </p>
+            <div className="absolute left-0 top-full mt-1">
+              <Tooltip message={errors.confirmPassword} />
+            </div>
           )}
         </div>
         <Button type="submit" className="w-full">

@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 
 import { Button } from '@/components/ui/button';
 import { BirthdayCalendar } from '@/components/ui/calendar/birthday';
+import { Tooltip } from '@/components/ui/error-message/error-message';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
@@ -56,7 +57,7 @@ export default function RegistrationFormSecond({
         </p>
       </div>
       <div className="grid gap-6">
-        <div className="grid gap-2">
+        <div className="grid gap-2 relative">
           <Label htmlFor="name">Name</Label>
           <Input
             id="name"
@@ -67,12 +68,12 @@ export default function RegistrationFormSecond({
             onChange={handleChange}
           />
           {errors.name && (
-            <p className="text-sm font-medium text-destructive">
-              {errors.name}
-            </p>
+            <div className="absolute left-0 top-full mt-1">
+              <Tooltip message={errors.name} />
+            </div>
           )}
         </div>
-        <div className="grid gap-2">
+        <div className="grid gap-2 relative">
           <Label htmlFor="lastName">Last name</Label>
           <Input
             id="lastName"
@@ -83,12 +84,12 @@ export default function RegistrationFormSecond({
             onChange={handleChange}
           />
           {errors.lastName && (
-            <p className="text-sm font-medium text-destructive">
-              {errors.lastName}
-            </p>
+            <div className="absolute left-0 top-full mt-1">
+              <Tooltip message={errors.lastName} />
+            </div>
           )}
         </div>
-        <div className="grid gap-2">
+        <div className="grid gap-2 relative">
           <Label htmlFor="dob">Birthday</Label>
           <BirthdayCalendar
             name="dob"
@@ -98,7 +99,9 @@ export default function RegistrationFormSecond({
             }
           />
           {errors.dob && (
-            <p className="text-sm font-medium text-destructive">{errors.dob}</p>
+            <div className="absolute left-0 top-full mt-1">
+              <Tooltip message={errors.dob} />
+            </div>
           )}
         </div>
         <Button type="submit" className="w-full">
