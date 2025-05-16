@@ -1,4 +1,4 @@
-import type { RegistrationAddress } from './types';
+import type { RegistrationAddress } from './interfaces';
 
 export const ROUTES = {
   HOME: '/',
