@@ -1,13 +1,11 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 
 import { Button } from '@/components/ui/button';
 import { BirthdayCalendar } from '@/components/ui/calendar/birthday';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
-import { ROUTES } from '@/utils/constantes';
 import type { Props } from '@/utils/types';
 import {
   validateUserFormData,
@@ -109,12 +107,6 @@ export default function RegistrationFormSecond({
             or
           </span>
         </div>
-      </div>
-      <div className="text-center text-sm">
-        Have an account?{' '}
-        <Link to={ROUTES.LOGIN} className="text-primary hover:text-accent">
-          Sign in
-        </Link>
       </div>
     </form>
   );

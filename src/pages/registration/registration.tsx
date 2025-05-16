@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 import { RegistrationFormFirst } from './registration-form-first';
 import { RegistrationFormFourth } from './registration-form-fourth';
@@ -7,6 +8,7 @@ import { RegistrationFormThird } from './registration-form-third';
 
 import gardenImage from '@/assets/images/garden.png';
 import logo from '@/assets/images/logo.png';
+import { ROUTES } from '@/utils/constantes';
 
 export default function Registration(): React.JSX.Element {
   const [step, setStep] = useState(1);
@@ -39,8 +41,14 @@ export default function Registration(): React.JSX.Element {
           </div>
           Petal & Pot.
         </div>
-        <div className="flex flex-1 items-center justify-center">
+        <div className="flex flex-col flex-1 items-center justify-center">
           <div className="w-full max-w-xs">{renderStep()}</div>
+          <div className="text-center text-sm">
+            Have an account?{' '}
+            <Link to={ROUTES.LOGIN} className="text-primary hover:text-accent">
+              Sign in
+            </Link>
+          </div>
         </div>
       </div>
       <div className="relative hidden bg-muted lg:block">

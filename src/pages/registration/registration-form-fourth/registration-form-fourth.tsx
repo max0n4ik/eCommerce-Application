@@ -1,11 +1,10 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
-import { defaultAddressForm, ROUTES } from '@/utils/constantes';
+import { defaultAddressForm } from '@/utils/constantes';
 import type {
   RegistrationAddress,
   RegistrationFormFourthProps,
@@ -160,13 +159,6 @@ export default function RegistrationFormFourth({
             or
           </span>
         </div>
-      </div>
-      <div className="text-center text-sm">
-        Have an account?{' '}
-        <Link to={ROUTES.LOGIN} className="text-primary hover:text-accent">
-          {' '}
-          Sign in
-        </Link>
       </div>
     </form>
   );
