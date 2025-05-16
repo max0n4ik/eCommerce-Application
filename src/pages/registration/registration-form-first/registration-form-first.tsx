@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
-import type { Props } from '@/utils/types';
+import type { RegistrationStepProps } from '@/utils/interfaces';
 import {
   validateRegistrationCredentials,
   type RegistrationCredentials,
@@ -14,7 +14,8 @@ export default function RegistrationFormFirst({
   onNext,
   className,
   ...props
-}: React.ComponentPropsWithoutRef<'form'> & Props): React.JSX.Element {
+}: React.ComponentPropsWithoutRef<'form'> &
+  RegistrationStepProps): React.JSX.Element {
   const [formData, setFormData] = useState<RegistrationCredentials>({
     email: '',
     password: '',

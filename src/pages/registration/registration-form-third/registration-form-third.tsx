@@ -5,7 +5,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { defaultAddressForm } from '@/utils/constantes';
-import type { Props, RegistrationAddress } from '@/utils/types';
+import type {
+  RegistrationAddress,
+  RegistrationStepProps,
+} from '@/utils/interfaces';
 import { registrationAddressSchema } from '@/utils/validations';
 
 const formSchema = registrationAddressSchema;
@@ -14,7 +17,8 @@ export default function RegistrationFormThird({
   onNext,
   className,
   ...props
-}: React.ComponentPropsWithoutRef<'form'> & Props): React.JSX.Element {
+}: React.ComponentPropsWithoutRef<'form'> &
+  RegistrationStepProps): React.JSX.Element {
   const [formData, setFormData] =
     React.useState<RegistrationAddress>(defaultAddressForm);
   const [errors, setErrors] = React.useState<{ [key: string]: string }>({});

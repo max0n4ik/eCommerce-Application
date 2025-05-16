@@ -8,7 +8,7 @@ import { defaultAddressForm } from '@/utils/constantes';
 import type {
   RegistrationAddress,
   RegistrationFormFourthProps,
-} from '@/utils/types';
+} from '@/utils/interfaces';
 import { registrationAddressSchema } from '@/utils/validations';
 
 export default function RegistrationFormFourth({
