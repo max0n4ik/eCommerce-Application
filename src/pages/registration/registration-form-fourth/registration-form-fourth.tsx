@@ -26,6 +26,11 @@ export default function RegistrationFormFourth({
       ...prevData,
       [name]: value,
     }));
+    setErrors((prevErrors) => {
+      return Object.fromEntries(
+        Object.entries(prevErrors).filter(([key]) => key !== name)
+      );
+    });
   };
   const validateForm = (): boolean => {
     const result = registrationAddressSchema.safeParse(formData);

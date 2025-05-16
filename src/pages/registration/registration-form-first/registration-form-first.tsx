@@ -32,6 +32,11 @@ export default function RegistrationFormFirst({
       ...prev,
       [name]: value,
     }));
+    setErrors((prevErrors) => {
+      return Object.fromEntries(
+        Object.entries(prevErrors).filter(([key]) => key !== name)
+      );
+    });
   };
 
   const handleSubmit = (e: React.FormEvent): void => {

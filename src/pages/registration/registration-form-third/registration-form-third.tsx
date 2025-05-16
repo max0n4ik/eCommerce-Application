@@ -30,6 +30,11 @@ export default function RegistrationFormThird({
       ...prev,
       [name]: value,
     }));
+    setErrors((prevErrors) => {
+      return Object.fromEntries(
+        Object.entries(prevErrors).filter(([key]) => key !== name)
+      );
+    });
   };
 
   const handleUseDefaultChange = (): void => {

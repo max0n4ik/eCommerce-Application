@@ -33,6 +33,11 @@ export default function RegistrationFormSecond({
       ...prevData,
       [name]: value,
     }));
+    setErrors((prevErrors) => {
+      return Object.fromEntries(
+        Object.entries(prevErrors).filter(([key]) => key !== name)
+      );
+    });
   };
 
   const handleSubmit = (e: React.FormEvent): void => {
@@ -94,9 +99,14 @@ export default function RegistrationFormSecond({
           <BirthdayCalendar
             name="dob"
             defaultValue={formData.dob}
-            onChange={(date: Date | null) =>
-              setFormData((prevData) => ({ ...prevData, dob: date }))
-            }
+            onChange={(date: Date | null) => {
+              setFormData((prevData) => ({ ...prevData, dob: date }));
+              setErrors((prevErrors) => {
+                return Object.fromEntries(
+                  Object.entries(prevErrors).filter(([key]) => key !== 'dob')
+                );
+              });
+            }}
           />
           {errors.dob && (
             <div className="absolute left-0 top-full mt-1">
