@@ -115,10 +115,7 @@ export default function RegistrationFormFirst({
       </div>
       <div className="text-center text-sm">
         Have an account?{' '}
-        <Link
-          to={ROUTES.LOGIN}
-          className="text-accent hover:text-accent-foreground"
-        >
+        <Link to={ROUTES.LOGIN} className="text-primary hover:text-accent">
           Sign in
         </Link>
       </div>
