@@ -22,3 +22,7 @@ export interface RegistrationFormFourthProps {
 export type Props = {
   onNext: () => void;
 };
+
+export interface LayoutProps {
+  children: React.ReactNode;
+}

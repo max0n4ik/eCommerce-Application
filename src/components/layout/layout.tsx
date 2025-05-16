@@ -1,10 +1,8 @@
-import Header from './header/header';
+import Header from '../header/header';
 
-interface Props {
-  children: React.ReactNode;
-}
+import type { LayoutProps } from '@/utils/types';
 
-export default function Layout({ children }: Props): React.JSX.Element {
+export default function Layout({ children }: LayoutProps): React.JSX.Element {
   return (
     <div className="p-4">
       <Header />
