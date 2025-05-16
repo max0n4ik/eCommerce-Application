@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 
 import { Button } from '@/components/ui/button';
 import { BirthdayCalendar } from '@/components/ui/calendar/birthday';
@@ -8,7 +7,6 @@ import { Tooltip } from '@/components/ui/error-message/error-message';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
-import { ROUTES } from '@/utils/constantes';
 import type { RegistrationStepProps } from '@/utils/interfaces';
 import {
   validateUserFormData,
@@ -118,20 +116,6 @@ export default function RegistrationFormSecond({
         <Button type="submit" className="w-full">
           Next
         </Button>
-        <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
-          <span className="relative z-10 bg-background px-2 text-muted-foreground">
-            or
-          </span>
-        </div>
-      </div>
-      <div className="text-center text-sm">
-        Have an account?{' '}
-        <Link
-          to={ROUTES.LOGIN}
-          className="text-accent hover:text-accent-foreground"
-        >
-          Sign in
-        </Link>
       </div>
     </form>
   );
