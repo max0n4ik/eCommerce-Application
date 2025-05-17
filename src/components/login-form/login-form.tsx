@@ -3,6 +3,8 @@ import { useActionState, useState } from 'react';
 import { useFormStatus } from 'react-dom';
 import { z } from 'zod';
 
+import { Tooltip } from '../ui/error-message/error-message';
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -58,7 +60,7 @@ export default function LoginForm({
       </div>
 
       <div className="grid gap-6">
-        <div className="grid gap-2">
+        <div className="grid gap-2 relative">
           <Label htmlFor="email">Email</Label>
           <Input
             id="email"
@@ -71,21 +73,21 @@ export default function LoginForm({
             onChange={handleInputChange}
           />
           {(validationErrors.email || state?.errors?.email) && (
-            <p
-              id="email-error"
-              className="text-sm font-medium text-destructive"
-            >
-              {validationErrors.email || state?.errors?.email}
-            </p>
+            <div className="absolute left-0 top-full mt-1">
+              <Tooltip
+                message={validationErrors.email || state?.errors?.email}
+              />
+            </div>
           )}
         </div>
-        <div className="grid gap-2">
+        <div className="grid gap-2 relative">
           <div className="relative">
             <Label htmlFor="email">Password</Label>
             <div className="relative">
               <Input
                 id="password"
                 name="password"
+                autoComplete="off"
                 type={showPassword ? 'text' : 'password'}
                 required
                 aria-describedby="password-error"
@@ -105,12 +107,11 @@ export default function LoginForm({
             </div>
           </div>
           {(validationErrors.password || state?.errors?.password) && (
-            <p
-              id="password-error"
-              className="text-sm font-medium text-destructive"
-            >
-              {validationErrors.password || state?.errors?.password}
-            </p>
+            <div className="absolute left-0 top-full mt-1">
+              <Tooltip
+                message={validationErrors.password || state?.errors?.password}
+              />
+            </div>
           )}
         </div>
         {state?.message && !state?.errors && (
