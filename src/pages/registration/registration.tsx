@@ -7,7 +7,6 @@ import { RegistrationFormSecond } from './registration-form-second';
 import { RegistrationFormThird } from './registration-form-third';
 
 import gardenImage from '@/assets/images/garden.png';
-import logo from '@/assets/images/logo.png';
 import { ROUTES } from '@/utils/constantes';
 
 export default function Registration(): React.JSX.Element {
@@ -35,12 +34,6 @@ export default function Registration(): React.JSX.Element {
   return (
     <div className="grid min-h-svh lg:grid-cols-2">
       <div className="flex flex-col gap-4 p-6 md:p-10">
-        <div className="flex justify-center gap-2 md:justify-start">
-          <div className="flex h-6 w-6 items-center justify-center rounded-md text-primary-foreground">
-            <img src={logo} alt="logo" />
-          </div>
-          Petal & Pot.
-        </div>
         <div className="flex flex-col flex-1 items-center justify-center">
           <div className="w-full max-w-xs">{renderStep()}</div>
           <div className="flex items-center text-sm text-gray-500 mt-6">
