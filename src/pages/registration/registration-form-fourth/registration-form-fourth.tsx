@@ -5,6 +5,7 @@ import { Tooltip } from '@/components/ui/error-message/error-message';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
+import useRegistrationStore from '@/store/registration';
 import { defaultAddressForm } from '@/utils/constantes';
 import type {
   RegistrationAddress,
@@ -49,6 +50,12 @@ export default function RegistrationFormFourth({
     if (validateForm()) {
       console.log('Submitted billing address:', formData);
     }
+  };
+  const storeData = useRegistrationStore();
+
+  const logStoreData = (): void => {
+    console.log('Current store data:', storeData);
+    alert(JSON.stringify(storeData, null, 2));
   };
   return (
     <form
@@ -157,7 +164,11 @@ export default function RegistrationFormFourth({
           <Input id="useDefault" type="checkbox" className="w-3 h-3" />
           <Label htmlFor="useDefault">Use as default</Label>
         </div>
-        <Button type="submit" className="w-full">
+        <Button
+          onClick={logStoreData}
+          // type="submit"
+          className="w-full"
+        >
           Sign up
         </Button>
       </div>

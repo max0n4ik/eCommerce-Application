@@ -5,6 +5,7 @@ import { Tooltip } from '@/components/ui/error-message/error-message';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
+import useRegistrationStore from '@/store/registration';
 import { defaultAddressForm } from '@/utils/constantes';
 import type {
   RegistrationAddress,
@@ -65,10 +66,20 @@ export default function RegistrationFormThird({
     setErrors({});
     return true;
   };
+  const { addAddress } = useRegistrationStore();
 
   const onSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
     if (validateForm()) {
+      const addressToSave = {
+        street: formData.street,
+        postalCode: formData.postalCode,
+        city: formData.city,
+        country: formData.country,
+        isDefault: useDefault,
+        house: formData.house,
+      };
+      addAddress(addressToSave);
       console.log('Submitted billing address:', formData);
       onNext();
     }

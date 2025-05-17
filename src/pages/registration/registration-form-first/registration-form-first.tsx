@@ -5,6 +5,7 @@ import { Tooltip } from '@/components/ui/error-message/error-message';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
+import useRegistrationStore from '@/store/registration';
 import type { RegistrationStepProps } from '@/utils/interfaces';
 import {
   validateRegistrationCredentials,
@@ -22,6 +23,8 @@ export default function RegistrationFormFirst({
     password: '',
     confirmPassword: '',
   });
+
+  const { setAccountInfo } = useRegistrationStore();
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -41,10 +44,10 @@ export default function RegistrationFormFirst({
   const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
     const { isValid, errors } = validateRegistrationCredentials(formData);
+    setAccountInfo(formData.email, formData.password);
     setErrors(errors);
     if (!isValid) return;
 
-    console.log('form data submitted', formData);
     onNext();
   };
 

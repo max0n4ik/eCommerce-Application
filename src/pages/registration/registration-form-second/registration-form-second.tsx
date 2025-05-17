@@ -7,6 +7,7 @@ import { Tooltip } from '@/components/ui/error-message/error-message';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
+import useRegistrationStore from '@/store/registration';
 import type { RegistrationStepProps } from '@/utils/interfaces';
 import {
   validateUserFormData,
@@ -25,9 +26,10 @@ export default function RegistrationFormSecond({
     dob: null,
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
-
+  const { setPersonalInfo } = useRegistrationStore();
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.target;
+
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
@@ -41,11 +43,13 @@ export default function RegistrationFormSecond({
 
   const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
-
     const { isValid, errors } = validateUserFormData(formData);
     setErrors(errors);
     if (!isValid) return;
-    onNext();
+    if (formData.dob) {
+      setPersonalInfo(formData.name, formData.lastName, formData.dob);
+      onNext();
+    }
   };
 
   return (

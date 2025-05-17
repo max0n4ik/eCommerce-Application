@@ -43,6 +43,8 @@
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.27.1",
+    "@commercetools/platform-sdk": "^8.9.0",
+    "@commercetools/sdk-client-v2": "^3.0.0",
     "@commitlint/cli": "^19.8.0",
     "@commitlint/config-conventional": "^19.8.0",
     "@eslint/js": "^9.22.0",
@@ -80,6 +82,7 @@
     "typescript-eslint": "^8.26.1",
     "vite": "^6.3.1",
     "vite-tsconfig-paths": "^5.1.4",
-    "vitest": "^3.1.2"
+    "vitest": "^3.1.2",
+    "zustand": "^5.0.4"
   }
 }
