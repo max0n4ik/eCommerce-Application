@@ -1,3 +1,4 @@
+import { Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -22,7 +23,8 @@ export default function RegistrationFormFirst({
     password: '',
     confirmPassword: '',
   });
-
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -79,35 +81,57 @@ export default function RegistrationFormFirst({
         </div>
         <div className="grid gap-2 relative">
           <Label htmlFor="password">Password</Label>
-          <Input
-            id="password"
-            type="password"
-            name="password"
-            placeholder="Password"
-            value={formData.password}
-            onChange={handleChange}
-          />
-          {errors.password && (
-            <div className="absolute left-0 top-full mt-1">
-              <Tooltip message={errors.password} />
-            </div>
-          )}
+          <div className="relative">
+            <Input
+              id="password"
+              type={showPassword ? 'text' : 'password'}
+              name="password"
+              placeholder="Password"
+              value={formData.password}
+              onChange={handleChange}
+            />
+            <button
+              type="button"
+              className="absolute inset-y-0 right-2 my-auto flex items-center text-muted-foreground hover:text-foreground"
+              onClick={() => setShowPassword(!showPassword)}
+              aria-label={showPassword ? 'Hide password' : 'Show password'}
+            >
+              {showPassword ? <EyeOff size={21} /> : <Eye size={21} />}
+            </button>
+            {errors.password && (
+              <div className="absolute left-0 top-full mt-1">
+                <Tooltip message={errors.password} />
+              </div>
+            )}
+          </div>
         </div>
         <div className="grid gap-2 relative">
           <Label htmlFor="confirmPassword">Repeat password</Label>
-          <Input
-            id="confirmPassword"
-            type="password"
-            name="confirmPassword"
-            placeholder="Repeat password"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-          />
-          {errors.confirmPassword && (
-            <div className="absolute left-0 top-full mt-1">
-              <Tooltip message={errors.confirmPassword} />
-            </div>
-          )}
+          <div className="relative">
+            <Input
+              id="confirmPassword"
+              type={showConfirmPassword ? 'text' : 'password'}
+              name="confirmPassword"
+              placeholder="Repeat password"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+            />
+            <button
+              type="button"
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              aria-label={
+                showConfirmPassword ? 'Hide password' : 'Show password'
+              }
+            >
+              {showConfirmPassword ? <EyeOff size={21} /> : <Eye size={21} />}
+            </button>
+            {errors.confirmPassword && (
+              <div className="absolute left-0 top-full mt-1">
+                <Tooltip message={errors.confirmPassword} />
+              </div>
+            )}
+          </div>
         </div>
         <Button type="submit" className="w-full">
           Next
