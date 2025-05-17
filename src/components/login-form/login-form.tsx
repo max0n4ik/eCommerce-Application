@@ -81,25 +81,28 @@ export default function LoginForm({
         </div>
         <div className="grid gap-2">
           <div className="relative">
-            <Input
-              id="password"
-              name="password"
-              type={showPassword ? 'text' : 'password'}
-              required
-              aria-describedby="password-error"
-              className="pr-10"
-              placeholder="Password"
-              value={formData.password}
-              onChange={handleInputChange}
-            />
-            <button
-              type="button"
-              className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-              onClick={() => setShowPassword(!showPassword)}
-              aria-label={showPassword ? 'Hide password' : 'Show password'}
-            >
-              {showPassword ? <EyeOff size={21} /> : <Eye size={21} />}
-            </button>
+            <Label htmlFor="email">Password</Label>
+            <div className="relative">
+              <Input
+                id="password"
+                name="password"
+                type={showPassword ? 'text' : 'password'}
+                required
+                aria-describedby="password-error"
+                className="pr-10"
+                placeholder="Password"
+                value={formData.password}
+                onChange={handleInputChange}
+              />
+              <button
+                type="button"
+                className="absolute inset-y-0 right-2 my-auto flex items-center text-muted-foreground hover:text-foreground"
+                onClick={() => setShowPassword(!showPassword)}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+              >
+                {showPassword ? <EyeOff size={21} /> : <Eye size={21} />}
+              </button>
+            </div>
           </div>
           {(validationErrors.password || state?.errors?.password) && (
             <p
