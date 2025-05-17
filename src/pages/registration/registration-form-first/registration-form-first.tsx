@@ -86,6 +86,7 @@ export default function RegistrationFormFirst({
               id="password"
               type={showPassword ? 'text' : 'password'}
               name="password"
+              autoComplete="off"
               placeholder="Password"
               value={formData.password}
               onChange={handleChange}
@@ -112,6 +113,7 @@ export default function RegistrationFormFirst({
               id="confirmPassword"
               type={showConfirmPassword ? 'text' : 'password'}
               name="confirmPassword"
+              autoComplete="off"
               placeholder="Repeat password"
               value={formData.confirmPassword}
               onChange={handleChange}

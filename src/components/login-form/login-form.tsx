@@ -87,6 +87,7 @@ export default function LoginForm({
               <Input
                 id="password"
                 name="password"
+                autoComplete="off"
                 type={showPassword ? 'text' : 'password'}
                 required
                 aria-describedby="password-error"
