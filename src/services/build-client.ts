@@ -6,13 +6,16 @@ import {
 
 const projectKey = `${import.meta.env.VITE_PROJECT_KEY}`;
 const scopes = [`${import.meta.env.VITE_SCOPES}`];
+const host = `${import.meta.env.VITE_AUTH_URL}`;
+const clientId = `${import.meta.env.VITE_CLIENT_ID}`;
+const clientSecret = `${import.meta.env.VITE_CLIENT_SECRET}`;
 
 const authMiddlewareOptions: AuthMiddlewareOptions = {
-  host: `${import.meta.env.VITE_AUTH_URL}`,
-  projectKey: projectKey,
+  host,
+  projectKey,
   credentials: {
-    clientId: `${import.meta.env.VITE_CLIENT_ID}`,
-    clientSecret: `${import.meta.env.VITE_CLIENT_SECRET}`,
+    clientId,
+    clientSecret,
   },
   scopes: scopes,
   fetch,

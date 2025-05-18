@@ -58,11 +58,12 @@ export default function RegistrationFormFourth({
     setErrors({});
     return true;
   };
-  const onSubmit = (e: React.FormEvent): void => {
+  const onSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
-    if (validateForm()) {
-      registration(userData);
+    if (!validateForm()) {
+      return;
     }
+    await registration(userData);
   };
 
   return (

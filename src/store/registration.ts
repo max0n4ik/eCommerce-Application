@@ -41,7 +41,7 @@ const useRegistrationStore = create<RegistrationState>((set) => ({
       password: '',
       firstName: '',
       lastName: '',
-      dateOfBirth: new Date(),
+      dateOfBirth: undefined,
       addresses: [],
     }),
 }));
