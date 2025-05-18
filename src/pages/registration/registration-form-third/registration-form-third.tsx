@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import useRegistrationStore from '@/store/registration';
-import { defaultAddressForm } from '@/utils/constantes';
+import { countryToAlpha2, defaultAddressForm } from '@/utils/constantes';
 import type {
   RegistrationAddress,
   RegistrationStepProps,
@@ -75,12 +75,13 @@ export default function RegistrationFormThird({
         street: formData.street,
         postalCode: formData.postalCode,
         city: formData.city,
-        country: formData.country,
+        country:
+          countryToAlpha2[formData.country as keyof typeof countryToAlpha2],
         isDefault: useDefault,
         house: formData.house,
       };
-      addAddress(addressToSave);
-      console.log('Submitted billing address:', formData);
+      addAddress([addressToSave]);
+
       onNext();
     }
   };

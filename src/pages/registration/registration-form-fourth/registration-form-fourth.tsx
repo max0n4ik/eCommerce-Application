@@ -1,3 +1,4 @@
+import type { CustomerDraft } from '@commercetools/platform-sdk';
 import React from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -5,6 +6,7 @@ import { Tooltip } from '@/components/ui/error-message/error-message';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
+import { registration } from '@/services/create-client';
 import useRegistrationStore from '@/store/registration';
 import { defaultAddressForm } from '@/utils/constantes';
 import type {
@@ -20,6 +22,17 @@ export default function RegistrationFormFourth({
   const [formData, setFormData] =
     React.useState<RegistrationAddress>(defaultAddressForm);
   const [errors, setErrors] = React.useState<{ [key: string]: string }>({});
+  const { email, password, firstName, lastName, dateOfBirth, addresses } =
+    useRegistrationStore();
+  const formattedDateOfBirth = dateOfBirth.toISOString().split('T')[0];
+  const userData: CustomerDraft = {
+    email,
+    password,
+    firstName,
+    lastName,
+    dateOfBirth: formattedDateOfBirth,
+    addresses,
+  };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -48,15 +61,10 @@ export default function RegistrationFormFourth({
   const onSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
     if (validateForm()) {
-      console.log('Submitted billing address:', formData);
+      registration(userData);
     }
   };
-  const storeData = useRegistrationStore();
 
-  const logStoreData = (): void => {
-    console.log('Current store data:', storeData);
-    alert(JSON.stringify(storeData, null, 2));
-  };
   return (
     <form
       onSubmit={onSubmit}
@@ -164,11 +172,7 @@ export default function RegistrationFormFourth({
           <Input id="useDefault" type="checkbox" className="w-3 h-3" />
           <Label htmlFor="useDefault">Use as default</Label>
         </div>
-        <Button
-          onClick={logStoreData}
-          // type="submit"
-          className="w-full"
-        >
+        <Button type="submit" className="w-full">
           Sign up
         </Button>
       </div>

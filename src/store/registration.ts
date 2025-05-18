@@ -1,6 +1,5 @@
+import type { BaseAddress } from '@commercetools/platform-sdk';
 import { create } from 'zustand';
-
-import type { RegistrationAddress } from '@/utils/interfaces';
 
 type RegistrationState = {
   email: string;
@@ -8,14 +7,14 @@ type RegistrationState = {
   firstName: string;
   lastName: string;
   dateOfBirth: Date;
-  addresses: RegistrationAddress[];
+  addresses: BaseAddress[];
   setAccountInfo: (email: string, password: string) => void;
   setPersonalInfo: (
     firstName: string,
     lastName: string,
     dateOfBirth: Date
   ) => void;
-  addAddress: (address: RegistrationAddress) => void;
+  addAddress: (address: BaseAddress[]) => void;
   reset: () => void;
 };
 
@@ -34,8 +33,8 @@ const useRegistrationStore = create<RegistrationState>((set) => ({
     lastName: string,
     dateOfBirth: Date
   ): void => set({ firstName, lastName, dateOfBirth }),
-  addAddress: (address: RegistrationAddress): void =>
-    set((state) => ({ addresses: [...state.addresses, address] })),
+  addAddress: (address: BaseAddress[]): void =>
+    set((state) => ({ addresses: [...state.addresses, ...address] })),
   reset: (): void =>
     set({
       email: '',
