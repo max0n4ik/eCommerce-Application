@@ -15,7 +15,10 @@ export default function LoginForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<'form'>): React.JSX.Element {
-  const [state, formAction] = useActionState(authenticate, null);
+  const [state, formAction] = useActionState(authenticate, {
+    message: '',
+    errors: undefined,
+  });
   const { pending } = useFormStatus();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
