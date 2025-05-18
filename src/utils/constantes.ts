@@ -2,9 +2,13 @@ import type { RegistrationAddress } from './interfaces';
 
 export const ROUTES = {
   HOME: '/',
+  ABOUT: '/about',
   CART: '/cart',
   LOGIN: '/login',
   REGISTRATION: '/registration',
+  PROFILE: '/profile',
+  CATALOG: '/catalog',
+  PRODUCT: '/product',
   LOGOUT: '/logout',
   NOTFOUND: '*',
 } as const;
