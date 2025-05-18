@@ -15,6 +15,7 @@ export async function registration(data: CustomerDraft): Promise<Customer> {
         body: data,
       })
       .execute();
+    console.log(response.body.customer);
     return response.body.customer;
   } catch (error) {
     console.error('Ошибка подключения:', error);

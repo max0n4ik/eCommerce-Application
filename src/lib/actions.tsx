@@ -12,7 +12,10 @@ export const schema = z.object({
 });
 
 export function authenticate(
-  prevState: unknown,
+  _state: {
+    message: string;
+    errors?: { email?: string[]; password?: string[] };
+  },
   formData: FormData
 ): {
   message: string;
