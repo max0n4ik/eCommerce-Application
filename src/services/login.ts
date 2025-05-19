@@ -13,15 +13,10 @@ export async function login(
 ): Promise<Customer> {
   try {
     const response = await apiRoot
+      .me()
       .login()
-      .post({
-        body: {
-          email,
-          password,
-        },
-      })
+      .post({ body: { password, email } })
       .execute();
-    console.log(response.body.customer.firstName);
     return response.body.customer;
   } catch (error) {
     console.error('Ошибка подключения:', error);
