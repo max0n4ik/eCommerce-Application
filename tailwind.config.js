@@ -5,7 +5,9 @@ export default {
   theme: {
     container: {
       center: true,
-      padding: '2rem',
+      screens: {
+        '4xl': '1800px',
+      },
     },
     extend: {
       fontFamily: {
