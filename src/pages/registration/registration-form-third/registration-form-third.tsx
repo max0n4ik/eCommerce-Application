@@ -1,4 +1,3 @@
-import type { CustomerDraft } from '@commercetools/platform-sdk';
 import React from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -6,12 +5,11 @@ import { Tooltip } from '@/components/ui/error-message/error-message';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
-import { registration } from '@/services/create-client';
 import useRegistrationStore from '@/store/registration';
 import { countryToAlpha2, defaultAddressForm } from '@/utils/constantes';
 import type {
   RegistrationAddress,
-  RegistrationFormProps,
+  RegistrationStepProps,
 } from '@/utils/interfaces';
 import { registrationAddressSchema } from '@/utils/validations';
 
@@ -19,30 +17,16 @@ const formSchema = registrationAddressSchema;
 
 export default function RegistrationFormThird({
   onNext,
-  isDefaultBilling,
-  onSignUp,
   className,
   ...props
 }: React.ComponentPropsWithoutRef<'form'> &
-  RegistrationFormProps): React.JSX.Element {
+  RegistrationStepProps): React.JSX.Element {
   const [formData, setFormData] =
     React.useState<RegistrationAddress>(defaultAddressForm);
   const [errors, setErrors] = React.useState<{ [key: string]: string }>({});
 
   const [useDefault, setUseDefault] = React.useState(false);
   const [useAsBilling, setUseAsBilling] = React.useState(false);
-
-  const {
-    email,
-    password,
-    firstName,
-    lastName,
-    dateOfBirth,
-    addresses,
-    addAddress,
-  } = useRegistrationStore();
-
-  const formattedDateOfBirth = dateOfBirth.toISOString().split('T')[0];
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.target;
@@ -63,13 +47,11 @@ export default function RegistrationFormThird({
       return !prev;
     });
   };
-
   const handleUseAsBillingChange = (): void => {
     const newValue = !useAsBilling;
     setUseAsBilling(newValue);
     if (newValue) setUseDefault(false);
   };
-
   const validateForm = (): boolean => {
     const result = formSchema.safeParse(formData);
     if (!result.success) {
@@ -84,46 +66,27 @@ export default function RegistrationFormThird({
     setErrors({});
     return true;
   };
+  const { addAddress } = useRegistrationStore();
 
-  const onSubmit = async (e: React.FormEvent): Promise<void> => {
+  const onSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
-    if (!validateForm()) return;
-
-    const addressToSave = {
-      street: formData.street,
-      postalCode: formData.postalCode,
-      city: formData.city,
-      country:
-        countryToAlpha2[formData.country as keyof typeof countryToAlpha2],
-      house: formData.house,
-    };
-
-    addAddress([addressToSave], {
-      asShipping: useDefault,
-      asBilling: useAsBilling,
-    });
-
-    const updatedAddresses = [...addresses, addressToSave];
-
-    if (useAsBilling) {
-      const userData: CustomerDraft = {
-        email,
-        password,
-        firstName,
-        lastName,
-        dateOfBirth: formattedDateOfBirth,
-        addresses: updatedAddresses,
-        defaultShippingAddress: useDefault
-          ? updatedAddresses.length - 1
-          : undefined,
-        defaultBillingAddress: updatedAddresses.length - 1,
+    if (validateForm()) {
+      const addressToSave = {
+        street: formData.street,
+        postalCode: formData.postalCode,
+        city: formData.city,
+        country:
+          countryToAlpha2[formData.country as keyof typeof countryToAlpha2],
+        house: formData.house,
+        isDefaultShipping: useDefault,
+        isDefaultBilling: useAsBilling,
       };
+      addAddress([addressToSave], {
+        asShipping: useDefault,
+        asBilling: useAsBilling,
+      });
 
-      await registration(userData);
-    } else {
-      if (onNext) {
-        onNext();
-      }
+      onNext();
     }
   };
 
@@ -157,7 +120,9 @@ export default function RegistrationFormThird({
           )}
         </div>
         <div className="grid gap-2 relative">
-          <Label htmlFor="city">City</Label>
+          <div className="flex items-center">
+            <Label htmlFor="city">City</Label>
+          </div>
           <Input
             id="city"
             type="text"
@@ -173,7 +138,9 @@ export default function RegistrationFormThird({
           )}
         </div>
         <div className="grid gap-2 relative">
-          <Label htmlFor="street">Street</Label>
+          <div className="flex items-center">
+            <Label htmlFor="street">Street</Label>
+          </div>
           <Input
             id="street"
             type="text"
@@ -190,7 +157,9 @@ export default function RegistrationFormThird({
         </div>
         <div className="flex gap-5">
           <div className="grid gap-2 relative">
-            <Label htmlFor="house">House</Label>
+            <div className="flex items-center">
+              <Label htmlFor="house">House</Label>
+            </div>
             <Input
               id="house"
               type="text"
@@ -206,7 +175,9 @@ export default function RegistrationFormThird({
             )}
           </div>
           <div className="grid gap-2 relative">
-            <Label htmlFor="postalCode">Post code</Label>
+            <div className="flex items-center">
+              <Label htmlFor="postalCode">Post code</Label>
+            </div>
             <Input
               id="postalCode"
               type="text"
@@ -222,8 +193,8 @@ export default function RegistrationFormThird({
             )}
           </div>
         </div>
-        <div className="flex flex-col gap-3">
-          <div className="flex gap-2 items-center">
+        <div>
+          <div className="flex gap-5">
             <Input
               id="useDefault"
               type="checkbox"
@@ -231,9 +202,9 @@ export default function RegistrationFormThird({
               checked={useDefault}
               onChange={handleUseDefaultChange}
             />
-            <Label htmlFor="useDefault">Use as default shipping</Label>
+            <Label htmlFor="useDefault">Use as default</Label>
           </div>
-          <div className="flex gap-2 items-center">
+          <div className="flex gap-5">
             <Input
               id="useAsBilling"
               type="checkbox"
@@ -244,12 +215,8 @@ export default function RegistrationFormThird({
             <Label htmlFor="useAsBilling">Use this address as billing</Label>
           </div>
         </div>
-        <Button
-          type="submit"
-          className="w-full"
-          onClick={isDefaultBilling ? onSignUp : onNext}
-        >
-          {useAsBilling ? 'Sign Up' : 'Next'}
+        <Button type="submit" className="w-full">
+          Next
         </Button>
       </div>
     </form>
