@@ -18,7 +18,7 @@ export default function Home(): JSX.Element {
             alt="Cactus"
             className="size-[200px] lg:size-[300px] mb-5"
           />
-          <Link to={ROUTES.PRODUCT}>Cactus →</Link>
+          <p>Cactus →</p>
         </div>
         <div className="text-center w-fit">
           <img
@@ -26,7 +26,7 @@ export default function Home(): JSX.Element {
             alt="Bonsai"
             className="size-[200px] lg:size-[300px] mb-5"
           />
-          <Link to={ROUTES.PRODUCT}>Bonsai →</Link>
+          <p>Bonsai →</p>
         </div>
         <div className="text-center w-fit">
           <img
@@ -34,7 +34,7 @@ export default function Home(): JSX.Element {
             alt="Succulent"
             className="size-[200px] lg:size-[300px] mb-5"
           />
-          <Link to={ROUTES.PRODUCT}>Succulent →</Link>
+          <p>Succulent →</p>
         </div>
         <div className="text-center w-fit">
           <img
@@ -42,7 +42,7 @@ export default function Home(): JSX.Element {
             alt="Indoor Plants"
             className="size-[200px] lg:size-[300px] mb-5"
           />
-          <Link to={ROUTES.PRODUCT}>Indoor Plants →</Link>
+          <p>Indoor Plants →</p>
         </div>
       </section>
       <section className="font-sans pb-[100px] pt-[21px] px-[20px] lg:px-[50px]">

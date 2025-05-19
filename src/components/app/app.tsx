@@ -7,7 +7,6 @@ import { Catalog } from '@/pages/catalog';
 import { Home } from '@/pages/home';
 import Login from '@/pages/login/login';
 import NotFound from '@/pages/not-found/not-found';
-import { Product } from '@/pages/product';
 import { Profile } from '@/pages/profile';
 import Registration from '@/pages/registration/registration';
 import { ROUTES } from '@/utils/constantes';
@@ -24,7 +23,6 @@ export default function App(): React.JSX.Element {
           <Route path={ROUTES.LOGIN} element={<Login />} />
           <Route path={ROUTES.PROFILE} element={<Profile />} />
           <Route path={ROUTES.CATALOG} element={<Catalog />} />
-          <Route path={ROUTES.PRODUCT} element={<Product />} />
           <Route path={ROUTES.NOTFOUND} element={<NotFound />} />
         </Routes>
       </Layout>
