@@ -8,10 +8,12 @@ export interface RegistrationAddress {
 
 export interface RegistrationStepProps {
   onNext: () => void;
+  onComplete?: () => void;
 }
 
 export interface RegistrationFormFourthProps {
   className?: string;
+  onComplete?: () => void;
 }
 
 export interface PropsWithChildren {

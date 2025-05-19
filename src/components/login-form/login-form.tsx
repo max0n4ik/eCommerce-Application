@@ -1,6 +1,8 @@
 import { Eye, EyeOff } from 'lucide-react';
 import { useActionState, useState } from 'react';
+import { useEffect } from 'react';
 import { useFormStatus } from 'react-dom';
+import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 
 import { Tooltip } from '../ui/error-message/error-message';
@@ -10,6 +12,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { authenticate, schema } from '@/lib/actions';
 import { cn } from '@/lib/utils';
+import { ROUTES } from '@/utils/constantes';
 
 export default function LoginForm({
   className,
@@ -29,6 +32,12 @@ export default function LoginForm({
     email?: string;
     password?: string;
   }>({});
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (state?.message === 'Login successful') {
+      navigate(ROUTES.PROFILE);
+    }
+  }, [state, navigate]);
 
   const validateField = (field: 'email' | 'password', value: string): void => {
     try {

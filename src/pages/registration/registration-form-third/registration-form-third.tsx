@@ -18,6 +18,7 @@ const formSchema = registrationAddressSchema;
 export default function RegistrationFormThird({
   onNext,
   className,
+  onComplete,
   ...props
 }: React.ComponentPropsWithoutRef<'form'> &
   RegistrationStepProps): React.JSX.Element {
@@ -81,8 +82,11 @@ export default function RegistrationFormThird({
         house: formData.house,
       };
       addAddress([addressToSave]);
-
-      onNext();
+      if (useAsBilling) {
+        onComplete?.();
+      } else {
+        onNext();
+      }
     }
   };
 

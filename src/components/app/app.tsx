@@ -9,6 +9,7 @@ import Login from '@/pages/login/login';
 import NotFound from '@/pages/not-found/not-found';
 import { Profile } from '@/pages/profile';
 import Registration from '@/pages/registration/registration';
+import PrivateRoute from '@/private-router/private.router';
 import { ROUTES } from '@/utils/constantes';
 
 export default function App(): React.JSX.Element {
@@ -21,9 +22,16 @@ export default function App(): React.JSX.Element {
           <Route path={ROUTES.CART} element={<Cart />} />
           <Route path={ROUTES.REGISTRATION} element={<Registration />} />
           <Route path={ROUTES.LOGIN} element={<Login />} />
-          <Route path={ROUTES.PROFILE} element={<Profile />} />
           <Route path={ROUTES.CATALOG} element={<Catalog />} />
           <Route path={ROUTES.NOTFOUND} element={<NotFound />} />
+          <Route
+            path={ROUTES.PROFILE}
+            element={
+              <PrivateRoute>
+                <Profile />
+              </PrivateRoute>
+            }
+          />
         </Routes>
       </Layout>
     </BrowserRouter>
