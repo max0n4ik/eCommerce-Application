@@ -77,10 +77,14 @@ export default function RegistrationFormThird({
         city: formData.city,
         country:
           countryToAlpha2[formData.country as keyof typeof countryToAlpha2],
-        isDefault: useDefault,
         house: formData.house,
+        isDefaultShipping: useDefault,
+        isDefaultBilling: useAsBilling,
       };
-      addAddress([addressToSave]);
+      addAddress([addressToSave], {
+        asShipping: useDefault,
+        asBilling: useAsBilling,
+      });
 
       onNext();
     }
@@ -202,7 +206,7 @@ export default function RegistrationFormThird({
           </div>
           <div className="flex gap-5">
             <Input
-              id="useAseBilling"
+              id="useAsBilling"
               type="checkbox"
               className="w-3 h-3"
               checked={useAsBilling}
