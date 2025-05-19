@@ -6,6 +6,10 @@ interface AuthState {
   setIsAuth: (value: boolean) => void;
 }
 
+export const selectIsAuth = (state: AuthState): boolean => state.isAuth;
+export const selectSetIsAuth = (state: AuthState): ((value: boolean) => void) =>
+  state.setIsAuth;
+
 export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
