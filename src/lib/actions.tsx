@@ -1,5 +1,8 @@
 import { z } from 'zod';
 
+import { login } from '@/services/login';
+import { authStore } from '@/store/login';
+
 export const schema = z.object({
   email: z.string().email('Invalid email address, (e.g., example@email.com)'),
   password: z
@@ -35,8 +38,9 @@ export function authenticate(
       message: '',
     };
   }
-
   try {
+    login(validatedFields.data.email, validatedFields.data.password);
+    authStore.setIsAuth(true);
     return { message: 'Login successful' };
   } catch {
     return { message: 'Invalid credentials' };
