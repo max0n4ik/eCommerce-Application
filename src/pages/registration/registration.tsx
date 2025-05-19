@@ -11,7 +11,19 @@ import { ROUTES } from '@/utils/constantes';
 
 export default function Registration(): React.JSX.Element {
   const [step, setStep] = useState(1);
-  const handleNext = (): void => setStep((prev) => prev + 1);
+  const handleNext = (): void => {
+    if (step === 3 && isDefaultBilling === true) {
+      handleSignUp();
+    } else {
+      setStep((prev) => prev + 1);
+    }
+  };
+  const handleSignUp = (): void => {
+    console.log('Signing up...');
+  };
+  const [isDefaultBilling, setIsDefaultBilling] = useState<boolean | null>(
+    null
+  );
   const renderStep = (): React.JSX.Element | null => {
     switch (step) {
       case 1: {
@@ -21,10 +33,17 @@ export default function Registration(): React.JSX.Element {
         return <RegistrationFormSecond onNext={handleNext} />;
       }
       case 3: {
-        return <RegistrationFormThird onNext={handleNext} />;
+        return (
+          <RegistrationFormThird
+            onNext={handleNext}
+            isDefaultBilling={isDefaultBilling}
+            setIsDefaultBilling={setIsDefaultBilling}
+            onSignUp={handleSignUp}
+          />
+        );
       }
       case 4: {
-        return <RegistrationFormFourth />;
+        return isDefaultBilling === false ? <RegistrationFormFourth /> : null;
       }
       default: {
         return null;

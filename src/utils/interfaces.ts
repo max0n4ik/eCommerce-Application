@@ -6,8 +6,12 @@ export interface RegistrationAddress {
   postalCode: string;
 }
 
-export interface RegistrationStepProps {
-  onNext: () => void;
+export interface RegistrationFormProps {
+  className?: string;
+  onNext?: () => void;
+  isDefaultBilling?: boolean | null;
+  setIsDefaultBilling?: (value: boolean) => void;
+  onSignUp?: () => void;
 }
 
 export interface RegistrationFormFourthProps {

@@ -11,14 +11,14 @@ import useRegistrationStore from '@/store/registration';
 import { defaultAddressForm } from '@/utils/constantes';
 import type {
   RegistrationAddress,
-  RegistrationFormFourthProps,
+  RegistrationFormProps,
 } from '@/utils/interfaces';
 import { registrationAddressSchema } from '@/utils/validations';
 
 export default function RegistrationFormFourth({
   className,
   ...props
-}: RegistrationFormFourthProps): React.JSX.Element {
+}: RegistrationFormProps): React.JSX.Element {
   const [formData, setFormData] =
     React.useState<RegistrationAddress>(defaultAddressForm);
   const [errors, setErrors] = React.useState<{ [key: string]: string }>({});
@@ -30,6 +30,8 @@ export default function RegistrationFormFourth({
     dateOfBirth,
     addresses,
     addAddress,
+    isDefaultShipping,
+    isDefaultBilling,
   } = useRegistrationStore();
 
   const formattedDateOfBirth = dateOfBirth.toISOString().split('T')[0];
@@ -87,8 +89,8 @@ export default function RegistrationFormFourth({
       lastName,
       dateOfBirth: formattedDateOfBirth,
       addresses: updatedAddresses,
-      defaultShippingAddress: undefined,
-      defaultBillingAddress: updatedAddresses.length - 1,
+      defaultShippingAddress: isDefaultShipping,
+      defaultBillingAddress: isDefaultBilling,
     };
     await registration(userData);
   };
