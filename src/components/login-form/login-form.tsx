@@ -29,7 +29,6 @@ export default function LoginForm({
     email?: string;
     password?: string;
   }>({});
-
   const validateField = (field: 'email' | 'password', value: string): void => {
     try {
       schema.shape[field].parse(value);

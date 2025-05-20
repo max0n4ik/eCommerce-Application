@@ -1,16 +1,16 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-interface AuthState {
+interface UserState {
   isAuth: boolean;
   setIsAuth: (value: boolean) => void;
 }
 
-export const selectIsAuth = (state: AuthState): boolean => state.isAuth;
-export const selectSetIsAuth = (state: AuthState): ((value: boolean) => void) =>
+export const selectIsAuth = (state: UserState): boolean => state.isAuth;
+export const selectSetIsAuth = (state: UserState): ((value: boolean) => void) =>
   state.setIsAuth;
 
-export const useAuthStore = create<AuthState>()(
+export const useAuthStore = create<UserState>()(
   persist(
     (set) => ({
       isAuth: false,

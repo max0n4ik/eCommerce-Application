@@ -17,6 +17,7 @@ const formSchema = registrationAddressSchema;
 
 export default function RegistrationFormThird({
   onNext,
+  onComplete,
   className,
   isSignUpStep = false,
   ...props
@@ -48,11 +49,13 @@ export default function RegistrationFormThird({
       return !prev;
     });
   };
+
   const handleUseAsBillingChange = (): void => {
     const newValue = !useAsBilling;
     setUseAsBilling(newValue);
     if (newValue) setUseDefault(false);
   };
+
   const validateForm = (): boolean => {
     const result = formSchema.safeParse(formData);
     if (!result.success) {
@@ -67,6 +70,7 @@ export default function RegistrationFormThird({
     setErrors({});
     return true;
   };
+
   const { addAddress } = useRegistrationStore();
 
   const onSubmit = (e: React.FormEvent): void => {
@@ -86,8 +90,11 @@ export default function RegistrationFormThird({
         asShipping: useDefault,
         asBilling: useAsBilling,
       });
-
-      onNext?.(useAsBilling);
+      if (useAsBilling) {
+        onComplete?.();
+      } else {
+        onNext();
+      }
     }
   };
 

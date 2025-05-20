@@ -11,6 +11,10 @@ import { ROUTES } from '@/utils/constantes';
 
 export default function Registration(): React.JSX.Element {
   const [step, setStep] = useState(1);
+
+  const handleComplete = (): void => {
+    console.log('Successfully restarted');
+  };
   const [isBillingUsed, setIsBillingUsed] = useState<boolean | null>(null);
 
   const handleNext = (useAsBilling?: boolean): void => {
@@ -38,12 +42,13 @@ export default function Registration(): React.JSX.Element {
         return (
           <RegistrationFormThird
             onNext={handleNext}
+            onComplete={handleComplete}
             isSignUpStep={isBillingUsed === true}
           />
         );
       }
       case 4: {
-        return <RegistrationFormFourth />;
+        return <RegistrationFormFourth onComplete={handleComplete} />;
       }
       default: {
         return null;

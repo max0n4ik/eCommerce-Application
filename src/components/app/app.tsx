@@ -1,5 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
+import { PrivateRoute } from '../private-route';
+
 import { Layout } from '@/components/layout';
 import { About } from '@/pages/about';
 import { Cart } from '@/pages/cart';
@@ -19,11 +21,32 @@ export default function App(): React.JSX.Element {
           <Route path={ROUTES.HOME} element={<Home />} />
           <Route path={ROUTES.ABOUT} element={<About />} />
           <Route path={ROUTES.CART} element={<Cart />} />
-          <Route path={ROUTES.REGISTRATION} element={<Registration />} />
-          <Route path={ROUTES.LOGIN} element={<Login />} />
-          <Route path={ROUTES.PROFILE} element={<Profile />} />
+          <Route
+            path={ROUTES.REGISTRATION}
+            element={
+              <PrivateRoute reverse>
+                <Registration />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path={ROUTES.LOGIN}
+            element={
+              <PrivateRoute reverse>
+                <Login />
+              </PrivateRoute>
+            }
+          />
           <Route path={ROUTES.CATALOG} element={<Catalog />} />
           <Route path={ROUTES.NOTFOUND} element={<NotFound />} />
+          <Route
+            path={ROUTES.PROFILE}
+            element={
+              <PrivateRoute>
+                <Profile />
+              </PrivateRoute>
+            }
+          />
         </Routes>
       </Layout>
     </BrowserRouter>

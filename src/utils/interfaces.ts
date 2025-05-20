@@ -7,11 +7,13 @@ export interface RegistrationAddress {
 }
 
 export interface RegistrationStepProps {
-  onNext: (useAsBilling?: boolean) => void;
+  onNext: () => void;
+  onComplete?: () => void;
 }
 
 export interface RegistrationFormFourthProps {
   className?: string;
+  onComplete?: () => void;
 }
 
 export interface PropsWithChildren {
