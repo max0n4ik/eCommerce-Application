@@ -11,3 +11,7 @@ export type RegistrationAddressFormData = z.infer<
 export type PropsWithChildren<P = unknown> = P & {
   children: React.JSX.Element;
 };
+
+export type PrivateRouteProps = PropsWithChildren & {
+  reverse?: boolean;
+};

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import { RegistrationFormFirst } from './registration-form-first';
 import { RegistrationFormFourth } from './registration-form-fourth';
@@ -11,12 +11,11 @@ import { ROUTES } from '@/utils/constantes';
 
 export default function Registration(): React.JSX.Element {
   const [step, setStep] = useState(1);
-  const navigate = useNavigate();
-  const handleComplete = (): void => {
-    navigate(ROUTES.PROFILE);
-  };
 
   const handleNext = (): void => setStep((prev) => prev + 1);
+  const handleComplete = (): void => {
+    console.log('Successfully restarted');
+  };
   const renderStep = (): React.JSX.Element | null => {
     switch (step) {
       case 1: {
