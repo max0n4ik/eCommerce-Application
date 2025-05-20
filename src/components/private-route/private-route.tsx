@@ -9,5 +9,4 @@ const PrivateRoute = ({ children }: PropsWithChildren): React.JSX.Element => {
   const isAuth = useIsAuth();
   return isAuth ? children : <Navigate to={ROUTES.LOGIN} />;
 };
-
 export default PrivateRoute;

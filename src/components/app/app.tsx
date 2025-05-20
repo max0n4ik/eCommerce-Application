@@ -1,5 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
+import { PrivateRoute } from '../private-route';
+
 import { Layout } from '@/components/layout';
 import { About } from '@/pages/about';
 import { Cart } from '@/pages/cart';
@@ -9,7 +11,6 @@ import Login from '@/pages/login/login';
 import NotFound from '@/pages/not-found/not-found';
 import { Profile } from '@/pages/profile';
 import Registration from '@/pages/registration/registration';
-import PrivateRoute from '@/private-router/private.router';
 import { ROUTES } from '@/utils/constantes';
 
 export default function App(): React.JSX.Element {
