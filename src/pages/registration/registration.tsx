@@ -17,7 +17,6 @@ export default function Registration(): React.JSX.Element {
     if (step === 3) {
       if (useAsBilling) {
         console.log('Регистрация выполнена, пропускаем шаг 4');
-        handleSignUp();
       } else {
         setStep(4);
       }
@@ -25,10 +24,6 @@ export default function Registration(): React.JSX.Element {
     } else {
       setStep((prev) => prev + 1);
     }
-  };
-
-  const handleSignUp = (): void => {
-    console.log('Signing up...');
   };
 
   const renderStep = (): React.JSX.Element | null => {
