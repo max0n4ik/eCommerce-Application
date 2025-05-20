@@ -1,4 +1,4 @@
-import type { CustomerDraft } from '@commercetools/platform-sdk';
+import type { MyCustomerDraft } from '@commercetools/platform-sdk';
 import React from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -23,17 +23,18 @@ export default function RegistrationFormFourth({
   const [formData, setFormData] =
     React.useState<RegistrationAddress>(defaultAddressForm);
   const [errors, setErrors] = React.useState<{ [key: string]: string }>({});
-  const { email, password, firstName, lastName, dateOfBirth, addresses } =
-    useRegistrationStore();
-  const formattedDateOfBirth = dateOfBirth.toISOString().split('T')[0];
-  const userData: CustomerDraft = {
+  const {
     email,
     password,
     firstName,
     lastName,
-    dateOfBirth: formattedDateOfBirth,
+    dateOfBirth,
     addresses,
-  };
+    addAddress,
+  } = useRegistrationStore();
+
+  const formattedDateOfBirth = dateOfBirth.toISOString().split('T')[0];
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -46,6 +47,7 @@ export default function RegistrationFormFourth({
       );
     });
   };
+
   const validateForm = (): boolean => {
     const result = registrationAddressSchema.safeParse(formData);
     if (!result.success) {
@@ -64,6 +66,32 @@ export default function RegistrationFormFourth({
     if (!validateForm()) {
       return;
     }
+
+    const addressToSave = {
+      street: formData.street,
+      postalCode: formData.postalCode,
+      city: formData.city,
+      country: formData.country,
+      house: formData.house,
+    };
+
+    addAddress([addressToSave], {
+      asShipping: false,
+      asBilling: true,
+    });
+
+    const updatedAddresses = [...addresses, addressToSave];
+
+    const userData: MyCustomerDraft = {
+      email,
+      password,
+      firstName,
+      lastName,
+      dateOfBirth: formattedDateOfBirth,
+      addresses: updatedAddresses,
+      defaultShippingAddress: undefined,
+      defaultBillingAddress: updatedAddresses.length - 1,
+    };
     try {
       await registration(userData);
       onComplete?.();
