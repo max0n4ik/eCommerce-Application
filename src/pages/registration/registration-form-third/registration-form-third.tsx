@@ -82,7 +82,7 @@ export default function RegistrationFormThird({
         city: formData.city,
         country:
           countryToAlpha2[formData.country as keyof typeof countryToAlpha2],
-        house: formData.house,
+        department: formData.house,
         isDefaultShipping: useDefault,
         isDefaultBilling: useAsBilling,
       };
