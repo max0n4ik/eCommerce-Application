@@ -9,12 +9,13 @@ import { RegistrationFormThird } from './registration-form-third';
 import gardenImage from '@/assets/images/garden.png';
 import { ROUTES } from '@/utils/constantes';
 
+const handleComplete = (): void => {
+  console.log('Successfully restarted');
+};
+
 export default function Registration(): React.JSX.Element {
   const [step, setStep] = useState(1);
 
-  const handleComplete = (): void => {
-    console.log('Successfully restarted');
-  };
   const [isBillingUsed, setIsBillingUsed] = useState<boolean | null>(null);
 
   const handleNext = (useAsBilling?: boolean): void => {
