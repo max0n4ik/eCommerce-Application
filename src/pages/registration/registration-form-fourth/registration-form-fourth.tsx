@@ -1,4 +1,4 @@
-import type { CustomerDraft } from '@commercetools/platform-sdk';
+import type { MyCustomerDraft } from '@commercetools/platform-sdk';
 import React from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -80,7 +80,7 @@ export default function RegistrationFormFourth({
 
     const updatedAddresses = [...addresses, addressToSave];
 
-    const userData: CustomerDraft = {
+    const userData: MyCustomerDraft = {
       email,
       password,
       firstName,
