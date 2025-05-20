@@ -6,7 +6,7 @@ export default function Layout({
   children,
 }: PropsWithChildren): React.JSX.Element {
   return (
-    <div className="p-4 flex flex-col justify-between container">
+    <div className="p-4 flex flex-col justify-between">
       <Header />
       <main>{children}</main>
       <Footer />
