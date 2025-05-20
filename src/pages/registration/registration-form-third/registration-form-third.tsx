@@ -18,9 +18,10 @@ const formSchema = registrationAddressSchema;
 export default function RegistrationFormThird({
   onNext,
   className,
+  isSignUpStep = false,
   ...props
 }: React.ComponentPropsWithoutRef<'form'> &
-  RegistrationStepProps): React.JSX.Element {
+  RegistrationStepProps & { isSignUpStep?: boolean }): React.JSX.Element {
   const [formData, setFormData] =
     React.useState<RegistrationAddress>(defaultAddressForm);
   const [errors, setErrors] = React.useState<{ [key: string]: string }>({});
@@ -77,12 +78,16 @@ export default function RegistrationFormThird({
         city: formData.city,
         country:
           countryToAlpha2[formData.country as keyof typeof countryToAlpha2],
-        isDefault: useDefault,
         house: formData.house,
+        isDefaultShipping: useDefault,
+        isDefaultBilling: useAsBilling,
       };
-      addAddress([addressToSave]);
+      addAddress([addressToSave], {
+        asShipping: useDefault,
+        asBilling: useAsBilling,
+      });
 
-      onNext();
+      onNext?.(useAsBilling);
     }
   };
 
@@ -202,7 +207,7 @@ export default function RegistrationFormThird({
           </div>
           <div className="flex gap-5">
             <Input
-              id="useAseBilling"
+              id="useAsBilling"
               type="checkbox"
               className="w-3 h-3"
               checked={useAsBilling}
@@ -212,7 +217,7 @@ export default function RegistrationFormThird({
           </div>
         </div>
         <Button type="submit" className="w-full">
-          Next
+          {isSignUpStep ? 'Sign Up' : 'Next'}
         </Button>
       </div>
     </form>

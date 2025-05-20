@@ -7,7 +7,7 @@ export interface RegistrationAddress {
 }
 
 export interface RegistrationStepProps {
-  onNext: () => void;
+  onNext: (useAsBilling?: boolean) => void;
 }
 
 export interface RegistrationFormFourthProps {
