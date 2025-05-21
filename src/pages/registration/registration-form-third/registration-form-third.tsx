@@ -17,7 +17,6 @@ const formSchema = registrationAddressSchema;
 
 export default function RegistrationFormThird({
   onNext,
-  onComplete,
   className,
   isSignUpStep = false,
   ...props
@@ -90,11 +89,7 @@ export default function RegistrationFormThird({
         asShipping: useDefault,
         asBilling: useAsBilling,
       });
-      if (useAsBilling) {
-        onComplete?.();
-      } else {
-        onNext();
-      }
+      onNext();
     }
   };
 

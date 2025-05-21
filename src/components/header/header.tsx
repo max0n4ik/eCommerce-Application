@@ -1,11 +1,17 @@
 import { Link } from 'react-router-dom';
 
 import Logo from '@/assets/images/logo.png';
+import { useAuthStore } from '@/store/login';
 import { useIsAuth } from '@/store/selector';
 import { ROUTES } from '@/utils/constantes';
 
 export default function Header(): React.JSX.Element {
   const isAuth = useIsAuth();
+  const logout = useAuthStore((state) => state.logout);
+
+  const handleLogout = (): void => {
+    logout();
+  };
 
   return (
     <>
@@ -23,7 +29,7 @@ export default function Header(): React.JSX.Element {
           {isAuth ? (
             <>
               <Link to={ROUTES.PROFILE}>Profile</Link>
-              <button>Logout</button>
+              <button onClick={handleLogout}>Logout</button>{' '}
             </>
           ) : (
             <>
