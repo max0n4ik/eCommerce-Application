@@ -26,33 +26,17 @@ export default function RegistrationFormThird({
     React.useState<RegistrationAddress>(defaultAddressForm);
   const [errors, setErrors] = React.useState<{ [key: string]: string }>({});
 
-  const [useDefault, setUseDefault] = React.useState(false);
-  const [useAsBilling, setUseAsBilling] = React.useState(false);
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    const { name, value } = e.target;
+    const { name, type, value, checked } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: type === 'checkbox' ? checked : value,
     }));
     setErrors((prevErrors) => {
       return Object.fromEntries(
         Object.entries(prevErrors).filter(([key]) => key !== name)
       );
     });
-  };
-
-  const handleUseDefaultChange = (): void => {
-    setUseDefault((prev) => {
-      if (!prev) setUseAsBilling(false);
-      return !prev;
-    });
-  };
-
-  const handleUseAsBillingChange = (): void => {
-    const newValue = !useAsBilling;
-    setUseAsBilling(newValue);
-    if (newValue) setUseDefault(false);
   };
 
   const validateForm = (): boolean => {
@@ -82,12 +66,12 @@ export default function RegistrationFormThird({
         country:
           countryToAlpha2[formData.country as keyof typeof countryToAlpha2],
         department: formData.house,
-        isDefaultShipping: useDefault,
-        isDefaultBilling: useAsBilling,
+        isDefaultShipping: formData.isDefault,
+        isDefaultBilling: formData.isBilling,
       };
       addAddress([addressToSave], {
-        asShipping: useDefault,
-        asBilling: useAsBilling,
+        asShipping: formData.isDefault,
+        asBilling: formData.isBilling,
       });
       onNext();
     }
@@ -200,20 +184,22 @@ export default function RegistrationFormThird({
           <div className="flex gap-5">
             <Input
               id="useDefault"
+              name="isDefault"
               type="checkbox"
               className="w-3 h-3"
-              checked={useDefault}
-              onChange={handleUseDefaultChange}
+              checked={formData.isDefault}
+              onChange={handleChange}
             />
             <Label htmlFor="useDefault">Use as default</Label>
           </div>
           <div className="flex gap-5">
             <Input
               id="useAsBilling"
+              name="isBilling"
               type="checkbox"
               className="w-3 h-3"
-              checked={useAsBilling}
-              onChange={handleUseAsBillingChange}
+              checked={formData.isBilling}
+              onChange={handleChange}
             />
             <Label htmlFor="useAsBilling">Use this address as billing</Label>
           </div>
