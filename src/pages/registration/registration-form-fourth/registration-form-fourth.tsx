@@ -1,4 +1,4 @@
-import type { MyCustomerDraft } from '@commercetools/platform-sdk';
+import type { Address, MyCustomerDraft } from '@commercetools/platform-sdk';
 import React from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { registration } from '@/services/create-client';
 import useRegistrationStore from '@/store/registration';
-import { defaultAddressForm } from '@/utils/constantes';
+import { countryToAlpha2, defaultAddressForm } from '@/utils/constantes';
 import type {
   RegistrationAddress,
   RegistrationFormFourthProps,
@@ -67,12 +67,14 @@ export default function RegistrationFormFourth({
       return;
     }
 
-    const addressToSave = {
-      street: formData.street,
+    const addressToSave: Address = {
+      streetName: formData.street,
       postalCode: formData.postalCode,
       city: formData.city,
-      country: formData.country,
-      house: formData.house,
+      country:
+        countryToAlpha2[formData.country as keyof typeof countryToAlpha2],
+
+      department: formData.house,
     };
 
     addAddress([addressToSave], {

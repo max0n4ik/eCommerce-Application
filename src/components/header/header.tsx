@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import Logo from '@/assets/images/logo.png';
 import { useAuthStore } from '@/store/login';
@@ -8,11 +8,9 @@ import { ROUTES } from '@/utils/constantes';
 export default function Header(): React.JSX.Element {
   const isAuth = useIsAuth();
   const logout = useAuthStore((state) => state.logout);
-  const navigate = useNavigate();
 
   const handleLogout = (): void => {
     logout();
-    navigate(ROUTES.HOME);
   };
 
   return (
