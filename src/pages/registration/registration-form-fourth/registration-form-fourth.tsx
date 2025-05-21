@@ -22,6 +22,7 @@ export default function RegistrationFormFourth({
   const [formData, setFormData] =
     React.useState<RegistrationAddress>(defaultAddressForm);
   const [errors, setErrors] = React.useState<{ [key: string]: string }>({});
+  const [registrationError, setRegistrationError] = React.useState<string>('');
   const {
     email,
     password,
@@ -68,6 +69,8 @@ export default function RegistrationFormFourth({
       return;
     }
 
+    setRegistrationError('');
+
     const addressToSave: Address = {
       streetName: formData.street,
       postalCode: formData.postalCode,
@@ -99,8 +102,10 @@ export default function RegistrationFormFourth({
     };
     try {
       await registration(userData);
-    } catch (error) {
-      console.error('Registration error:', error);
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Неизвестная ошибка';
+      setRegistrationError(errorMessage);
     }
   };
 
@@ -218,6 +223,11 @@ export default function RegistrationFormFourth({
           />
           <Label htmlFor="useDefault">Use as default</Label>
         </div>
+        {registrationError && (
+          <p className="text-sm font-medium text-destructive">
+            {registrationError}
+          </p>
+        )}
         <Button type="submit" className="w-full">
           Sign up
         </Button>
