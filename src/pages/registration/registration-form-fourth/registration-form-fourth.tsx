@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { registration } from '@/services/create-client';
+import { authStore } from '@/store/login';
 import useRegistrationStore from '@/store/registration';
 import { countryToAlpha2, defaultAddressForm } from '@/utils/constantes';
 import type {
@@ -36,16 +37,18 @@ export default function RegistrationFormFourth({
   const formattedDateOfBirth = dateOfBirth.toISOString().split('T')[0];
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
+    const { name, value, type, checked } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value,
     }));
-    setErrors((prevErrors) => {
-      return Object.fromEntries(
-        Object.entries(prevErrors).filter(([key]) => key !== name)
-      );
-    });
+    if (type === 'text') {
+      setErrors((prevErrors) => {
+        return Object.fromEntries(
+          Object.entries(prevErrors).filter(([key]) => key !== name)
+        );
+      });
+    }
   };
 
   const validateForm = (): boolean => {
@@ -94,13 +97,16 @@ export default function RegistrationFormFourth({
       dateOfBirth: formattedDateOfBirth,
       addresses: updatedAddresses,
       defaultShippingAddress: undefined,
-      defaultBillingAddress: updatedAddresses.length - 1,
+      defaultBillingAddress: formData.isDefault
+        ? updatedAddresses.length - 1
+        : undefined,
     };
     try {
       await registration(userData);
+      authStore.setIsAuth(true);
     } catch (error: unknown) {
       const errorMessage =
-        error instanceof Error ? error.message : 'Неизвестная ошибка';
+        error instanceof Error ? error.message : 'Unknown error';
       setRegistrationError(errorMessage);
     }
   };
@@ -209,7 +215,14 @@ export default function RegistrationFormFourth({
           </div>
         </div>
         <div className="flex gap-5">
-          <Input id="useDefault" type="checkbox" className="w-3 h-3" />
+          <Input
+            id="useDefault"
+            type="checkbox"
+            name="isDefault"
+            className="w-3 h-3"
+            checked={formData.isDefault}
+            onChange={handleChange}
+          />
           <Label htmlFor="useDefault">Use as default</Label>
         </div>
         {registrationError && (

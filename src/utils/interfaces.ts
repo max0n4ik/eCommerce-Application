@@ -4,6 +4,8 @@ export interface RegistrationAddress {
   street: string;
   house: string;
   postalCode: string;
+  isDefault: boolean;
+  isBilling?: boolean;
 }
 
 export interface RegistrationStepProps {

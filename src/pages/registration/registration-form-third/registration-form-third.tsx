@@ -5,6 +5,8 @@ import { Tooltip } from '@/components/ui/error-message/error-message';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
+import { registration } from '@/services/create-client';
+import { authStore } from '@/store/login';
 import useRegistrationStore from '@/store/registration';
 import { countryToAlpha2, defaultAddressForm } from '@/utils/constantes';
 import type {
@@ -25,34 +27,19 @@ export default function RegistrationFormThird({
   const [formData, setFormData] =
     React.useState<RegistrationAddress>(defaultAddressForm);
   const [errors, setErrors] = React.useState<{ [key: string]: string }>({});
-
-  const [useDefault, setUseDefault] = React.useState(false);
-  const [useAsBilling, setUseAsBilling] = React.useState(false);
+  const [registrationError, setRegistrationError] = React.useState<string>('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    const { name, value } = e.target;
+    const { name, type, value, checked } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: type === 'checkbox' ? checked : value,
     }));
     setErrors((prevErrors) => {
       return Object.fromEntries(
         Object.entries(prevErrors).filter(([key]) => key !== name)
       );
     });
-  };
-
-  const handleUseDefaultChange = (): void => {
-    setUseDefault((prev) => {
-      if (!prev) setUseAsBilling(false);
-      return !prev;
-    });
-  };
-
-  const handleUseAsBillingChange = (): void => {
-    const newValue = !useAsBilling;
-    setUseAsBilling(newValue);
-    if (newValue) setUseDefault(false);
   };
 
   const validateForm = (): boolean => {
@@ -72,25 +59,62 @@ export default function RegistrationFormThird({
 
   const { addAddress } = useRegistrationStore();
 
-  const onSubmit = (e: React.FormEvent): void => {
+  const onSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
-    if (validateForm()) {
-      const addressToSave = {
-        streetName: formData.street,
-        postalCode: formData.postalCode,
-        city: formData.city,
-        country:
-          countryToAlpha2[formData.country as keyof typeof countryToAlpha2],
-        department: formData.house,
-        isDefaultShipping: useDefault,
-        isDefaultBilling: useAsBilling,
-      };
-      addAddress([addressToSave], {
-        asShipping: useDefault,
-        asBilling: useAsBilling,
-      });
-      onNext();
+    if (!validateForm()) return;
+
+    setRegistrationError('');
+
+    const addressToSave = {
+      streetName: formData.street,
+      postalCode: formData.postalCode,
+      city: formData.city,
+      country:
+        countryToAlpha2[formData.country as keyof typeof countryToAlpha2],
+      department: formData.house,
+      isDefaultShipping: formData.isDefault,
+      isDefaultBilling: formData.isBilling,
+    };
+
+    addAddress([addressToSave], {
+      asShipping: formData.isDefault,
+      asBilling: formData.isBilling,
+    });
+
+    const isFinalStep = formData.isDefault && formData.isBilling;
+    if (isFinalStep && isSignUpStep) {
+      try {
+        const { email, password, firstName, lastName, dateOfBirth, addresses } =
+          useRegistrationStore.getState();
+
+        const formattedDateOfBirth = dateOfBirth.toISOString().split('T')[0];
+        const updatedAddresses = [...addresses, addressToSave];
+        const userData = {
+          email,
+          password,
+          firstName,
+          lastName,
+          dateOfBirth: formattedDateOfBirth,
+          addresses: [...addresses, addressToSave],
+          defaultShippingAddress: formData.isDefault
+            ? updatedAddresses.length - 1
+            : undefined,
+          defaultBillingAddress: formData.isBilling
+            ? updatedAddresses.length - 1
+            : undefined,
+        };
+
+        await registration(userData);
+        authStore.setIsAuth(true);
+      } catch (error: unknown) {
+        const errorMessage =
+          error instanceof Error ? error.message : 'Unknown error';
+        setRegistrationError(errorMessage);
+        return;
+      }
     }
+
+    onNext();
   };
 
   return (
@@ -200,20 +224,22 @@ export default function RegistrationFormThird({
           <div className="flex gap-5">
             <Input
               id="useDefault"
+              name="isDefault"
               type="checkbox"
               className="w-3 h-3"
-              checked={useDefault}
-              onChange={handleUseDefaultChange}
+              checked={formData.isDefault}
+              onChange={handleChange}
             />
             <Label htmlFor="useDefault">Use as default</Label>
           </div>
           <div className="flex gap-5">
             <Input
               id="useAsBilling"
+              name="isBilling"
               type="checkbox"
               className="w-3 h-3"
-              checked={useAsBilling}
-              onChange={handleUseAsBillingChange}
+              checked={formData.isBilling}
+              onChange={handleChange}
             />
             <Label htmlFor="useAsBilling">Use this address as billing</Label>
           </div>
@@ -221,6 +247,11 @@ export default function RegistrationFormThird({
         <Button type="submit" className="w-full">
           {isSignUpStep ? 'Sign Up' : 'Next'}
         </Button>
+        {registrationError && (
+          <p className="text-sm font-medium text-destructive">
+            {registrationError}
+          </p>
+        )}
       </div>
     </form>
   );
