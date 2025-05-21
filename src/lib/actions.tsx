@@ -14,19 +14,19 @@ export const schema = z.object({
     ),
 });
 
-export function authenticate(
+export async function authenticate(
   _state: {
     message: string;
     errors?: { email?: string[]; password?: string[] };
   },
   formData: FormData
-): {
+): Promise<{
   message: string;
   errors?: {
     email?: string[] | undefined;
     password?: string[] | undefined;
   };
-} {
+}> {
   const validatedFields = schema.safeParse({
     email: formData.get('email'),
     password: formData.get('password'),
@@ -38,11 +38,20 @@ export function authenticate(
       message: '',
     };
   }
+
   try {
-    login(validatedFields.data.email, validatedFields.data.password);
+    const result = await login(
+      validatedFields.data.email,
+      validatedFields.data.password
+    );
+
+    if (!result.success) {
+      return { message: result.error || 'Error' };
+    }
+
     authStore.setIsAuth(true);
     return { message: 'Login successful' };
   } catch {
-    return { message: 'Invalid credentials' };
+    return { message: 'Error' };
   }
 }

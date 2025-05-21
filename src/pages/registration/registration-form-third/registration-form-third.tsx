@@ -76,7 +76,7 @@ export default function RegistrationFormThird({
     e.preventDefault();
     if (validateForm()) {
       const addressToSave = {
-        street: formData.street,
+        streetName: formData.street,
         postalCode: formData.postalCode,
         city: formData.city,
         country:
