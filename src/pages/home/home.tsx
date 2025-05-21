@@ -10,7 +10,6 @@ import { ROUTES } from '@/utils/constantes';
 export default function Home(): JSX.Element {
   return (
     <>
-      <div>Home page</div>
       <section className="pt-[40px] bg-white pb-[100px] flex flex-col md:flex-row md:justify-between text-[23px] font-medium font-sans text-[#2A2A2A] items-center">
         <div className="text-center w-fit">
           <img

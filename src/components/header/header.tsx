@@ -1,9 +1,12 @@
 import { Link } from 'react-router-dom';
 
 import Logo from '@/assets/images/logo.png';
+import { useIsAuth } from '@/store/selector';
 import { ROUTES } from '@/utils/constantes';
 
 export default function Header(): React.JSX.Element {
+  const isAuth = useIsAuth();
+
   return (
     <>
       <header className="flex md:flex-row flex-col gap-5 md:gap-0 items-center px-[34px] py-[15px] justify-between">
@@ -16,8 +19,18 @@ export default function Header(): React.JSX.Element {
         <nav className="mb-4 font-medium items-center flex gap-4 text-base text-black font-sans uppercase">
           <Link to={ROUTES.HOME}>Home</Link>
           <Link to={ROUTES.CART}>Cart</Link>
-          <Link to={ROUTES.LOGIN}>Login</Link>
-          <Link to={ROUTES.REGISTRATION}>Registration</Link>
+
+          {isAuth ? (
+            <>
+              <Link to={ROUTES.PROFILE}>Profile</Link>
+              <button>Logout</button>
+            </>
+          ) : (
+            <>
+              <Link to={ROUTES.LOGIN}>Login</Link>
+              <Link to={ROUTES.REGISTRATION}>Registration</Link>
+            </>
+          )}
         </nav>
       </header>
     </>
