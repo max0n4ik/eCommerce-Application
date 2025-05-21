@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { registration } from '@/services/create-client';
+import { authStore } from '@/store/login';
 import useRegistrationStore from '@/store/registration';
 import { countryToAlpha2, defaultAddressForm } from '@/utils/constantes';
 import type {
@@ -102,9 +103,10 @@ export default function RegistrationFormFourth({
     };
     try {
       await registration(userData);
+      authStore.setIsAuth(true);
     } catch (error: unknown) {
       const errorMessage =
-        error instanceof Error ? error.message : 'Неизвестная ошибка';
+        error instanceof Error ? error.message : 'Unknown error';
       setRegistrationError(errorMessage);
     }
   };

@@ -1,8 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-import { PrivateRoute } from '../private-route';
-
 import { Layout } from '@/components/layout';
+import { PrivateRoute } from '@/components/private-route';
 import { About } from '@/pages/about';
 import { Cart } from '@/pages/cart';
 import { Catalog } from '@/pages/catalog';
