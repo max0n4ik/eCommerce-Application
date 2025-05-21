@@ -17,7 +17,6 @@ import { registrationAddressSchema } from '@/utils/validations';
 
 export default function RegistrationFormFourth({
   className,
-  onComplete,
   ...props
 }: RegistrationFormFourthProps): React.JSX.Element {
   const [formData, setFormData] =
@@ -96,7 +95,6 @@ export default function RegistrationFormFourth({
     };
     try {
       await registration(userData);
-      onComplete?.();
     } catch (error) {
       console.error('Registration error:', error);
     }

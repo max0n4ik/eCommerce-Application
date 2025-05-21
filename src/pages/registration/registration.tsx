@@ -9,10 +9,6 @@ import { RegistrationFormThird } from './registration-form-third';
 import gardenImage from '@/assets/images/garden.png';
 import { ROUTES } from '@/utils/constantes';
 
-const handleComplete = (): void => {
-  console.log('Successfully restarted');
-};
-
 export default function Registration(): React.JSX.Element {
   const [step, setStep] = useState(1);
 
@@ -43,13 +39,12 @@ export default function Registration(): React.JSX.Element {
         return (
           <RegistrationFormThird
             onNext={handleNext}
-            onComplete={handleComplete}
             isSignUpStep={isBillingUsed === true}
           />
         );
       }
       case 4: {
-        return <RegistrationFormFourth onComplete={handleComplete} />;
+        return <RegistrationFormFourth />;
       }
       default: {
         return null;
