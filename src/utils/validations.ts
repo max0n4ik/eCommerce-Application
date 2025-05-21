@@ -30,8 +30,18 @@ export const registrationAddressSchema = z
   });
 
 export const registrationUserSchema = z.object({
-  name: z.string().min(1, 'Name must be at least 1 character'),
-  lastName: z.string().min(1, 'Last name must be at least 1 character'),
+  name: z
+    .string()
+    .min(1, 'Name must be at least 1 character')
+    .refine((val) => /^[A-Za-z]+$/.test(val), {
+      message: 'Name cannot start or end with spaces and contain number',
+    }),
+  lastName: z
+    .string()
+    .min(1, 'Last name must be at least 1 character')
+    .refine((val) => /^[A-Za-z]+$/.test(val), {
+      message: 'Last name cannot start or end with spaces and contain number',
+    }),
   dob: z
     .date()
     .nullable()
