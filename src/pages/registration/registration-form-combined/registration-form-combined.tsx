@@ -16,7 +16,7 @@ export default function CombinedRegistrationForm({
   className,
 }: {
   className?: string;
-}) {
+}): React.JSX.Element {
   const [useShippingAsBilling, setUseShippingAsBilling] = React.useState(true);
   const [shippingData, setShippingData] = React.useState<RegistrationAddress>({
     ...defaultAddressForm,
@@ -37,7 +37,7 @@ export default function CombinedRegistrationForm({
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     type: 'shipping' | 'billing'
-  ) => {
+  ): void => {
     const { name, value, type: inputType, checked } = e.target;
     const updater = type === 'shipping' ? setShippingData : setBillingData;
     updater((prev) => ({
@@ -57,7 +57,7 @@ export default function CombinedRegistrationForm({
   const validate = (
     data: RegistrationAddress,
     prefix: 'shipping' | 'billing'
-  ) => {
+  ): boolean => {
     const result = registrationAddressSchema.safeParse(data);
     if (!result.success) {
       const newErrors: { [key: string]: string } = {};
@@ -71,7 +71,7 @@ export default function CombinedRegistrationForm({
     return true;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
     setRegistrationError('');
 
@@ -102,17 +102,25 @@ export default function CombinedRegistrationForm({
           department: billingData.house,
         };
 
-    const addresses = useShippingAsBilling
-      ? [shippingAddress]
-      : [shippingAddress, billingAddress];
-    const defaultShippingAddress = shippingData.isDefault ? 0 : undefined;
-    const defaultBillingAddress = useShippingAsBilling
-      ? shippingData.isDefault
-        ? 0
-        : undefined
-      : billingData.isDefault
-        ? 1
-        : undefined;
+    let addresses;
+    let defaultShippingAddress: number | undefined;
+    let defaultBillingAddress: number | undefined;
+
+    if (useShippingAsBilling) {
+      addresses = [shippingAddress];
+      if (shippingData.isDefault) {
+        defaultShippingAddress = 0;
+        defaultBillingAddress = 0;
+      }
+    } else {
+      addresses = [shippingAddress, billingAddress];
+      if (shippingData.isDefault) {
+        defaultShippingAddress = 0;
+      }
+      if (billingData.isDefault) {
+        defaultBillingAddress = 1;
+      }
+    }
 
     try {
       addAddress(addresses, {
@@ -143,7 +151,7 @@ export default function CombinedRegistrationForm({
     formType: 'shipping' | 'billing',
     formData: RegistrationAddress,
     handleInput: (e: React.ChangeEvent<HTMLInputElement>) => void
-  ) => (
+  ): React.JSX.Element => (
     <div className="grid gap-6">
       {['country', 'city', 'street', 'house', 'postalCode'].map((field) => (
         <div key={field} className="grid gap-2 relative">
@@ -153,7 +161,7 @@ export default function CombinedRegistrationForm({
           <Input
             id={`${formType}-${field}`}
             name={field}
-            value={formData[field as keyof RegistrationAddress] || ''}
+            value={String(formData[field as keyof RegistrationAddress] || '')}
             onChange={handleInput}
             placeholder={field}
           />
