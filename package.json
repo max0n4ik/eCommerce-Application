@@ -17,7 +17,7 @@
     "format:check": "prettier --list-different --ignore-unknown .",
     "lint:styles": "stylelint \"**/*.css\"",
     "lint:styles:fix": "stylelint \"**/*.css\" --fix",
-    "prepare": "husky && chmod ug+x .husky/*"
+    "prepare": "husky"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,json,css,scss,md}": "pnpm run format",
@@ -25,20 +25,38 @@
     "*.css": "pnpm run lint:styles:fix"
   },
   "dependencies": {
+    "@radix-ui/react-label": "^2.1.6",
+    "@radix-ui/react-popover": "^1.1.13",
+    "@radix-ui/react-slot": "^1.2.2",
+    "@radix-ui/react-toast": "^1.2.13",
+    "@radix-ui/react-tooltip": "^1.2.6",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
+    "lucide-react": "^0.508.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-day-picker": "8.10.1",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^7.6.0",
+    "tailwind-merge": "^3.2.0",
+    "zod": "^3.24.4"
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.27.1",
+    "@commercetools/platform-sdk": "^8.9.0",
+    "@commercetools/sdk-client-v2": "^3.0.0",
     "@commitlint/cli": "^19.8.0",
     "@commitlint/config-conventional": "^19.8.0",
     "@eslint/js": "^9.22.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
+    "@typescript-eslint/eslint-plugin": "^8.32.1",
+    "@typescript-eslint/parser": "^8.32.1",
     "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.21",
     "cross-env": "^7.0.3",
-    "eslint": "^9.22.0",
+    "eslint": "^9.26.0",
     "eslint-config-prettier": "^10.1.2",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
@@ -52,13 +70,19 @@
     "husky": "^9.1.7",
     "jsdom": "^26.1.0",
     "lint-staged": "^15.5.2",
+    "postcss": "^8.5.3",
     "prettier": "^3.5.3",
     "stylelint": "^16.19.1",
     "stylelint-config-clean-order": "^7.0.0",
     "stylelint-config-standard": "^38.0.0",
+    "stylelint-config-tailwindcss": "^1.0.0",
+    "tailwindcss": "3.4.3",
+    "tailwindcss-animate": "^1.0.7",
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.26.1",
     "vite": "^6.3.1",
-    "vitest": "^3.1.2"
+    "vite-tsconfig-paths": "^5.1.4",
+    "vitest": "^3.1.2",
+    "zustand": "^5.0.4"
   }
 }

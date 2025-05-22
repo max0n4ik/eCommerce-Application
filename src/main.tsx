@@ -1,6 +1,10 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
+import App from './components/app/app';
+
+import './styles/index.css';
+
 const rootElement =
   document.querySelector('#root') ??
   ((): HTMLDivElement => {
@@ -10,4 +14,8 @@ const rootElement =
     return element;
   })();
 
-createRoot(rootElement).render(<StrictMode></StrictMode>);
+createRoot(rootElement).render(
+  <StrictMode>
+    <App />
+  </StrictMode>
+);

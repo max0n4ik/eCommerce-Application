@@ -1,0 +1,167 @@
+/* Импортируем кастомные классы — здесь можно описывать свои классы или utility-миксы. */
+@import './custom-classes/customClassElements.css';
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap');
+
+/* Подключаем Tailwind reset-стили (base), компоненты (components) и утилиты (utilities). */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 
+==========================================
+Глобальные CSS-переменные (цвета, радиус и др.)
+- Эти переменные будут использоваться внутри Tailwind-конфига для динамических цветов и других стилей.
+- Формат цвета: HSL БЕЗ 'hsl()' — только ТРИ числа (например: 0 0% 100%).
+
+Пример использования в Tailwind:
+bg-background -> подставляется значение из --background
+text-foreground -> подставляется значение из --foreground
+border-border -> подставляется значение из --border и т.д.
+
+Здесь задаём СВЕТЛУЮ тему.
+==========================================
+*/
+@layer base {
+  :root {
+    --background: oklch(94% 0.01 112.37deg);
+    --foreground: oklch(31% 0.01 84.57deg);
+    --card: oklch(94% 0.01 112.37deg);
+    --card-foreground: oklch(31% 0.01 84.57deg);
+    --popover: oklch(94% 0.01 112.37deg);
+    --popover-foreground: oklch(31% 0.01 84.57deg);
+    --primary: oklch(47% 0.05 164.39deg);
+    --primary-foreground: oklch(100% 0 0deg);
+    --secondary: oklch(92% 0.01 167.16deg);
+    --secondary-foreground: oklch(38% 0.04 165.64deg);
+    --muted: oklch(91% 0.02 106.71deg);
+    --muted-foreground: oklch(46% 0.03 92.72deg);
+    --accent: oklch(66% 0.1317 169.1235deg);
+    --accent-foreground: oklch(94% 0.01 112.37deg);
+    --destructive: oklch(58% 0.1677 23.29deg);
+    --destructive-foreground: oklch(100% 0 0deg);
+    --border: oklch(86% 0.02 110.11deg);
+    --input: oklch(86% 0.02 110.11deg);
+    --ring: oklch(47% 0.05 164.39deg);
+    --chart-1: oklch(61% 0.06 163.7deg);
+    --chart-2: oklch(52% 0.05 164.51deg);
+    --chart-3: oklch(47% 0.05 164.39deg);
+    --chart-4: oklch(38% 0.04 165.64deg);
+    --chart-5: oklch(23% 0.02 168.57deg);
+    --sidebar: oklch(91% 0.02 106.71deg);
+    --sidebar-foreground: oklch(31% 0.01 84.57deg);
+    --sidebar-primary: oklch(47% 0.05 164.39deg);
+    --sidebar-primary-foreground: oklch(100% 0 0deg);
+    --sidebar-accent: oklch(86% 0.02 165.76deg);
+    --sidebar-accent-foreground: oklch(38% 0.04 165.64deg);
+    --sidebar-border: oklch(86% 0.02 110.11deg);
+    --sidebar-ring: oklch(47% 0.05 164.39deg);
+    --font-sans: montserrat, sans-serif;
+    --font-serif: merriweather, serif;
+    --font-mono: source code pro, monospace;
+    --radius: 0.5rem;
+    --shadow-2xs: 0 1px 3px 0px hsl(0deg 0% 10.2% / 5%);
+    --shadow-xs: 0 1px 3px 0px hsl(0deg 0% 10.2% / 5%);
+    --shadow-sm:
+      0 1px 3px 0px hsl(0deg 0% 10.2% / 10%),
+      0 1px 2px -1px hsl(0deg 0% 10.2% / 10%);
+    --shadow:
+      0 1px 3px 0px hsl(0deg 0% 10.2% / 10%),
+      0 1px 2px -1px hsl(0deg 0% 10.2% / 10%);
+    --shadow-md:
+      0 1px 3px 0px hsl(0deg 0% 10.2% / 10%),
+      0 2px 4px -1px hsl(0deg 0% 10.2% / 10%);
+    --shadow-lg:
+      0 1px 3px 0px hsl(0deg 0% 10.2% / 10%),
+      0 4px 6px -1px hsl(0deg 0% 10.2% / 10%);
+    --shadow-xl:
+      0 1px 3px 0px hsl(0deg 0% 10.2% / 10%),
+      0 8px 10px -1px hsl(0deg 0% 10.2% / 10%);
+    --shadow-2xl: 0 1px 3px 0px hsl(0deg 0% 10.2% / 25%);
+  }
+
+  /* 
+  ==========================================
+  Тёмная тема (активируется если в стили добавлен класс 'dark')
+  Цвета аналогичные, но под тёмную тему.
+  Пример, установить родительскому контейнеру класс 'dark' <div class="dark">...
+  ==========================================
+  */
+  .dark {
+    --background: oklch(26% 0.01 176.3deg);
+    --foreground: oklch(91% 0.01 106.64deg);
+    --card: oklch(32% 0.01 164.31deg);
+    --card-foreground: oklch(91% 0.01 106.64deg);
+    --popover: oklch(32% 0.01 164.31deg);
+    --popover-foreground: oklch(91% 0.01 106.64deg);
+    --primary: oklch(61% 0.06 163.7deg);
+    --primary-foreground: oklch(23% 0.02 168.57deg);
+    --secondary: oklch(38% 0.01 164.47deg);
+    --secondary-foreground: oklch(86% 0.01 157.06deg);
+    --muted: oklch(32% 0.01 164.31deg);
+    --muted-foreground: oklch(83% 0.02 110.61deg);
+    --accent: oklch(52% 0.05 164.51deg);
+    --accent-foreground: oklch(91% 0.01 106.64deg);
+    --destructive: oklch(58% 0.07 64.9deg);
+    --destructive-foreground: oklch(91% 0.07 106.64deg);
+    --border: oklch(38% 0.01 164.47deg);
+    --input: oklch(38% 0.01 164.47deg);
+    --ring: oklch(61% 0.06 163.7deg);
+    --chart-1: oklch(72% 0.05 164.55deg);
+    --chart-2: oklch(67% 0.06 164.27deg);
+    --chart-3: oklch(61% 0.06 163.7deg);
+    --chart-4: oklch(57% 0.06 164.35deg);
+    --chart-5: oklch(52% 0.05 164.51deg);
+    --sidebar: oklch(26% 0.01 176.3deg);
+    --sidebar-foreground: oklch(91% 0.01 106.64deg);
+    --sidebar-primary: oklch(61% 0.06 163.7deg);
+    --sidebar-primary-foreground: oklch(23% 0.02 168.57deg);
+    --sidebar-accent: oklch(52% 0.05 164.51deg);
+    --sidebar-accent-foreground: oklch(91% 0.01 106.64deg);
+    --sidebar-border: oklch(38% 0.01 164.47deg);
+    --sidebar-ring: oklch(61% 0.06 163.7deg);
+    --font-sans: montserrat, sans-serif;
+    --font-serif: merriweather, serif;
+    --font-mono: source code pro, monospace;
+    --radius: 0.5rem;
+    --shadow-2xs: 0 1px 3px 0px hsl(0deg 0% 10.2% / 5%);
+    --shadow-xs: 0 1px 3px 0px hsl(0deg 0% 10.2% / 5%);
+    --shadow-sm:
+      0 1px 3px 0px hsl(0deg 0% 10.2% / 10%),
+      0 1px 2px -1px hsl(0deg 0% 10.2% / 10%);
+    --shadow:
+      0 1px 3px 0px hsl(0deg 0% 10.2% / 10%),
+      0 1px 2px -1px hsl(0deg 0% 10.2% / 10%);
+    --shadow-md:
+      0 1px 3px 0px hsl(0deg 0% 10.2% / 10%),
+      0 2px 4px -1px hsl(0deg 0% 10.2% / 10%);
+    --shadow-lg:
+      0 1px 3px 0px hsl(0deg 0% 10.2% / 10%),
+      0 4px 6px -1px hsl(0deg 0% 10.2% / 10%);
+    --shadow-xl:
+      0 1px 3px 0px hsl(0deg 0% 10.2% / 10%),
+      0 8px 10px -1px hsl(0deg 0% 10.2% / 10%);
+    --shadow-2xl: 0 1px 3px 0px hsl(0deg 0% 10.2% / 25%);
+  }
+}
+
+/*
+==========================================
+Базовые apply-стили:
+- Задаём всем элементам рамку цвета border.
+- Задаём body фоновый и цвет текста по переменным.
+
+Эффект:
+Все элементы с border-* будут по умолчанию иметь цвет --border.
+Тело страницы — цвет фона и текста по переменным.
+==========================================
+*/
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
