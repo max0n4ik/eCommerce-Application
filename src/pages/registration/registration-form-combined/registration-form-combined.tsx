@@ -146,7 +146,13 @@ export default function CombinedRegistrationForm({
       );
     }
   };
-
+  const placeholderMap: Record<string, string> = {
+    country: 'Country',
+    city: 'City',
+    street: 'Street',
+    house: 'House',
+    postalCode: 'Postal Code',
+  };
   const renderFormFields = (
     formType: 'shipping' | 'billing',
     formData: RegistrationAddress,
@@ -163,7 +169,7 @@ export default function CombinedRegistrationForm({
             name={field}
             value={String(formData[field as keyof RegistrationAddress] || '')}
             onChange={handleInput}
-            placeholder={field}
+            placeholder={placeholderMap[field] || field}
           />
           {errors[`${formType}.${field}`] && (
             <div className="absolute left-0 top-full mt-1">
