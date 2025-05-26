@@ -1,5 +1,5 @@
 import type {
-  CategoryPagedQueryResponse,
+  Category,
   ClientResponse,
   Product,
 } from '@commercetools/platform-sdk';
@@ -17,7 +17,13 @@ export function fetchCatalogProducts(): Promise<ClientResponse<Product[]>> {
 }
 
 export async function fetchCatalogCategories(): Promise<
-  ClientResponse<CategoryPagedQueryResponse>
+  ClientResponse<Category[]>
 > {
-  return apiRoot.categories().get().execute();
+  return apiRoot
+    .categories()
+    .get()
+    .execute()
+    .then((response) => {
+      return { body: response.body.results };
+    });
 }

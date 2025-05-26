@@ -1,4 +1,8 @@
-import type { Attribute } from '@commercetools/platform-sdk';
+import type {
+  Attribute,
+  CategoryReference,
+  LocalizedString,
+} from '@commercetools/platform-sdk';
 
 export interface RegistrationAddress {
   country: string;
@@ -27,9 +31,17 @@ export interface ProductCard {
   name: string;
   price: number;
   salePrice?: number;
+  priceCurrency: string;
   imageUrl: string;
   imageAlt?: string;
-  description?: string;
-  category?: string;
+  description?: LocalizedString;
+  category?: CategoryReference[];
   attributes?: Attribute[];
+}
+
+export interface CategoryCard {
+  id: string;
+  name: string;
+  description?: string;
+  parent?: CategoryReference;
 }
