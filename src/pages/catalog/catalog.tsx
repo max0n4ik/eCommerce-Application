@@ -1,31 +1,16 @@
-import { useEffect, useState } from 'react';
-
-import { fetchCatalogProducts } from '@/services/catalog';
-import type { ProductCard } from '@/utils/types';
+import useCatalogStore from '@/store/catalog';
+import type { ProductCard } from '@/utils/interfaces';
 
 export default function CatalogPage(): React.JSX.Element {
-  const [products, setProducts] = useState<ProductCard[]>([]);
-
-  useEffect(() => {
-    const load = async (): Promise<void> => {
-      const raw = await fetchCatalogProducts();
-      const parsed = raw.map((p) => ({
-        id: p.id,
-        name: p.name?.en ?? '',
-        description: p.description?.en ?? '',
-        image: p.masterVariant.images?.[0]?.url ?? null,
-      }));
-      setProducts(parsed);
-    };
-    load();
-  }, []);
-
+  //надо взять из стора все продукты
+  const { products, fetchProducts } = useCatalogStore();
+  fetchProducts();
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
-      {products.map((p) => (
+      {products.map((p: ProductCard) => (
         <div key={p.id} className="border p-4 rounded shadow">
-          {p.image ? (
-            <img src={p.image} alt={p.name} className="mb-2 rounded" />
+          {p.imageUrl ? (
+            <img src={p.imageUrl} alt={p.imageAlt} className="mb-2 rounded" />
           ) : (
             <div className="h-40 bg-gray-100 mb-2 rounded" />
           )}

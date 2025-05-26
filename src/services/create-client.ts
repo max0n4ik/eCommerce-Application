@@ -6,7 +6,7 @@ import type {
 
 import { ctpClient } from './build-client';
 
-const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
+export const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
   projectKey: import.meta.env.VITE_PROJECT_KEY,
 });
 

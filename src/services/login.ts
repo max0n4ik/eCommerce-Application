@@ -1,11 +1,6 @@
-import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 import type { Customer } from '@commercetools/platform-sdk';
 
-import { ctpClient } from './build-client';
-
-const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
-  projectKey: import.meta.env.VITE_PROJECT_KEY,
-});
+import { apiRoot } from './create-client';
 
 export type LoginResult = {
   success: boolean;
