@@ -15,3 +15,10 @@ export type PropsWithChildren<P = unknown> = P & {
 export type PrivateRouteProps = PropsWithChildren & {
   reverse?: boolean;
 };
+
+export type ProductCard = {
+  id: string;
+  name: string;
+  description: string;
+  image: string | null;
+};

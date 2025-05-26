@@ -4,7 +4,7 @@ import { Layout } from '@/components/layout';
 import { PrivateRoute } from '@/components/private-route';
 import { About } from '@/pages/about';
 import { Cart } from '@/pages/cart';
-import { Catalog } from '@/pages/catalog';
+import { CatalogPage } from '@/pages/catalog';
 import { Home } from '@/pages/home';
 import Login from '@/pages/login/login';
 import NotFound from '@/pages/not-found/not-found';
@@ -36,7 +36,7 @@ export default function App(): React.JSX.Element {
               </PrivateRoute>
             }
           />
-          <Route path={ROUTES.CATALOG} element={<Catalog />} />
+          <Route path={ROUTES.CATALOG} element={<CatalogPage />} />
           <Route path={ROUTES.NOTFOUND} element={<NotFound />} />
           <Route
             path={ROUTES.PROFILE}
