@@ -41,6 +41,7 @@ export default function CatalogPage(): React.JSX.Element {
                   : 'Без категории'}
               </p>
               <h3 className="font-bold text-lg">{p.name}</h3>
+              <h5 className=" line-clamp-2">{p.description?.en}</h5>
               <p className="font-bold text-lg self-end">
                 {p.price}{' '}
                 <span className="font-normal text-lg self-end">
