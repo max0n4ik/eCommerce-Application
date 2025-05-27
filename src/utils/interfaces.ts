@@ -31,6 +31,7 @@ export interface ProductCard {
   name: string;
   price: number;
   salePrice?: number;
+  permyriad?: number;
   priceCurrency: string;
   imageUrl: string;
   imageAlt?: string;
@@ -44,4 +45,12 @@ export interface CategoryCard {
   name: string;
   description?: string;
   parent?: CategoryReference;
+}
+
+export interface DiscountPrice {
+  id: string;
+  name: string;
+  description?: string;
+  category: string;
+  value: number;
 }
