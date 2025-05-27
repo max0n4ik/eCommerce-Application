@@ -30,7 +30,29 @@ const useCatalogStore = create<CatalogStore>((set) => ({
   fetchProducts: async (): Promise<void> => {
     const response = await fetchCatalogProducts();
     const mappedProducts = mappersCatalog(response);
-    set({ products: mappedProducts });
+    const discountResponse = await fetchCatalogProductsDiscount();
+    const mappedDiscount = mappersDiscount(discountResponse);
+
+    const productsWithDiscount = mappedProducts.map((product) => {
+      const productDiscount = mappedDiscount.find((discount) => {
+        const discountCategories = new Set(
+          discount.category
+            .replace('categoriesWithAncestors.id = (', '')
+            .replace(')', '')
+            .split(',')
+            .map((id) => id.replaceAll('"', '').trim())
+        );
+
+        return product.category?.some((cat) => discountCategories.has(cat.id));
+      });
+
+      return {
+        ...product,
+        permyriad: productDiscount ? productDiscount.value : 0,
+      };
+    });
+
+    set({ products: productsWithDiscount });
   },
   fetchCategories: async (): Promise<void> => {
     const response = await fetchCatalogCategories();
