@@ -55,7 +55,6 @@ export default function CatalogPage(): React.JSX.Element {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
         {getDiscounts().map((p: ProductCard) => (
           <div key={p.id} className="border p-4 rounded shadow">
-            {console.log(p)}
             {p.imageUrl ? (
               <img
                 src={p.imageUrl}
