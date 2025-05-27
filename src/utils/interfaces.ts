@@ -26,7 +26,7 @@ export interface PropsWithChildren {
   children: React.ReactNode;
 }
 
-export interface ProductCard {
+export interface ProductCardI {
   id: string;
   name: string;
   price: number;

@@ -11,11 +11,11 @@ import {
 import type {
   CategoryCard,
   DiscountPrice,
-  ProductCard,
+  ProductCardI,
 } from '@/utils/interfaces';
 
 type CatalogStore = {
-  products: ProductCard[];
+  products: ProductCardI[];
   categories: CategoryCard[];
   discount: DiscountPrice[];
   fetchProducts: () => Promise<void>;

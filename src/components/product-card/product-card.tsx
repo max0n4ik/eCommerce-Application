@@ -6,9 +6,9 @@ import {
   getDiscountedPrice,
   getCategoryName,
 } from '@/utils/catalog';
-import type { ProductCard } from '@/utils/interfaces';
+import type { ProductCardI } from '@/utils/interfaces';
 
-export default function Catalog({
+export default function ProductCard({
   imageUrl,
   imageAlt,
   id,
@@ -17,7 +17,7 @@ export default function Catalog({
   permyriad,
   name,
   description,
-}: ProductCard): React.JSX.Element {
+}: ProductCardI): React.JSX.Element {
   const { categories, fetchCategories } = useCatalogStore();
   useEffect(() => {
     fetchCategories();
