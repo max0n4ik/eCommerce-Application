@@ -37,10 +37,8 @@ const useCatalogStore = create<CatalogStore>((set) => ({
       const productDiscount = mappedDiscount.find((discount) => {
         const discountCategories = new Set(
           discount.category
-            .replace('categoriesWithAncestors.id = (', '')
-            .replace(')', '')
-            .split(',')
-            .map((id) => id.replaceAll('"', '').trim())
+            ?.match(/"([^"]+)"/g)
+            ?.map((id) => id.replaceAll('"', '').trim())
         );
 
         return product.category?.some((cat) => discountCategories.has(cat.id));

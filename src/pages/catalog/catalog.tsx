@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-import { Catalog } from '@/components/catalog';
+import { Catalog } from '@/components/product-card';
 import useCatalogStore from '@/store/catalog';
 import type { ProductCard } from '@/utils/interfaces';
 
