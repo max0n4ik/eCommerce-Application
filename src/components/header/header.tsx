@@ -22,10 +22,10 @@ export default function Header(): React.JSX.Element {
             Petal & Pot
           </p>
         </Link>
-        <nav className="mb-4 font-medium items-center flex gap-4 text-base text-black font-sans uppercase">
+        <nav className=" font-medium  items-center flex gap-4 text-base text-black font-sans uppercase">
           <Link to={ROUTES.HOME}>Home</Link>
           <Link to={ROUTES.CART}>Cart</Link>
-
+          <Link to={ROUTES.CATALOG}>Catalog</Link>
           {isAuth ? (
             <>
               <Link to={ROUTES.PROFILE}>Profile</Link>

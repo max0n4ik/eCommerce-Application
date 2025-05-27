@@ -1,3 +1,9 @@
+import type {
+  Attribute,
+  CategoryReference,
+  LocalizedString,
+} from '@commercetools/platform-sdk';
+
 export interface RegistrationAddress {
   country: string;
   city: string;
@@ -18,4 +24,24 @@ export interface RegistrationFormFourthProps {
 
 export interface PropsWithChildren {
   children: React.ReactNode;
+}
+
+export interface ProductCard {
+  id: string;
+  name: string;
+  price: number;
+  salePrice?: number;
+  priceCurrency: string;
+  imageUrl: string;
+  imageAlt?: string;
+  description?: LocalizedString;
+  category?: CategoryReference[];
+  attributes?: Attribute[];
+}
+
+export interface CategoryCard {
+  id: string;
+  name: string;
+  description?: string;
+  parent?: CategoryReference;
 }
