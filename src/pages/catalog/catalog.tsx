@@ -23,7 +23,7 @@ export default function Catalog(): React.JSX.Element {
     return (
       <div className="flex justify-center items-center min-h-screen">
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-          <p>Ошибка загрузки продуктов: {error}</p>
+          <p>Error: {error}</p>
         </div>
       </div>
     );
