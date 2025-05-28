@@ -17,7 +17,13 @@ export default function Product(): React.JSX.Element {
     return <div>Product loading ...</div>;
   }
   if (error) {
-    return <div className="color red"></div>;
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+          <p>Error: {error}</p>
+        </div>
+      </div>
+    );
   }
   return <div>Product page ID: {id}</div>;
 }
