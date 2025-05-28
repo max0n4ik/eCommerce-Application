@@ -7,6 +7,7 @@ import {
   fetchCatalogProducts,
   fetchCatalogCategories,
   fetchCatalogProductsDiscount,
+  fetchProductById,
 } from '@/services/catalog';
 import type {
   CategoryCard,
@@ -18,18 +19,23 @@ type CatalogStore = {
   products: ProductCardI[];
   categories: CategoryCard[];
   discount: DiscountPrice[];
+  currentProduct: ProductCardI | null;
   loading: boolean;
+  productLoading: boolean;
   error: string | null;
   fetchProducts: () => Promise<void>;
   fetchCategories: () => Promise<void>;
   fetchDiscount: () => Promise<void>;
+  fetchProduct: (id: string) => Promise<void>;
 };
 
 const useCatalogStore = create<CatalogStore>((set) => ({
   products: [],
   categories: [],
   discount: [],
+  currentProduct: null,
   loading: false,
+  productLoading: false,
   error: null,
   fetchProducts: async (): Promise<void> => {
     set({ loading: true, error: null });
@@ -61,20 +67,50 @@ const useCatalogStore = create<CatalogStore>((set) => ({
       set({ products: productsWithDiscount, loading: false });
     } catch (error) {
       set({
-        error: error instanceof Error ? error.message : 'Произошла ошибка',
+        error: error instanceof Error ? error.message : 'Something went wrong',
         loading: false,
       });
     }
   },
   fetchCategories: async (): Promise<void> => {
-    const response = await fetchCatalogCategories();
-    const mappedCategory = mappersCategory(response);
-    set({ categories: mappedCategory });
+    try {
+      set({ loading: true, error: null });
+      const response = await fetchCatalogCategories();
+      const mappedCategory = mappersCategory(response);
+      set({ categories: mappedCategory, loading: false });
+    } catch (error) {
+      set({
+        error: error instanceof Error ? error.message : 'Something went wrong',
+        loading: false,
+      });
+    }
   },
   fetchDiscount: async (): Promise<void> => {
-    const response = await fetchCatalogProductsDiscount();
-    const mappedDiscount = mappersDiscount(response);
-    set({ discount: mappedDiscount });
+    try {
+      set({ loading: true, error: null });
+      const response = await fetchCatalogProductsDiscount();
+      const mappedDiscount = mappersDiscount(response);
+      set({ discount: mappedDiscount, loading: false });
+    } catch (error) {
+      set({
+        error: error instanceof Error ? error.message : 'Something went wrong',
+        loading: false,
+      });
+    }
+  },
+
+  fetchProduct: async (id: string): Promise<void> => {
+    try {
+      set({ productLoading: true, error: null });
+      const response = await fetchProductById(id);
+      console.log(response, "IT'S YOUR RESPONSE");
+      set({ productLoading: false });
+    } catch (error) {
+      set({
+        error: error instanceof Error ? error.message : 'Something went wrong',
+        productLoading: false,
+      });
+    }
   },
 }));
 
