@@ -10,6 +10,7 @@ export const ROUTES = {
   CATALOG: '/catalog',
   LOGOUT: '/logout',
   NOTFOUND: '*',
+  PRODUCT: '',
 } as const;
 
 export const allowedCountries = new Set([
