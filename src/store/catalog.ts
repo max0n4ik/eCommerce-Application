@@ -8,6 +8,7 @@ import {
   fetchCatalogCategories,
   fetchCatalogProductsDiscount,
 } from '@/services/catalog';
+import { nestCategories } from '@/utils/catalog';
 import type {
   CategoryCard,
   DiscountPrice,
@@ -69,7 +70,8 @@ const useCatalogStore = create<CatalogStore>((set) => ({
   fetchCategories: async (): Promise<void> => {
     const response = await fetchCatalogCategories();
     const mappedCategory = mappersCategory(response);
-    set({ categories: mappedCategory });
+    const nestCategory = nestCategories(mappedCategory);
+    set({ categories: nestCategory });
   },
   fetchDiscount: async (): Promise<void> => {
     const response = await fetchCatalogProductsDiscount();
