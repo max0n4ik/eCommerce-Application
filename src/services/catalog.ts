@@ -49,6 +49,6 @@ export async function fetchProductById(
     .get()
     .execute()
     .then((response) => {
-      return { body: response.body.id };
+      return { ...response.body };
     });
 }

@@ -103,7 +103,7 @@ const useCatalogStore = create<CatalogStore>((set) => ({
     try {
       set({ productLoading: true, error: null });
       const response = await fetchProductById(id);
-      console.log(response, "IT'S YOUR RESPONSE");
+      console.log(response);
       set({ productLoading: false });
     } catch (error) {
       set({
