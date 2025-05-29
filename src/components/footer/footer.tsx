@@ -9,7 +9,7 @@ import { ROUTES } from '@/utils/constantes';
 export default function Footer(): React.JSX.Element {
   return (
     <>
-      <footer>
+      <footer className="bc-section-background">
         <div className="grid lg:grid-cols-[1fr_0.6fr_0.6fr] gap-[5vw] lg:p-[100px] p-[20px]">
           <div className="flex flex-col gap-5">
             <Link to={ROUTES.HOME} className="flex items-center">

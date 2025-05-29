@@ -24,7 +24,8 @@ border-border -> подставляется значение из --border и т
 */
 @layer base {
   :root {
-    --background: oklch(94% 0.01 112.37deg);
+    --background: oklch(100% 0 0deg);
+    --section-background: oklch(94% 0.01 112.37deg);
     --foreground: oklch(31% 0.01 84.57deg);
     --card: oklch(94% 0.01 112.37deg);
     --card-foreground: oklch(31% 0.01 84.57deg);
@@ -163,5 +164,9 @@ border-border -> подставляется значение из --border и т
 
   body {
     @apply bg-background text-foreground;
+  }
+
+  .bc-section-background {
+    background-color: var(--section-background);
   }
 }
