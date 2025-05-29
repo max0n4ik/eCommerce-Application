@@ -40,3 +40,15 @@ export async function fetchCatalogCategories(): Promise<
       return { body: response.body.results };
     });
 }
+export async function fetchProductById(
+  id: string
+): Promise<ClientResponse<Product>> {
+  return apiRoot
+    .products()
+    .withId({ ID: id })
+    .get()
+    .execute()
+    .then((response) => {
+      return { body: response.body };
+    });
+}
