@@ -12,9 +12,8 @@ export default function DetailedProduct({
   return (
     <div
       key={id}
-      className="flex justify-center items-start gap-8 px-4 py-8 max-w-screen-xl mx-auto"
+      className="flex justify-center items-start gap-8 p-[50px] max-w-screen-xl mx-auto "
     >
-      {/* Блок с изображениями */}
       <div className="w-1/2">
         <div className="grid grid-cols-2 gap-1">
           {images[0] && (
@@ -35,16 +34,17 @@ export default function DetailedProduct({
             <img
               src={images[2].url}
               alt={images[2].alt || 'Product image'}
-              className="object-contain w-full h-60 "
+              className="object-contain w-full max-h-[200px]"
             />
           )}
         </div>
       </div>
 
-      {/* Блок с текстовой информацией */}
       <div className="w-1/2 flex flex-col gap-4">
-        <h3 className="font-medium text-2xl text-[var(--gray)]">{name}</h3>
-
+        <h3 className="font-medium font-serif text-[var(--title-color)] text-[42px] ">
+          {name}
+        </h3>
+        <span className=" inline-block h-[2px] w-[115px] bg-[color:var(--bar-color)]"></span>
         <div className="flex items-center gap-2">
           {permyriad && permyriad > 0 ? (
             <>
@@ -57,13 +57,19 @@ export default function DetailedProduct({
               </p>
             </>
           ) : (
-            <p className="text-base font-semibold text-gray-900">
-              {formatPrice(price)} <span className="ml-1 font-normal">$</span>
+            <p className="font-inter font-bold text-[var(--title-color)] text-2xl ">
+              {formatPrice(price)}{' '}
+              <span className="font-inter font-bold text-[var(--title-color)] text-2xl ">
+                $
+              </span>
             </p>
           )}
         </div>
 
-        <p className="text-gray-700 text-base">{description?.en}</p>
+        <p className="ont-inter text-[13px] font-normal text-[var(--description-color)] max-w-[425px]">
+          {description}
+        </p>
+        <span className=" inline-block h-[1px] w-full bg-[color:var(--light-bar-color)]"></span>
       </div>
     </div>
   );
