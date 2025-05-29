@@ -12,12 +12,14 @@ export const getCategoryName = (
 export const formatPrice = (price: number): string => {
   return price.toString().replace(/(\d{2})$/, '.$1');
 };
+
 export const getDiscountedPrice = (
   price: number,
   permyriad: number = 0
 ): number => {
   return (price * (10000 - permyriad)) / 10000;
 };
+
 export function nestCategories(categories: CategoryCard[]): NestedCategory[] {
   const map = new Map<string, NestedCategory>();
   const roots: NestedCategory[] = [];
@@ -40,3 +42,55 @@ export function nestCategories(categories: CategoryCard[]): NestedCategory[] {
 
   return roots;
 }
+
+interface CategoryWithParent {
+  category: NestedCategory | undefined;
+  parent: NestedCategory | undefined;
+}
+
+export const findCategoryById = (
+  categoryId: string,
+  categories: NestedCategory[]
+): CategoryWithParent => {
+  const mainCategory = categories.find((cat) => cat.id === categoryId);
+  if (mainCategory) {
+    return { category: mainCategory, parent: undefined };
+  }
+
+  for (const category of categories) {
+    const subCategory = category.children?.find(
+      (child) => child.id === categoryId
+    );
+    if (subCategory) {
+      return { category: subCategory, parent: category };
+    }
+  }
+  return { category: undefined, parent: undefined };
+};
+
+export const getSubCategories = (
+  currentCategory: NestedCategory | undefined,
+  parentCategory: NestedCategory | undefined
+): NestedCategory[] => {
+  if (parentCategory?.children) {
+    return parentCategory.children;
+  }
+
+  if (currentCategory?.children) {
+    return currentCategory.children;
+  }
+
+  return [];
+};
+
+export const shouldShowSubCategories = (
+  selectedCategory: string,
+  currentCategory: NestedCategory | undefined,
+  parentCategory: NestedCategory | undefined
+): boolean => {
+  return Boolean(
+    selectedCategory !== 'all' &&
+      ((currentCategory?.children && currentCategory.children.length > 0) ||
+        (parentCategory?.children && parentCategory.children.length > 0))
+  );
+};
