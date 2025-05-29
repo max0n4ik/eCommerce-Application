@@ -25,7 +25,6 @@ export default function ProductCard({
           <div className="h-72 w-full bg-gray-100" />
         )}
         <div className="p-4 flex flex-col gap-2">
-          <h3 className="text-sm text-gray-400">category</h3>
           <h3 className="font-medium text-lg text-[var(--gray)]">{name}</h3>
           <h5 className="line-clamp-2">{description?.en}</h5>
           <div className="flex items-center gap-2">
