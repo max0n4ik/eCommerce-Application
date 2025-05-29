@@ -11,7 +11,7 @@ export default function ProductCard({
   description,
 }: ProductCardI): React.JSX.Element {
   return (
-    <div key={id} className="overflow-hidden shadow-sm flex flex-col">
+    <div key={id} className="product-card cursor-pointer">
       {imageUrl ? (
         <img
           src={imageUrl}

@@ -170,4 +170,27 @@ border-border -> подставляется значение из --border и т
   .bc-section-background {
     background-color: var(--section-background);
   }
+
+  .product-card {
+    @apply overflow-hidden shadow-sm flex flex-col;
+
+    will-change: transform, box-shadow, background-color;
+
+    transform-style: preserve-3d;
+    transform: translateZ(0);
+
+    border-radius: var(--radius);
+
+    backface-visibility: hidden;
+
+    transition-timing-function: ease-in-out;
+    transition-duration: 300ms;
+    transition-property: transform, box-shadow, background-color;
+
+    &:hover {
+      transform: scale(1.03);
+      background-color: var(--section-background);
+      box-shadow: var(--shadow-lg);
+    }
+  }
 }
