@@ -179,8 +179,6 @@ border-border -> подставляется значение из --border и т
     transform-style: preserve-3d;
     transform: translateZ(0);
 
-    border-radius: var(--radius);
-
     backface-visibility: hidden;
 
     transition-timing-function: ease-in-out;
