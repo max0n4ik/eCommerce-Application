@@ -89,7 +89,7 @@ border-border -> подставляется значение из --border и т
   ==========================================
   */
   .dark {
-    --background: oklch(26% 0.01 176.3deg);
+    --background: oklch(96.68% 0.0044 179.73deg);
     --foreground: oklch(91% 0.01 106.64deg);
     --card: oklch(32% 0.01 164.31deg);
     --card-foreground: oklch(91% 0.01 106.64deg);
