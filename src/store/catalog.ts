@@ -20,7 +20,7 @@ type CatalogStore = {
   products: ProductCardI[];
   categories: CategoryCard[];
   discount: DiscountPrice[];
-  currentProduct: ProductCardI | null;
+  currentProduct: DetailedProductInterface | null;
   loading: boolean;
   productLoading: boolean;
   error: string | null;
@@ -107,6 +107,11 @@ const useCatalogStore = create<CatalogStore>((set) => ({
       const current = response.body.masterData.staged;
       const variant = current.masterVariant;
       const lang = 'en';
+      const images =
+        variant?.images?.map((img) => ({
+          url: img.url,
+          alt: img.label || 'Product image',
+        })) || [];
 
       console.log('>>>>>', response);
       const product: DetailedProductInterface = {
@@ -115,6 +120,7 @@ const useCatalogStore = create<CatalogStore>((set) => ({
         description: current.description[lang],
         imageUrl: variant?.images?.[0]?.url || '',
         imageAlt: variant?.images?.[0]?.label || 'Product image',
+        images,
         price: variant?.prices?.[0]?.value?.centAmount || 0,
         priceCurrency: variant?.prices?.[0]?.value?.currencyCode || 'USD',
         category: current.categories || [],

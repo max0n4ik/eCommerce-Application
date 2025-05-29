@@ -64,7 +64,8 @@ export interface DetailedProductInterface {
   priceCurrency: string;
   imageUrl: string;
   imageAlt?: string;
-  description?: LocalizedString;
+  images: { url: string; alt: string }[];
+  description?: string;
   category?: CategoryReference[];
   attributes?: Attribute[];
 }
