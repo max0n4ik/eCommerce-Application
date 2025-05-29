@@ -11,6 +11,7 @@ import {
 } from '@/services/catalog';
 import type {
   CategoryCard,
+  DetailedProductInterface,
   DiscountPrice,
   ProductCardI,
 } from '@/utils/interfaces';
@@ -35,7 +36,7 @@ const useCatalogStore = create<CatalogStore>((set) => ({
   discount: [],
   currentProduct: null,
   loading: false,
-  productLoading: false,
+  productLoading: true,
   error: null,
   fetchProducts: async (): Promise<void> => {
     set({ loading: true, error: null });
@@ -103,8 +104,23 @@ const useCatalogStore = create<CatalogStore>((set) => ({
     try {
       set({ productLoading: true, error: null });
       const response = await fetchProductById(id);
-      console.log(response);
-      set({ productLoading: false });
+      const current = response.body.masterData.staged;
+      const variant = current.masterVariant;
+      const lang = 'en';
+
+      console.log('>>>>>', response);
+      const product: DetailedProductInterface = {
+        id: response.body.id,
+        name: current.name[lang] || 'Unnamed Product',
+        description: current.description[lang],
+        imageUrl: variant?.images?.[0]?.url || '',
+        imageAlt: variant?.images?.[0]?.label || 'Product image',
+        price: variant?.prices?.[0]?.value?.centAmount || 0,
+        priceCurrency: variant?.prices?.[0]?.value?.currencyCode || 'USD',
+        category: current.categories || [],
+        attributes: variant.attributes || [],
+      };
+      set({ currentProduct: product, productLoading: false });
     } catch (error) {
       set({
         error: error instanceof Error ? error.message : 'Something went wrong',
