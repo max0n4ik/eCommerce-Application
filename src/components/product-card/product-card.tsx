@@ -14,35 +14,34 @@ export default function ProductCard({
 }: ProductCardI): React.JSX.Element {
   return (
     <Link to={`/product/${id}`} className="block">
-      <div key={id} className="border p-4 rounded shadow">
+      <div key={id} className="product-card cursor-pointer">
         {imageUrl ? (
           <img
             src={imageUrl}
             alt={imageAlt}
-            className="mb-2 rounded object-cover"
+            className="h-96 w-full object-cover object-[center_top]"
           />
         ) : (
-          <div className="h-40 bg-gray-100 mb-2 rounded" />
+          <div className="h-72 w-full bg-gray-100" />
         )}
-        <div className="flex flex-col gap-2">
-          <h3 className="font-bold text-lg">{name}</h3>
+        <div className="p-4 flex flex-col gap-2">
+          <h3 className="font-medium text-lg text-[var(--gray)]">{name}</h3>
           <h5 className="line-clamp-2">{description?.en}</h5>
-          <div className="flex gap-2 justify-end">
+          <div className="flex items-center gap-2">
             {permyriad && permyriad > 0 ? (
               <>
-                <p className="font-bold text-lg line-through text-gray-500">
+                <p className="text-gray-400 line-through text-base">
                   {formatPrice(price)}{' '}
-                  <span className="font-normal text-lg">$</span>
+                  <span className="ml-1 font-normal">$</span>
                 </p>
-                <p className="font-bold text-lg text-red-600">
+                <p className="text-base font-semibold text-red-600">
                   {formatPrice(getDiscountedPrice(price, permyriad))}{' '}
-                  <span className="font-normal text-lg">$</span>
+                  <span className="ml-1 font-normal">$</span>
                 </p>
               </>
             ) : (
-              <p className="font-bold text-lg">
-                {formatPrice(price)}{' '}
-                <span className="font-normal text-lg">$</span>
+              <p className="text-base font-semibold text-gray-900">
+                {formatPrice(price)} <span className="ml-1 font-normal">$</span>
               </p>
             )}
           </div>
