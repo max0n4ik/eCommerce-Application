@@ -43,7 +43,7 @@ export default function DetailedProduct({
           )}
         </div>
 
-        <p className="ont-inter text-[13px] font-normal text-[var(--description-color)] max-w-[425px]">
+        <p className="font-inter text-[13px] font-normal text-[var(--description-color)] max-w-[425px]">
           {description}
         </p>
         <span className=" inline-block h-[1px] w-full bg-[color:var(--light-bar-color)]"></span>
