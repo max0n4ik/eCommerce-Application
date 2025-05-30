@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useRef } from 'react';
 
 import {
   Carousel,
@@ -7,47 +7,43 @@ import {
   CarouselNext,
   CarouselPrevious,
   type CarouselApi,
-} from '@/components/ui/carousel';
+} from '@/components/ui/corousel/carousel-utils';
 
 interface Props {
   images: { url: string; alt?: string }[];
 }
 
-export default function SyncedCarousel({ images }: Props) {
-  const [emblaMainApi, setEmblaMainApi] = useState<CarouselApi | null>(null);
-  const [emblaThumbApi, setEmblaThumbApi] = useState<CarouselApi | null>(null);
+export default function SyncedCarousel({ images }: Props): React.JSX.Element {
+  const mainEmblaRef = useRef<CarouselApi | null>(null);
+  const thumbEmblaRef = useRef<CarouselApi | null>(null);
   const [selectedIndex, setSelectedIndex] = useState(0);
 
-  // Синхронизируем выбранный слайд
-  function onSelect() {
-    if (!emblaMainApi || !emblaThumbApi) return;
-    const index = emblaMainApi.selectedScrollSnap();
-    setSelectedIndex(index);
-    emblaThumbApi.scrollTo(index);
-  }
-
-  function onThumbClick(index: number) {
-    if (!emblaMainApi) return;
-    emblaMainApi.scrollTo(index);
-  }
-
-  useEffect(() => {
-    if (!emblaMainApi) return;
-
-    emblaMainApi.on('select', onSelect);
-    emblaMainApi.on('reInit', onSelect);
-
-    // При размонтировании удаляем слушатели
-    return () => {
-      emblaMainApi.off('select', onSelect);
-      emblaMainApi.off('reInit', onSelect);
-    };
-  }, [emblaMainApi, emblaThumbApi]);
+  const onThumbClick = (index: number): void => {
+    mainEmblaRef.current?.scrollTo(index);
+  };
 
   return (
     <div className="w-full max-w-md mx-auto">
-      {/* Главный слайдер */}
-      <Carousel className="relative w-full" onInitApi={setEmblaMainApi}>
+      <Carousel
+        className="relative w-full"
+        setApi={(api) => {
+          if (!api) return;
+          mainEmblaRef.current = api;
+          setSelectedIndex(api.selectedScrollSnap());
+
+          api.on('select', () => {
+            const index = api.selectedScrollSnap();
+            setSelectedIndex(index);
+            thumbEmblaRef.current?.scrollTo(index);
+          });
+
+          api.on('reInit', () => {
+            const index = api.selectedScrollSnap();
+            setSelectedIndex(index);
+            thumbEmblaRef.current?.scrollTo(index);
+          });
+        }}
+      >
         <CarouselContent>
           {images.map((image, i) => (
             <CarouselItem key={i}>
@@ -63,8 +59,13 @@ export default function SyncedCarousel({ images }: Props) {
         <CarouselNext />
       </Carousel>
 
-      {/* Миниатюры */}
-      <Carousel className="relative w-full mt-4" onInitApi={setEmblaThumbApi}>
+      <Carousel
+        className="relative w-full mt-4"
+        opts={{ align: 'start' }}
+        setApi={(api) => {
+          thumbEmblaRef.current = api;
+        }}
+      >
         <CarouselContent className="flex -ml-2">
           {images.map((image, i) => (
             <CarouselItem
@@ -77,7 +78,7 @@ export default function SyncedCarousel({ images }: Props) {
               <img
                 src={image.url}
                 alt={image.alt || `Thumbnail ${i + 1}`}
-                className="w-full h-20 object-cover rounded"
+                className="w-full h-20 object-cover"
               />
             </CarouselItem>
           ))}

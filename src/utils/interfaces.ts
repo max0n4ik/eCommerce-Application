@@ -62,8 +62,6 @@ export interface DetailedProductInterface {
   salePrice?: number;
   permyriad?: number;
   priceCurrency: string;
-  imageUrl: string;
-  imageAlt?: string;
   images: { url: string; alt: string }[];
   description?: string;
   category?: CategoryReference[];

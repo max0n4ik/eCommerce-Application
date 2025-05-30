@@ -116,8 +116,6 @@ const useCatalogStore = create<CatalogStore>((set) => ({
         id: response.body.id,
         name: current.name[lang] || 'Unnamed Product',
         description: current.description[lang],
-        imageUrl: variant?.images?.[0]?.url || '',
-        imageAlt: variant?.images?.[0]?.label || 'Product image',
         images,
         price: variant?.prices?.[0]?.value?.centAmount || 0,
         priceCurrency: variant?.prices?.[0]?.value?.currencyCode || 'USD',
