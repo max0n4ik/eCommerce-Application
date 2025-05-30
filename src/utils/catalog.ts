@@ -17,3 +17,15 @@ export const getDiscountedPrice = (
 ): number => {
   return (price * (10000 - permyriad)) / 10000;
 };
+export function getDiscount(discounts, productCategories) {
+  const productDiscount = discounts.find((discount) => {
+    const discountCategories = new Set(
+      discount.category
+        ?.match(/"([^"]+)"/g)
+        ?.map((id) => id.replaceAll('"', '').trim())
+    );
+
+    return productCategories.some((cat) => discountCategories.has(cat.id));
+  });
+  return productDiscount ? productDiscount.value : 0;
+}

@@ -28,11 +28,10 @@ export default function DetailedProduct({
           {permyriad && permyriad > 0 ? (
             <>
               <p className="text-gray-400 line-through text-base">
-                {formatPrice(price)} <span className="ml-1 font-normal">$</span>
+                {formatPrice(price)}$
               </p>
               <p className="text-base font-semibold text-red-600">
-                {formatPrice(getDiscountedPrice(price, permyriad))}{' '}
-                <span className="ml-1 font-normal">$</span>
+                {formatPrice(getDiscountedPrice(price, permyriad))} $
               </p>
             </>
           ) : (

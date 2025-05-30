@@ -8,7 +8,9 @@ import {
   fetchCatalogCategories,
   fetchCatalogProductsDiscount,
   fetchProductById,
+  fetchProductDiscount,
 } from '@/services/catalog';
+import { getDiscount } from '@/utils/catalog';
 import type {
   CategoryCard,
   DetailedProductInterface,
@@ -19,7 +21,7 @@ import type {
 type CatalogStore = {
   products: ProductCardI[];
   categories: CategoryCard[];
-  discount: DiscountPrice[];
+  discounts: DiscountPrice[];
   currentProduct: DetailedProductInterface | null;
   loading: boolean;
   productLoading: boolean;
@@ -30,10 +32,10 @@ type CatalogStore = {
   fetchProduct: (id: string) => Promise<void>;
 };
 
-const useCatalogStore = create<CatalogStore>((set) => ({
+const useCatalogStore = create<CatalogStore>((set, get) => ({
   products: [],
   categories: [],
-  discount: [],
+  discounts: [],
   currentProduct: null,
   loading: false,
   productLoading: true,
@@ -65,7 +67,11 @@ const useCatalogStore = create<CatalogStore>((set) => ({
         };
       });
 
-      set({ products: productsWithDiscount, loading: false });
+      set({
+        discounts: mappedDiscount,
+        products: productsWithDiscount,
+        loading: false,
+      });
     } catch (error) {
       set({
         error: error instanceof Error ? error.message : 'Something went wrong',
@@ -91,7 +97,7 @@ const useCatalogStore = create<CatalogStore>((set) => ({
       set({ loading: true, error: null });
       const response = await fetchCatalogProductsDiscount();
       const mappedDiscount = mappersDiscount(response);
-      set({ discount: mappedDiscount, loading: false });
+      set({ discounts: mappedDiscount, loading: false });
     } catch (error) {
       set({
         error: error instanceof Error ? error.message : 'Something went wrong',
@@ -102,9 +108,14 @@ const useCatalogStore = create<CatalogStore>((set) => ({
 
   fetchProduct: async (id: string): Promise<void> => {
     try {
+      let { discounts } = get();
       set({ productLoading: true, error: null });
+      if (discounts.length === 0) {
+        const response = await fetchCatalogProductsDiscount();
+        discounts = mappersDiscount(response);
+      }
       const response = await fetchProductById(id);
-      const current = response.body.masterData.staged;
+      const current = response.body.masterData.current;
       const variant = current.masterVariant;
       const lang = 'en';
       const images =
@@ -112,14 +123,17 @@ const useCatalogStore = create<CatalogStore>((set) => ({
           url: img.url,
           alt: img.label || 'Product image',
         })) || [];
+      const categories = current.categories;
+      const productPermyriad = getDiscount(discounts, categories);
       const product: DetailedProductInterface = {
         id: response.body.id,
         name: current.name[lang] || 'Unnamed Product',
         description: current.description[lang],
         images,
+        permyriad: productPermyriad,
         price: variant?.prices?.[0]?.value?.centAmount || 0,
         priceCurrency: variant?.prices?.[0]?.value?.currencyCode || 'USD',
-        category: current.categories || [],
+        category: categories || [],
         attributes: variant.attributes || [],
       };
       set({ currentProduct: product, productLoading: false });

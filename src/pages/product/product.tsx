@@ -8,7 +8,6 @@ export default function Product(): React.JSX.Element {
   const { id } = useParams<{ id: string }>();
   const { currentProduct, productLoading, error, fetchProduct } =
     useCatalogStore();
-
   useEffect(() => {
     if (id) {
       fetchProduct(id);

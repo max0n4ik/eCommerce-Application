@@ -52,3 +52,16 @@ export async function fetchProductById(
       return response;
     });
 }
+export async function fetchProductDiscount(
+  id: string
+): Promise<ClientResponse<ProductDiscount>> {
+  return apiRoot
+    .productDiscounts()
+    .withId({ ID: id })
+    .get()
+    .execute()
+    .then((response) => {
+      console.log(response, '>>>>');
+      return response;
+    });
+}
