@@ -9,6 +9,7 @@ import {
   fetchCatalogProductsDiscount,
   fetchProductById,
 } from '@/services/catalog';
+import { nestCategories } from '@/utils/catalog';
 import type {
   CategoryCard,
   DiscountPrice,
@@ -23,10 +24,12 @@ type CatalogStore = {
   loading: boolean;
   productLoading: boolean;
   error: string | null;
+  selectedCategory: string;
   fetchProducts: () => Promise<void>;
   fetchCategories: () => Promise<void>;
   fetchDiscount: () => Promise<void>;
   fetchProduct: (id: string) => Promise<void>;
+  setSelectedCategory: (category: string) => void;
 };
 
 const useCatalogStore = create<CatalogStore>((set) => ({
@@ -37,6 +40,7 @@ const useCatalogStore = create<CatalogStore>((set) => ({
   loading: false,
   productLoading: false,
   error: null,
+  selectedCategory: 'all',
   fetchProducts: async (): Promise<void> => {
     set({ loading: true, error: null });
     try {
@@ -73,17 +77,10 @@ const useCatalogStore = create<CatalogStore>((set) => ({
     }
   },
   fetchCategories: async (): Promise<void> => {
-    try {
-      set({ loading: true, error: null });
-      const response = await fetchCatalogCategories();
-      const mappedCategory = mappersCategory(response);
-      set({ categories: mappedCategory, loading: false });
-    } catch (error) {
-      set({
-        error: error instanceof Error ? error.message : 'Something went wrong',
-        loading: false,
-      });
-    }
+    const response = await fetchCatalogCategories();
+    const mappedCategory = mappersCategory(response);
+    const nestCategory = nestCategories(mappedCategory);
+    set({ categories: nestCategory });
   },
   fetchDiscount: async (): Promise<void> => {
     try {
@@ -112,6 +109,8 @@ const useCatalogStore = create<CatalogStore>((set) => ({
       });
     }
   },
+  setSelectedCategory: (category: string): void =>
+    set({ selectedCategory: category }),
 }));
 
 export default useCatalogStore;

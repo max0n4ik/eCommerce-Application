@@ -1,5 +1,6 @@
 import type { z } from 'zod';
 
+import type { CategoryCard } from './interfaces';
 import type { registrationAddressSchema } from './validations';
 
 import type { ROUTES } from '@/utils/constantes';
@@ -14,4 +15,8 @@ export type PropsWithChildren<P = unknown> = P & {
 
 export type PrivateRouteProps = PropsWithChildren & {
   reverse?: boolean;
+};
+
+export type NestedCategory = CategoryCard & {
+  children: NestedCategory[];
 };
