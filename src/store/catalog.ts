@@ -112,8 +112,6 @@ const useCatalogStore = create<CatalogStore>((set) => ({
           url: img.url,
           alt: img.label || 'Product image',
         })) || [];
-
-      console.log('>>>>>', response);
       const product: DetailedProductInterface = {
         id: response.body.id,
         name: current.name[lang] || 'Unnamed Product',

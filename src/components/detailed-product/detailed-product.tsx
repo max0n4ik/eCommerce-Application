@@ -1,3 +1,5 @@
+import SyncedCarousel from '../ui/corousel/corousel';
+
 import { formatPrice, getDiscountedPrice } from '@/utils/catalog';
 import type { DetailedProductInterface } from '@/utils/interfaces';
 
@@ -15,31 +17,8 @@ export default function DetailedProduct({
       className="flex justify-center items-start gap-8 p-[50px] max-w-screen-xl mx-auto "
     >
       <div className="w-1/2">
-        <div className="grid grid-cols-2 gap-1">
-          {images[0] && (
-            <img
-              src={images[0].url}
-              alt={images[0].alt || 'Product image'}
-              className="col-span-2 object-contain w-full max-h-[400px]"
-            />
-          )}
-          {images[1] && (
-            <img
-              src={images[1].url}
-              alt={images[1].alt || 'Product image'}
-              className="object-contain w-full max-h-[200px] "
-            />
-          )}
-          {images[2] && (
-            <img
-              src={images[2].url}
-              alt={images[2].alt || 'Product image'}
-              className="object-contain w-full max-h-[200px]"
-            />
-          )}
-        </div>
+        <SyncedCarousel images={images} />
       </div>
-
       <div className="w-1/2 flex flex-col gap-4">
         <h3 className="font-medium font-serif text-[var(--title-color)] text-[42px] ">
           {name}

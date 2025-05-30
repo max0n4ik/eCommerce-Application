@@ -129,6 +129,7 @@ border-border -> подставляется значение из --border и т
     --sidebar-ring: oklch(61% 0.06 163.7deg);
     --bar-color: oklch(51.61% 0.002 145.55deg);
     --title-color: oklch(52.13% 0.0288 177.47deg);
+    --light-bar-color: oklch(11.47% 0 0deg);
     --description-color: oklch(100% 0 0deg);
     --font-sans: montserrat, sans-serif;
     --font-serif: 'Noto Serif', serif;
