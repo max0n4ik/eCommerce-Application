@@ -4,7 +4,6 @@ import { formatPrice, getDiscountedPrice } from '@/utils/catalog';
 import type { DetailedProductInterface } from '@/utils/interfaces';
 
 export default function DetailedProduct({
-  id,
   name,
   price,
   description,
@@ -12,10 +11,7 @@ export default function DetailedProduct({
   images = [],
 }: DetailedProductInterface): React.JSX.Element {
   return (
-    <div
-      key={id}
-      className="flex justify-center items-start gap-8 p-[50px] max-w-screen-xl mx-auto "
-    >
+    <div className="flex justify-center items-start gap-8 p-[50px] max-w-screen-xl mx-auto ">
       <div className="w-1/2">
         <SyncedCarousel images={images} />
       </div>

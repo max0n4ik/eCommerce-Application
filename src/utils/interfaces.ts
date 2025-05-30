@@ -56,7 +56,6 @@ export interface DiscountPrice {
 }
 
 export interface DetailedProductInterface {
-  id: string;
   name: string;
   description?: string;
   images: { url: string; alt: string }[];
@@ -69,11 +68,4 @@ export interface DetailedProductInterface {
 export interface ProductCategoriesInterface {
   typeId: string;
   id: string;
-}
-export interface DiscountInterface {
-  id: string;
-  name: string;
-  description: string;
-  value: number;
-  category: string;
 }

@@ -125,9 +125,8 @@ const useCatalogStore = create<CatalogStore>((set, get) => ({
       const categories = current.categories;
       const productPermyriad = getDiscount(discounts, categories);
       const product: DetailedProductInterface = {
-        id: response.body.id,
         name: current.name[lang] || 'Unnamed Product',
-        description: current.description[lang],
+        description: current.description && current.description[lang],
         images,
         permyriad: productPermyriad,
         price: variant?.prices?.[0]?.value?.centAmount || 0,

@@ -1,6 +1,6 @@
 import type {
   CategoryCard,
-  DiscountInterface,
+  DiscountPrice,
   ProductCategoriesInterface,
 } from './interfaces';
 
@@ -23,7 +23,7 @@ export const getDiscountedPrice = (
 };
 
 export function getDiscount(
-  discounts: DiscountInterface[],
+  discounts: DiscountPrice[],
   productCategories: ProductCategoriesInterface[]
 ): number {
   const productDiscount = discounts.find((discount) => {
