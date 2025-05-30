@@ -58,12 +58,22 @@ export interface DiscountPrice {
 export interface DetailedProductInterface {
   id: string;
   name: string;
-  price: number;
-  salePrice?: number;
-  permyriad?: number;
-  priceCurrency: string;
-  images: { url: string; alt: string }[];
   description?: string;
+  images: { url: string; alt: string }[];
+  permyriad?: number;
+  price: number;
+  priceCurrency: string;
   category?: CategoryReference[];
   attributes?: Attribute[];
+}
+export interface ProductCategoriesInterface {
+  typeId: string;
+  id: string;
+}
+export interface DiscountInterface {
+  id: string;
+  name: string;
+  description: string;
+  value: number;
+  category: string;
 }

@@ -30,6 +30,22 @@ export default function Product(): React.JSX.Element {
       </div>
     );
   }
+  if (
+    !currentProduct ||
+    !currentProduct.id ||
+    !currentProduct.name ||
+    !currentProduct.price ||
+    !currentProduct.images ||
+    !currentProduct.priceCurrency
+  ) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="text-gray-500 text-lg">
+          Sorry... Currently unavailable
+        </div>
+      </div>
+    );
+  }
   return (
     <div>
       <DetailedProduct {...currentProduct}></DetailedProduct>

@@ -1,4 +1,8 @@
-import type { CategoryCard } from './interfaces';
+import type {
+  CategoryCard,
+  DiscountInterface,
+  ProductCategoriesInterface,
+} from './interfaces';
 
 export const getCategoryName = (
   categoryId: string,
@@ -17,7 +21,11 @@ export const getDiscountedPrice = (
 ): number => {
   return (price * (10000 - permyriad)) / 10000;
 };
-export function getDiscount(discounts, productCategories) {
+
+export function getDiscount(
+  discounts: DiscountInterface[],
+  productCategories: ProductCategoriesInterface[]
+): number {
   const productDiscount = discounts.find((discount) => {
     const discountCategories = new Set(
       discount.category

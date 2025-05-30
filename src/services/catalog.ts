@@ -61,7 +61,6 @@ export async function fetchProductDiscount(
     .get()
     .execute()
     .then((response) => {
-      console.log(response, '>>>>');
       return response;
     });
 }
