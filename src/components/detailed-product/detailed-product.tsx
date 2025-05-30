@@ -24,22 +24,25 @@ export default function DetailedProduct({
           {name}
         </h3>
         <span className=" inline-block h-[2px] w-[115px] bg-[color:var(--bar-color)]"></span>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-col items-start gap-1">
           {permyriad && permyriad > 0 ? (
             <>
-              <p className="text-gray-400 line-through text-base">
+              <div className="flex items-center gap-2">
+                <p className="font-inter font-bold text-[var(--accent)] text-2xl">
+                  {formatPrice(getDiscountedPrice(price, permyriad))} $
+                </p>
+                <span className=" inline-block h-[25px] w-[2px] bg-[color:var(--light-bar-color)]"></span>
+                <span className="text-[var(--accent)] font-bold text-2xl">
+                  Sale!
+                </span>
+              </div>
+              <p className="text-gray-400 line-through text-m">
                 {formatPrice(price)}$
-              </p>
-              <p className="text-base font-semibold text-red-600">
-                {formatPrice(getDiscountedPrice(price, permyriad))} $
               </p>
             </>
           ) : (
-            <p className="font-inter font-bold text-[var(--title-color)] text-2xl ">
-              {formatPrice(price)}{' '}
-              <span className="font-inter font-bold text-[var(--title-color)] text-2xl ">
-                $
-              </span>
+            <p className="font-inter font-bold text-[var(--title-color)] text-2xl">
+              {formatPrice(price)} $
             </p>
           )}
         </div>

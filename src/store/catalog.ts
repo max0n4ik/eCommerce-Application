@@ -8,7 +8,6 @@ import {
   fetchCatalogCategories,
   fetchCatalogProductsDiscount,
   fetchProductById,
-  fetchProductDiscount,
 } from '@/services/catalog';
 import { getDiscount } from '@/utils/catalog';
 import type {
