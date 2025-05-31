@@ -17,8 +17,8 @@ export default function DetailedProduct({
         <Dialog>
           <SyncedCarousel images={images} />
           <DialogContent className="flex justify-center items-center p-8 max-w-4xl w-full">
-            <div className="w-full max-w-md">
-              <SyncedCarousel images={images} />
+            <div className="w-full">
+              <SyncedCarousel images={images} isModal={true} />
             </div>
           </DialogContent>
         </Dialog>

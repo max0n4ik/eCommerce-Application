@@ -13,9 +13,13 @@ import {
 
 interface Props {
   images: { url: string; alt?: string }[];
+  isModal?: boolean;
 }
 
-export default function SyncedCarousel({ images }: Props): React.JSX.Element {
+export default function SyncedCarousel({
+  images,
+  isModal = false,
+}: Props): React.JSX.Element {
   const mainEmblaRef = useRef<CarouselApi | null>(null);
   const thumbEmblaRef = useRef<CarouselApi | null>(null);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -25,7 +29,11 @@ export default function SyncedCarousel({ images }: Props): React.JSX.Element {
   };
 
   return (
-    <div className="w-full max-w-md mx-auto">
+    <div
+      className={
+        isModal ? 'w-full max-w-4xl mx-auto' : 'w-full max-w-md mx-auto'
+      }
+    >
       <Carousel
         className="relative w-full"
         setApi={(api) => {
@@ -45,6 +53,7 @@ export default function SyncedCarousel({ images }: Props): React.JSX.Element {
             thumbEmblaRef.current?.scrollTo(index);
           });
         }}
+        opts={{ loop: true }}
       >
         <DialogTrigger>
           <CarouselContent>
@@ -53,14 +62,26 @@ export default function SyncedCarousel({ images }: Props): React.JSX.Element {
                 <img
                   src={image.url}
                   alt={image.alt || `Image ${i + 1}`}
-                  className="w-full object-contain max-h-[400px]"
+                  className={
+                    isModal
+                      ? 'w-full object-contain max-h-[60vh] mx-auto'
+                      : 'w-full object-contain max-h-[400px]'
+                  }
                 />
               </CarouselItem>
             ))}
           </CarouselContent>
         </DialogTrigger>
-        <CarouselPrevious />
-        <CarouselNext />
+        <CarouselPrevious
+          className={
+            isModal ? '-left-6 top-1/2 -translate-y-1/2 !h-6 !w-6' : undefined
+          }
+        />
+        <CarouselNext
+          className={
+            isModal ? '-right-6 top-1/2 -translate-y-1/2 !h-6 !w-6' : undefined
+          }
+        />
       </Carousel>
 
       <Carousel
