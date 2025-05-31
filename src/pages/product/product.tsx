@@ -1,12 +1,13 @@
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
+import { DetailedProduct } from '@/components/detailed-product';
 import useCatalogStore from '@/store/catalog';
 
 export default function Product(): React.JSX.Element {
   const { id } = useParams<{ id: string }>();
-  const { productLoading, error, fetchProduct } = useCatalogStore();
-
+  const { currentProduct, productLoading, error, fetchProduct } =
+    useCatalogStore();
   useEffect(() => {
     if (id) {
       fetchProduct(id);
@@ -29,5 +30,18 @@ export default function Product(): React.JSX.Element {
       </div>
     );
   }
-  return <div>Product page ID: {id}</div>;
+  if (!currentProduct) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="text-gray-500 text-lg">
+          Sorry... Currently unavailable
+        </div>
+      </div>
+    );
+  }
+  return (
+    <div>
+      <DetailedProduct {...currentProduct}></DetailedProduct>
+    </div>
+  );
 }

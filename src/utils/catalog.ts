@@ -1,4 +1,8 @@
-import type { CategoryCard } from './interfaces';
+import type {
+  CategoryCard,
+  DiscountPrice,
+  ProductCategoriesInterface,
+} from './interfaces';
 import type { NestedCategory } from './types';
 
 export const getCategoryName = (
@@ -20,6 +24,21 @@ export const getDiscountedPrice = (
   return (price * (10000 - permyriad)) / 10000;
 };
 
+export function getDiscount(
+  discounts: DiscountPrice[],
+  productCategories: ProductCategoriesInterface[]
+): number {
+  const productDiscount = discounts.find((discount) => {
+    const discountCategories = new Set(
+      discount.category
+        ?.match(/"([^"]+)"/g)
+        ?.map((id) => id.replaceAll('"', '').trim())
+    );
+
+    return productCategories.some((cat) => discountCategories.has(cat.id));
+  });
+  return productDiscount ? productDiscount.value : 0;
+}
 export function nestCategories(categories: CategoryCard[]): NestedCategory[] {
   const map = new Map<string, NestedCategory>();
   const roots: NestedCategory[] = [];
