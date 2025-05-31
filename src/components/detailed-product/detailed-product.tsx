@@ -1,5 +1,5 @@
 import SyncedCarousel from '../ui/carousel/carousel';
-import { Dialog, DialogContent, DialogTrigger } from '../ui/modal/modal-utils';
+import { Dialog, DialogContent } from '../ui/modal/modal-utils';
 
 import { formatPrice, getDiscountedPrice } from '@/utils/catalog';
 import type { DetailedProductInterface } from '@/utils/interfaces';
@@ -13,16 +13,16 @@ export default function DetailedProduct({
 }: DetailedProductInterface): React.JSX.Element {
   return (
     <div className="flex justify-center items-start gap-8 p-[50px] max-w-screen-xl mx-auto ">
-      <Dialog>
-        <DialogTrigger>
-          <div className="w-1/2">
-            <SyncedCarousel images={images} />
-          </div>
-        </DialogTrigger>
-        <DialogContent>
+      <div className="w-1/2">
+        <Dialog>
           <SyncedCarousel images={images} />
-        </DialogContent>
-      </Dialog>
+          <DialogContent className="flex justify-center items-center p-8 max-w-4xl w-full">
+            <div className="w-full max-w-md">
+              <SyncedCarousel images={images} />
+            </div>
+          </DialogContent>
+        </Dialog>
+      </div>
       <div className="w-1/2 flex flex-col gap-4">
         <h3 className="font-medium font-serif text-[var(--title-color)] text-[42px] ">
           {name}

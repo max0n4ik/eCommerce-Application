@@ -1,5 +1,7 @@
 import { useState, useRef } from 'react';
 
+import { DialogTrigger } from '../modal/modal-utils';
+
 import {
   Carousel,
   CarouselContent,
@@ -44,17 +46,19 @@ export default function SyncedCarousel({ images }: Props): React.JSX.Element {
           });
         }}
       >
-        <CarouselContent>
-          {images.map((image, i) => (
-            <CarouselItem key={i}>
-              <img
-                src={image.url}
-                alt={image.alt || `Image ${i + 1}`}
-                className="w-full object-contain max-h-[400px]"
-              />
-            </CarouselItem>
-          ))}
-        </CarouselContent>
+        <DialogTrigger>
+          <CarouselContent>
+            {images.map((image, i) => (
+              <CarouselItem key={i}>
+                <img
+                  src={image.url}
+                  alt={image.alt || `Image ${i + 1}`}
+                  className="w-full object-contain max-h-[400px]"
+                />
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+        </DialogTrigger>
         <CarouselPrevious />
         <CarouselNext />
       </Carousel>
