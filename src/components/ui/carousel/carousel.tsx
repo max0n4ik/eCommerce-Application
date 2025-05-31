@@ -7,7 +7,7 @@ import {
   CarouselNext,
   CarouselPrevious,
   type CarouselApi,
-} from '@/components/ui/corousel/carousel-utils';
+} from '@/components/ui/carousel/carousel-utils';
 
 interface Props {
   images: { url: string; alt?: string }[];

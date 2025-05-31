@@ -1,4 +1,4 @@
-import SyncedCarousel from '../ui/corousel/corousel';
+import SyncedCarousel from '../ui/carousel/carousel';
 import { Dialog, DialogContent, DialogTrigger } from '../ui/modal/modal-utils';
 
 import { formatPrice, getDiscountedPrice } from '@/utils/catalog';
