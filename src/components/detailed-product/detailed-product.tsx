@@ -15,7 +15,7 @@ export default function DetailedProduct({
 }: DetailedProductInterface): React.JSX.Element {
   const [currenImageIndex, setCurrentImageIndex] = useState(0);
   return (
-    <div className="flex justify-center items-start gap-8 p-[50px] max-w-screen-xl mx-auto ">
+    <div className="flex flex-row max-[780px]:flex-col  max-[780px]:items-center justify-center gap-8 p-[50px] max-w-screen-xl mx-auto">
       <div className="w-1/2">
         <Dialog>
           <SyncedCarousel
@@ -40,35 +40,34 @@ export default function DetailedProduct({
           </DialogContent>
         </Dialog>
       </div>
-      <div className="w-1/2 flex flex-col gap-4">
-        <h3 className="font-medium font-serif text-[var(--title-color)] text-[42px] ">
+      <div className="w-1/2 max-[780px]:w-full flex flex-col gap-4 items-center">
+        <h3 className="font-medium font-serif text-[var(--title-color)] text-[42px] max-[500px]:text-[28px] max-[365px]:text-[20px]">
           {name}
         </h3>
-        <span className=" inline-block h-[2px] w-[115px] bg-[color:var(--bar-color)]"></span>
+        <span className=" inline-block h-[2px] w-[115px] max-[400px]:w-[80px] bg-[color:var(--bar-color)]"></span>
         <div className="flex flex-col items-start gap-1">
           {permyriad && permyriad > 0 ? (
             <>
               <div className="flex items-center gap-2">
-                <p className="font-inter font-bold text-[var(--accent)] text-2xl">
+                <p className="font-inter font-bold text-[var(--accent)] text-2xl max-[500px]:text-xl max-[365px]:text-sm">
                   {formatPrice(getDiscountedPrice(price, permyriad))} $
                 </p>
                 <span className=" inline-block h-[25px] w-[2px] bg-[color:var(--light-bar-color)]"></span>
-                <span className="text-[var(--accent)] font-bold text-2xl">
+                <span className="text-[var(--accent)] font-bold text-2xl max-[500px]:text-xl max-[365px]:text-sm">
                   Sale!
                 </span>
               </div>
-              <p className="text-gray-400 line-through text-m">
+              <p className="text-gray-400 line-through text-m max-[500px]:text-sm">
                 {formatPrice(price)}$
               </p>
             </>
           ) : (
-            <p className="font-inter font-bold text-[var(--title-color)] text-2xl">
+            <p className="font-inter font-bold text-[var(--title-color)] text-2xl max-[500px]:text-xl">
               {formatPrice(price)} $
             </p>
           )}
         </div>
-
-        <p className="font-inter text-[13px] font-normal text-[var(--description-color)] max-w-[425px]">
+        <p className="font-inter text-[13px] font-normal text-[var(--description-color)] max-w-[425px] max-[500px]:max-w-none max-[500px]:w-full  max-[500px]:text-[12px]">
           {description}
         </p>
         <span className=" inline-block h-[1px] w-full bg-[color:var(--light-bar-color)]"></span>
