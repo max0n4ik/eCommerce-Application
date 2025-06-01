@@ -78,9 +78,8 @@ export interface CustomerDataInterface {
   firstName: string;
   lastName: string;
   dateOfBirth: Date;
-  addresses: BaseAddress[];
   useAsDefaultShipping: boolean;
   useAsDefaultBilling: boolean;
-  shippingAddress: unknown;
-  billingAddress: unknown;
+  shippingAddress?: BaseAddress;
+  billingAddress?: BaseAddress;
 }
