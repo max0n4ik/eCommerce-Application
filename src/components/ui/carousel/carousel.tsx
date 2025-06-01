@@ -14,20 +14,35 @@ import {
 interface Props {
   images: { url: string; alt?: string }[];
   isModal?: boolean;
+  currentImageIndex?: number;
+  setCurrentImageIndex?: (currenImageIndex: number) => void;
 }
 
 export default function SyncedCarousel({
   images,
   isModal = false,
+  currentImageIndex = undefined,
+  setCurrentImageIndex = undefined,
 }: Props): React.JSX.Element {
   const mainEmblaRef = useRef<CarouselApi | null>(null);
   const thumbEmblaRef = useRef<CarouselApi | null>(null);
-  const [selectedIndex, setSelectedIndex] = useState(0);
+  let startIndex = 0;
+  const [jump, setJump] = useState(isModal);
+
+  if (currentImageIndex) {
+    startIndex = currentImageIndex;
+  }
+  const [selectedIndex, setSelectedIndex] = useState(startIndex);
 
   const onThumbClick = (index: number): void => {
     mainEmblaRef.current?.scrollTo(index);
   };
-
+  function updateIndex(index: number): void {
+    setSelectedIndex(index);
+    if (setCurrentImageIndex) {
+      setCurrentImageIndex(index);
+    }
+  }
   return (
     <div
       className={
@@ -39,17 +54,19 @@ export default function SyncedCarousel({
         setApi={(api) => {
           if (!api) return;
           mainEmblaRef.current = api;
-          setSelectedIndex(api.selectedScrollSnap());
-
+          api.scrollTo(selectedIndex, jump);
+          setJump(false);
           api.on('select', () => {
             const index = api.selectedScrollSnap();
-            setSelectedIndex(index);
+            updateIndex(index);
+
             thumbEmblaRef.current?.scrollTo(index);
           });
 
           api.on('reInit', () => {
             const index = api.selectedScrollSnap();
-            setSelectedIndex(index);
+            updateIndex(index);
+
             thumbEmblaRef.current?.scrollTo(index);
           });
         }}
@@ -91,7 +108,7 @@ export default function SyncedCarousel({
           thumbEmblaRef.current = api;
         }}
       >
-        <CarouselContent className="flex -ml-2">
+        <CarouselContent className="flex -ml-2 justify-center">
           {images.map((image, i) => (
             <CarouselItem
               key={i}

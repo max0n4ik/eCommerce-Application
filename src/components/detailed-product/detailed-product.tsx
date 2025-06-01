@@ -1,5 +1,7 @@
+import { useState } from 'react';
+
 import SyncedCarousel from '../ui/carousel/carousel';
-import { Dialog, DialogContent } from '../ui/modal/modal-utils';
+import { Dialog, DialogContent, DialogTitle } from '../ui/modal/modal-utils';
 
 import { formatPrice, getDiscountedPrice } from '@/utils/catalog';
 import type { DetailedProductInterface } from '@/utils/interfaces';
@@ -11,14 +13,29 @@ export default function DetailedProduct({
   permyriad,
   images = [],
 }: DetailedProductInterface): React.JSX.Element {
+  const [currenImageIndex, setCurrentImageIndex] = useState(0);
   return (
     <div className="flex justify-center items-start gap-8 p-[50px] max-w-screen-xl mx-auto ">
       <div className="w-1/2">
         <Dialog>
-          <SyncedCarousel images={images} />
-          <DialogContent className="flex justify-center items-center p-8 max-w-4xl w-full">
+          <SyncedCarousel
+            images={images}
+            currentImageIndex={currenImageIndex}
+            setCurrentImageIndex={setCurrentImageIndex}
+          />
+          <DialogContent
+            aria-describedby={undefined}
+            className="flex justify-center items-center p-8 max-w-4xl w-full"
+          >
+            <DialogTitle></DialogTitle>
+
             <div className="w-full">
-              <SyncedCarousel images={images} isModal={true} />
+              <SyncedCarousel
+                images={images}
+                isModal={true}
+                currentImageIndex={currenImageIndex}
+                setCurrentImageIndex={setCurrentImageIndex}
+              />
             </div>
           </DialogContent>
         </Dialog>
