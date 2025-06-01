@@ -108,6 +108,7 @@ export const defaultAddressForm: RegistrationAddress = {
   street: '',
   house: '',
   postalCode: '',
-  isDefault: false,
-  isBilling: false,
+  useAsDefaultShippingAddress: false,
+  useAsBillingAddress: false,
+  useAsDefaultBillingAddress: false,
 };

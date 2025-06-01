@@ -10,8 +10,9 @@ export interface RegistrationAddress {
   street: string;
   house: string;
   postalCode: string;
-  isDefault: boolean;
-  isBilling?: boolean;
+  useAsDefaultShippingAddress: boolean;
+  useAsDefaultBillingAddress: boolean;
+  useAsBillingAddress: boolean;
 }
 
 export interface RegistrationStepProps {
@@ -68,4 +69,17 @@ export interface DetailedProductInterface {
 export interface ProductCategoriesInterface {
   typeId: string;
   id: string;
+}
+
+export interface CustomerDataInterface {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  dateOfBirth: Date;
+  addresses: unknown;
+  useAsDefaultShipping: boolean;
+  useAsDefaultBilling: boolean;
+  shippingAddress: unknown;
+  billingAddress: unknown;
 }

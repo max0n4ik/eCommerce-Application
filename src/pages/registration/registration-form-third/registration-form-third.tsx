@@ -1,12 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Tooltip } from '@/components/ui/error-message/error-message';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { cn } from '@/lib/utils';
-import { registration } from '@/services/create-client';
-import { authStore } from '@/store/login';
+import { completeSignUp } from '@/services/create-client';
 import useRegistrationStore from '@/store/registration';
 import { countryToAlpha2, defaultAddressForm } from '@/utils/constantes';
 import type {
@@ -15,22 +13,23 @@ import type {
 } from '@/utils/interfaces';
 import { registrationAddressSchema } from '@/utils/validations';
 
-const formSchema = registrationAddressSchema;
-
 export default function RegistrationFormThird({
   onNext,
-  className,
-  isSignUpStep = false,
-  ...props
-}: React.ComponentPropsWithoutRef<'form'> &
-  RegistrationStepProps & { isSignUpStep?: boolean }): React.JSX.Element {
+}: RegistrationStepProps): React.JSX.Element {
   const [formData, setFormData] =
     React.useState<RegistrationAddress>(defaultAddressForm);
-  const [errors, setErrors] = React.useState<{ [key: string]: string }>({});
-  const [registrationError, setRegistrationError] = React.useState<string>('');
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [registrationError, setRegistrationError] = useState<string>('');
+  const [useAsBillingAddrState, setUseAsBillingAddrState] = useState<boolean>(
+    defaultAddressForm.useAsBillingAddress
+  );
+  const billingCheckboxName = 'useAsBillingAddress';
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, type, value, checked } = e.target;
+    if (name == billingCheckboxName) {
+      setUseAsBillingAddrState(checked);
+    }
     setFormData((prev) => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : value,
@@ -42,8 +41,18 @@ export default function RegistrationFormThird({
     });
   };
 
+  const {
+    email,
+    password,
+    firstName,
+    lastName,
+    dateOfBirth,
+    setShippingAddress,
+    setBillingAddress,
+  } = useRegistrationStore();
+
   const validateForm = (): boolean => {
-    const result = formSchema.safeParse(formData);
+    const result = registrationAddressSchema.safeParse(formData);
     if (!result.success) {
       const newErrors: { [key: string]: string } = {};
       result.error.errors.forEach((err) => {
@@ -57,72 +66,47 @@ export default function RegistrationFormThird({
     return true;
   };
 
-  const { addAddress } = useRegistrationStore();
-
   const onSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
     if (!validateForm()) return;
 
     setRegistrationError('');
 
-    const addressToSave = {
+    const address = {
       streetName: formData.street,
       postalCode: formData.postalCode,
       city: formData.city,
       country:
         countryToAlpha2[formData.country as keyof typeof countryToAlpha2],
       department: formData.house,
-      isDefaultShipping: formData.isDefault,
-      isDefaultBilling: formData.isBilling,
     };
 
-    addAddress([addressToSave], {
-      asShipping: formData.isDefault,
-      asBilling: formData.isBilling,
-    });
+    setShippingAddress(address, formData.useAsDefaultShippingAddress);
 
-    const isFinalStep = formData.isDefault && formData.isBilling;
-    if (isFinalStep && isSignUpStep) {
+    if (formData.useAsBillingAddress) {
+      setBillingAddress(address, formData.useAsBillingAddress);
       try {
-        const { email, password, firstName, lastName, dateOfBirth, addresses } =
-          useRegistrationStore.getState();
-
-        const formattedDateOfBirth = dateOfBirth.toISOString().split('T')[0];
-        const updatedAddresses = [...addresses, addressToSave];
-        const userData = {
+        await completeSignUp({
           email,
           password,
           firstName,
           lastName,
-          dateOfBirth: formattedDateOfBirth,
-          addresses: [...addresses, addressToSave],
-          defaultShippingAddress: formData.isDefault
-            ? updatedAddresses.length - 1
-            : undefined,
-          defaultBillingAddress: formData.isBilling
-            ? updatedAddresses.length - 1
-            : undefined,
-        };
-
-        await registration(userData);
-        authStore.setIsAuth(true);
+          dateOfBirth,
+          useAsDefaultShipping: formData.useAsDefaultShippingAddress,
+          shippingAddress: address,
+        });
       } catch (error: unknown) {
         const errorMessage =
           error instanceof Error ? error.message : 'Unknown error';
         setRegistrationError(errorMessage);
-        return;
       }
+    } else {
+      onNext();
     }
-
-    onNext();
   };
 
   return (
-    <form
-      onSubmit={onSubmit}
-      className={cn('flex flex-col gap-6', className)}
-      {...props}
-    >
+    <form onSubmit={onSubmit} className="flex flex-col gap-6">
       <div className="flex flex-col items-center gap-2 text-center">
         <h1 className="text-2xl font-bold capitalize">Registration</h1>
         <p className="text-balance text-sm text-muted-foreground">
@@ -224,28 +208,28 @@ export default function RegistrationFormThird({
           <div className="flex gap-5">
             <Input
               id="useDefault"
-              name="isDefault"
+              name="useAsDefaultShippingAddress"
               type="checkbox"
               className="w-3 h-3"
-              checked={formData.isDefault}
+              checked={formData.useAsDefaultShippingAddress}
               onChange={handleChange}
             />
-            <Label htmlFor="useDefault">Use as default</Label>
+            <Label htmlFor="useDefault">Use as default shipping address</Label>
           </div>
           <div className="flex gap-5">
             <Input
               id="useAsBilling"
-              name="isBilling"
+              name={billingCheckboxName}
               type="checkbox"
               className="w-3 h-3"
-              checked={formData.isBilling}
+              checked={formData.useAsBillingAddress}
               onChange={handleChange}
             />
-            <Label htmlFor="useAsBilling">Use this address as billing</Label>
+            <Label htmlFor="useAsBilling">Use as billing address</Label>
           </div>
         </div>
         <Button type="submit" className="w-full">
-          {isSignUpStep ? 'Sign Up' : 'Next'}
+          {useAsBillingAddrState ? 'Sign Up' : 'Next'}
         </Button>
         {registrationError && (
           <p className="text-sm font-medium text-destructive">

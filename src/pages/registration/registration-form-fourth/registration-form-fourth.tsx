@@ -1,13 +1,11 @@
-import type { Address, MyCustomerDraft } from '@commercetools/platform-sdk';
-import React from 'react';
+import type { Address } from '@commercetools/platform-sdk';
+import React, { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Tooltip } from '@/components/ui/error-message/error-message';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { cn } from '@/lib/utils';
-import { registration } from '@/services/create-client';
-import { authStore } from '@/store/login';
+import { completeSignUp } from '@/services/create-client';
 import useRegistrationStore from '@/store/registration';
 import { countryToAlpha2, defaultAddressForm } from '@/utils/constantes';
 import type {
@@ -17,12 +15,11 @@ import type {
 import { registrationAddressSchema } from '@/utils/validations';
 
 export default function RegistrationFormFourth({
-  className,
   ...props
 }: RegistrationFormFourthProps): React.JSX.Element {
   const [formData, setFormData] =
-    React.useState<RegistrationAddress>(defaultAddressForm);
-  const [errors, setErrors] = React.useState<{ [key: string]: string }>({});
+    useState<RegistrationAddress>(defaultAddressForm);
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [registrationError, setRegistrationError] = React.useState<string>('');
   const {
     email,
@@ -30,11 +27,10 @@ export default function RegistrationFormFourth({
     firstName,
     lastName,
     dateOfBirth,
-    addresses,
-    addAddress,
+    useAsDefaultShipping,
+    shippingAddress,
+    setBillingAddress,
   } = useRegistrationStore();
-
-  const formattedDateOfBirth = dateOfBirth.toISOString().split('T')[0];
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value, type, checked } = e.target;
@@ -72,7 +68,7 @@ export default function RegistrationFormFourth({
 
     setRegistrationError('');
 
-    const addressToSave: Address = {
+    const address: Address = {
       streetName: formData.street,
       postalCode: formData.postalCode,
       city: formData.city,
@@ -82,28 +78,20 @@ export default function RegistrationFormFourth({
       department: formData.house,
     };
 
-    addAddress([addressToSave], {
-      asShipping: false,
-      asBilling: true,
-    });
+    setBillingAddress(address, formData.useAsDefaultBillingAddress);
 
-    const updatedAddresses = [...addresses, addressToSave];
-
-    const userData: MyCustomerDraft = {
-      email,
-      password,
-      firstName,
-      lastName,
-      dateOfBirth: formattedDateOfBirth,
-      addresses: updatedAddresses,
-      defaultShippingAddress: undefined,
-      defaultBillingAddress: formData.isDefault
-        ? updatedAddresses.length - 1
-        : undefined,
-    };
     try {
-      await registration(userData);
-      authStore.setIsAuth(true);
+      await completeSignUp({
+        email,
+        password,
+        firstName,
+        lastName,
+        dateOfBirth,
+        useAsDefaultShipping,
+        shippingAddress,
+        useAsDefaultBilling: formData.useAsDefaultBillingAddress,
+        billingAddress: address,
+      });
     } catch (error: unknown) {
       const errorMessage =
         error instanceof Error ? error.message : 'Unknown error';
@@ -112,11 +100,7 @@ export default function RegistrationFormFourth({
   };
 
   return (
-    <form
-      onSubmit={onSubmit}
-      className={cn('flex flex-col gap-6', className)}
-      {...props}
-    >
+    <form onSubmit={onSubmit} className="flex flex-col gap-6" {...props}>
       <div className="flex flex-col items-center gap-2 text-center">
         <h1 className="text-2xl font-bold capitalize">Registration</h1>
         <p className="text-balance text-sm text-muted-foreground">
@@ -216,11 +200,11 @@ export default function RegistrationFormFourth({
         </div>
         <div className="flex gap-5">
           <Input
-            id="useDefault"
+            id="useAsDefaultBillingAddress"
             type="checkbox"
-            name="isDefault"
+            name="useAsDefaultBillingAddress"
             className="w-3 h-3"
-            checked={formData.isDefault}
+            checked={formData.useAsDefaultBillingAddress}
             onChange={handleChange}
           />
           <Label htmlFor="useDefault">Use as default</Label>
