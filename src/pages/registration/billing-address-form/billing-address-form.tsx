@@ -27,7 +27,7 @@ export default function BillingAddressForm({
     firstName,
     lastName,
     dateOfBirth,
-    useAsDefaultShipping,
+    asDefaultShipping,
     shippingAddress,
     setBillingAddress,
   } = useRegistrationStore();
@@ -78,7 +78,7 @@ export default function BillingAddressForm({
       department: formData.house,
     };
 
-    setBillingAddress(address, formData.useAsDefaultBillingAddress);
+    setBillingAddress(address, formData.asDefaultBillingAddress);
 
     try {
       await completeSignUp({
@@ -87,9 +87,9 @@ export default function BillingAddressForm({
         firstName,
         lastName,
         dateOfBirth,
-        useAsDefaultShipping,
+        asDefaultShipping,
         shippingAddress,
-        useAsDefaultBilling: formData.useAsDefaultBillingAddress,
+        asDefaultBilling: formData.asDefaultBillingAddress,
         billingAddress: address,
       });
     } catch (error: unknown) {
@@ -200,11 +200,11 @@ export default function BillingAddressForm({
         </div>
         <div className="flex gap-5">
           <Input
-            id="useAsDefaultBillingAddress"
+            id="asDefaultBillingAddress"
             type="checkbox"
-            name="useAsDefaultBillingAddress"
+            name="asDefaultBillingAddress"
             className="w-3 h-3"
-            checked={formData.useAsDefaultBillingAddress}
+            checked={formData.asDefaultBillingAddress}
             onChange={handleChange}
           />
           <Label htmlFor="useDefault">Use as default</Label>

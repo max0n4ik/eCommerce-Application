@@ -11,8 +11,8 @@ export interface RegistrationAddress {
   street: string;
   house: string;
   postalCode: string;
-  useAsDefaultShippingAddress: boolean;
-  useAsDefaultBillingAddress: boolean;
+  asDefaultShippingAddress: boolean;
+  asDefaultBillingAddress: boolean;
   billingAddressFlag: boolean;
 }
 
@@ -78,8 +78,8 @@ export interface CustomerDataInterface {
   firstName: string;
   lastName: string;
   dateOfBirth: Date;
-  useAsDefaultShipping: boolean;
-  useAsDefaultBilling: boolean;
+  asDefaultShipping: boolean;
+  asDefaultBilling?: boolean;
   shippingAddress?: BaseAddress;
   billingAddress?: BaseAddress;
 }

@@ -1,7 +1,7 @@
-import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
-import type {
-  CustomerSignInResult,
-  MyCustomerDraft,
+import {
+  createApiBuilderFromCtpClient,
+  type CustomerDraft,
+  type CustomerSignInResult,
 } from '@commercetools/platform-sdk';
 
 import { ctpClient } from './build-client';
@@ -14,11 +14,10 @@ export const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
 });
 
 export async function signUpCustomer(
-  data: MyCustomerDraft
+  data: CustomerDraft
 ): Promise<CustomerSignInResult> {
   const response = await apiRoot
-    .me()
-    .signup()
+    .customers()
     .post({
       body: data,
     })
@@ -35,8 +34,8 @@ export async function completeSignUp(
     firstName,
     lastName,
     dateOfBirth,
-    useAsDefaultShipping,
-    useAsDefaultBilling,
+    asDefaultShipping,
+    asDefaultBilling,
     shippingAddress,
     billingAddress,
   } = customerData;
@@ -51,13 +50,13 @@ export async function completeSignUp(
   const shippingAddresses = [0];
   const billingAddresses = [0];
 
-  const defaultShippingAddress = useAsDefaultShipping ? 0 : undefined;
+  const defaultShippingAddress = asDefaultShipping ? 0 : undefined;
   let defaultBillingAddress = undefined;
 
   if (billingAddress) {
     addresses.push(billingAddress);
     billingAddresses[0] = 1;
-    if (useAsDefaultBilling) {
+    if (asDefaultBilling) {
       defaultBillingAddress = 1;
     }
   }
@@ -72,7 +71,7 @@ export async function completeSignUp(
     defaultShippingAddress,
     defaultBillingAddress,
     shippingAddresses,
-    billingAddress,
+    billingAddresses,
   });
   authStore.setIsAuth(true);
 }

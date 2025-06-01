@@ -20,15 +20,15 @@ export default function ShippingAddressForm({
     React.useState<RegistrationAddress>(defaultAddressForm);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [registrationError, setRegistrationError] = useState<string>('');
-  const [useAsBillingAddrState, setUseAsBillingAddrState] = useState<boolean>(
+  const [asBillingAddrState, setAsBillingAddrState] = useState<boolean>(
     defaultAddressForm.billingAddressFlag
   );
-  const billingCheckboxName = 'useAsBillingAddress';
+  const billingCheckboxName = 'billingAddressFlag';
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, type, value, checked } = e.target;
     if (name == billingCheckboxName) {
-      setUseAsBillingAddrState(checked);
+      setAsBillingAddrState(checked);
     }
     setFormData((prev) => ({
       ...prev,
@@ -81,7 +81,7 @@ export default function ShippingAddressForm({
       department: formData.house,
     };
 
-    setShippingAddress(address, formData.useAsDefaultShippingAddress);
+    setShippingAddress(address, formData.asDefaultShippingAddress);
 
     if (formData.billingAddressFlag) {
       setBillingAddress(address, formData.billingAddressFlag);
@@ -92,7 +92,7 @@ export default function ShippingAddressForm({
           firstName,
           lastName,
           dateOfBirth,
-          useAsDefaultShipping: formData.useAsDefaultShippingAddress,
+          asDefaultShipping: formData.asDefaultShippingAddress,
           shippingAddress: address,
         });
       } catch (error: unknown) {
@@ -208,10 +208,10 @@ export default function ShippingAddressForm({
           <div className="flex gap-5">
             <Input
               id="useDefault"
-              name="useAsDefaultShippingAddress"
+              name="asDefaultShippingAddress"
               type="checkbox"
               className="w-3 h-3"
-              checked={formData.useAsDefaultShippingAddress}
+              checked={formData.asDefaultShippingAddress}
               onChange={handleChange}
             />
             <Label htmlFor="useDefault">Use as default shipping address</Label>
@@ -229,7 +229,7 @@ export default function ShippingAddressForm({
           </div>
         </div>
         <Button type="submit" className="w-full">
-          {useAsBillingAddrState ? 'Sign Up' : 'Next'}
+          {asBillingAddrState ? 'Sign Up' : 'Next'}
         </Button>
         {registrationError && (
           <p className="text-sm font-medium text-destructive">

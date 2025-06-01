@@ -7,8 +7,8 @@ type RegistrationState = {
   firstName: string;
   lastName: string;
   dateOfBirth: Date;
-  useAsDefaultShipping: boolean;
-  useAsDefaultBilling: boolean;
+  asDefaultShipping: boolean;
+  asDefaultBilling: boolean;
   shippingAddress?: BaseAddress;
   billingAddress?: BaseAddress;
   setAccountInfo: (email: string, password: string) => void;
@@ -28,8 +28,8 @@ const useRegistrationStore = create<RegistrationState>((set) => ({
   firstName: '',
   lastName: '',
   dateOfBirth: new Date(),
-  useAsDefaultShipping: true,
-  useAsDefaultBilling: true,
+  asDefaultShipping: true,
+  asDefaultBilling: true,
   shippingAddress: undefined,
   billingAddress: undefined,
   setAccountInfo: (email: string, password: string): void =>
@@ -45,13 +45,13 @@ const useRegistrationStore = create<RegistrationState>((set) => ({
     address: BaseAddress,
     useAsDefault: boolean = true
   ): void => {
-    set({ shippingAddress: address, useAsDefaultShipping: useAsDefault });
+    set({ shippingAddress: address, asDefaultShipping: useAsDefault });
   },
   setBillingAddress: (
     address: BaseAddress,
     useAsDefault: boolean = true
   ): void => {
-    set({ billingAddress: address, useAsDefaultBilling: useAsDefault });
+    set({ billingAddress: address, asDefaultBilling: useAsDefault });
   },
   reset: (): void =>
     set({
