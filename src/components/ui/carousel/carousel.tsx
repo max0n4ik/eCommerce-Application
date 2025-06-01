@@ -120,7 +120,7 @@ export default function SyncedCarousel({
               <img
                 src={image.url}
                 alt={image.alt || `Thumbnail ${i + 1}`}
-                className="w-full h-20 object-cover"
+                className="w-full h-20 object-contain"
               />
             </CarouselItem>
           ))}
