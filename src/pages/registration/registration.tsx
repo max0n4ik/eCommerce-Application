@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
+import BillingAddressForm from './billing-address-form/billing-address-form';
 import { RegistrationFormFirst } from './registration-form-first';
-import { RegistrationFormFourth } from './registration-form-fourth';
 import { RegistrationFormSecond } from './registration-form-second';
-import { RegistrationFormThird } from './registration-form-third';
+import { ShippingAddressForm } from './shipping-address-form';
 
 import gardenImage from '@/assets/images/garden.png';
 import { ROUTES } from '@/utils/constantes';
@@ -24,10 +24,10 @@ export default function Registration(): React.JSX.Element {
         return <RegistrationFormSecond onNext={handleNext} />;
       }
       case 3: {
-        return <RegistrationFormThird onNext={handleNext} />;
+        return <ShippingAddressForm onNext={handleNext} />;
       }
       case 4: {
-        return <RegistrationFormFourth />;
+        return <BillingAddressForm />;
       }
       default: {
         return null;

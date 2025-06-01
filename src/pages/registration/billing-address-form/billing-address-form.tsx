@@ -10,13 +10,13 @@ import useRegistrationStore from '@/store/registration';
 import { countryToAlpha2, defaultAddressForm } from '@/utils/constantes';
 import type {
   RegistrationAddress,
-  RegistrationFormFourthProps,
+  RegistrationBillingFormProps,
 } from '@/utils/interfaces';
 import { registrationAddressSchema } from '@/utils/validations';
 
-export default function RegistrationFormFourth({
+export default function BillingAddressForm({
   ...props
-}: RegistrationFormFourthProps): React.JSX.Element {
+}: RegistrationBillingFormProps): React.JSX.Element {
   const [formData, setFormData] =
     useState<RegistrationAddress>(defaultAddressForm);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});

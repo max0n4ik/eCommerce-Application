@@ -13,7 +13,7 @@ import type {
 } from '@/utils/interfaces';
 import { registrationAddressSchema } from '@/utils/validations';
 
-export default function RegistrationFormThird({
+export default function ShippingAddressForm({
   onNext,
 }: RegistrationStepProps): React.JSX.Element {
   const [formData, setFormData] =

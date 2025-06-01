@@ -1,5 +1,6 @@
 import type {
   Attribute,
+  BaseAddress,
   CategoryReference,
   LocalizedString,
 } from '@commercetools/platform-sdk';
@@ -19,7 +20,7 @@ export interface RegistrationStepProps {
   onNext: () => void;
 }
 
-export interface RegistrationFormFourthProps {
+export interface RegistrationBillingFormProps {
   className?: string;
 }
 
@@ -77,7 +78,7 @@ export interface CustomerDataInterface {
   firstName: string;
   lastName: string;
   dateOfBirth: Date;
-  addresses: unknown;
+  addresses: BaseAddress[];
   useAsDefaultShipping: boolean;
   useAsDefaultBilling: boolean;
   shippingAddress: unknown;
