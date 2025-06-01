@@ -13,7 +13,7 @@ export interface RegistrationAddress {
   postalCode: string;
   useAsDefaultShippingAddress: boolean;
   useAsDefaultBillingAddress: boolean;
-  useAsBillingAddress: boolean;
+  billingAddressFlag: boolean;
 }
 
 export interface RegistrationStepProps {

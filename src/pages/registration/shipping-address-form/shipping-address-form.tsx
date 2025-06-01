@@ -21,7 +21,7 @@ export default function ShippingAddressForm({
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [registrationError, setRegistrationError] = useState<string>('');
   const [useAsBillingAddrState, setUseAsBillingAddrState] = useState<boolean>(
-    defaultAddressForm.useAsBillingAddress
+    defaultAddressForm.billingAddressFlag
   );
   const billingCheckboxName = 'useAsBillingAddress';
 
@@ -83,8 +83,8 @@ export default function ShippingAddressForm({
 
     setShippingAddress(address, formData.useAsDefaultShippingAddress);
 
-    if (formData.useAsBillingAddress) {
-      setBillingAddress(address, formData.useAsBillingAddress);
+    if (formData.billingAddressFlag) {
+      setBillingAddress(address, formData.billingAddressFlag);
       try {
         await completeSignUp({
           email,
@@ -222,7 +222,7 @@ export default function ShippingAddressForm({
               name={billingCheckboxName}
               type="checkbox"
               className="w-3 h-3"
-              checked={formData.useAsBillingAddress}
+              checked={formData.billingAddressFlag}
               onChange={handleChange}
             />
             <Label htmlFor="useAsBilling">Use as billing address</Label>
