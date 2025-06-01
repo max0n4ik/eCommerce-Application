@@ -15,7 +15,7 @@ export default function DetailedProduct({
 }: DetailedProductInterface): React.JSX.Element {
   const [currenImageIndex, setCurrentImageIndex] = useState(0);
   return (
-    <div className="flex flex-row max-[780px]:flex-col  max-[780px]:items-center justify-center gap-8 p-[50px] max-w-screen-xl mx-auto">
+    <div className="flex flex-row max-[780px]:flex-col  max-[780px]:items-center justify-center gap-10 p-[50px] max-w-screen-xl mx-auto">
       <div className="w-1/2">
         <Dialog>
           <SyncedCarousel
@@ -25,10 +25,9 @@ export default function DetailedProduct({
           />
           <DialogContent
             aria-describedby={undefined}
-            className="flex justify-center items-center p-8 max-w-4xl w-full"
+            className="flex justify-center items-center p-4 sm:p-4 md:p-8 w-full max-w-sm sm:max-w-sm md:max-w-2xl max-h-[80vh] sm:max-h-[85vh] md:max-h-[90vh] overflow-y-auto"
           >
             <DialogTitle></DialogTitle>
-
             <div className="w-full">
               <SyncedCarousel
                 images={images}
@@ -40,8 +39,8 @@ export default function DetailedProduct({
           </DialogContent>
         </Dialog>
       </div>
-      <div className="w-1/2 max-[780px]:w-full flex flex-col gap-4 items-center">
-        <h3 className="font-medium font-serif text-[var(--title-color)] text-[42px] max-[500px]:text-[28px] max-[365px]:text-[20px]">
+      <div className="w-1/2 max-[780px]:w-full flex flex-col gap-4">
+        <h3 className="font-medium font-serif text-[var(--title-color)] text-[42px] max-[500px]:text-[28px] max-[400px]:text-[20px]">
           {name}
         </h3>
         <span className=" inline-block h-[2px] w-[115px] max-[400px]:w-[80px] bg-[color:var(--bar-color)]"></span>
@@ -49,11 +48,11 @@ export default function DetailedProduct({
           {permyriad && permyriad > 0 ? (
             <>
               <div className="flex items-center gap-2">
-                <p className="font-inter font-bold text-[var(--accent)] text-2xl max-[500px]:text-xl max-[365px]:text-sm">
+                <p className="font-inter font-bold text-[var(--accent)] text-2xl max-[500px]:text-xl max-[400px]:text-sm">
                   {formatPrice(getDiscountedPrice(price, permyriad))} $
                 </p>
                 <span className=" inline-block h-[25px] w-[2px] bg-[color:var(--light-bar-color)]"></span>
-                <span className="text-[var(--accent)] font-bold text-2xl max-[500px]:text-xl max-[365px]:text-sm">
+                <span className="text-[var(--accent)] font-bold text-2xl max-[500px]:text-xl max-[400px]:text-sm">
                   Sale!
                 </span>
               </div>

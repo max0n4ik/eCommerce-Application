@@ -81,7 +81,7 @@ export default function SyncedCarousel({
                   alt={image.alt || `Image ${i + 1}`}
                   className={
                     isModal
-                      ? 'w-full object-contain max-h-[60vh] mx-auto'
+                      ? 'w-full max-w-sm  max-h-[32vh] object-contain sm:max-h-[32vh] md:max-h-[60vh] lg:max-h-[60vh] xl:max-h-[70vh] mx-auto'
                       : 'w-full object-contain max-h-[400px]'
                   }
                 />
@@ -91,12 +91,16 @@ export default function SyncedCarousel({
         </DialogTrigger>
         <CarouselPrevious
           className={
-            isModal ? '-left-6 top-1/2 -translate-y-1/2 !h-8 !w-8' : undefined
+            isModal
+              ? '-left-6 top-1/2 -translate-y-1/2 !h-8 !w-8 sm:-left-6  md:-left-4 lg:-left-4'
+              : '-left-10 top-1/2 -translate-y-1/2 !h-8 !w-8 sm:-left-12  md:-left-10 lg:-left-4'
           }
         />
         <CarouselNext
           className={
-            isModal ? '-right-6 top-1/2 -translate-y-1/2 !h-8 !w-8' : undefined
+            isModal
+              ? '-right-6 top-1/2 -translate-y-1/2 !h-8 !w-8 sm:-right-4 md:-right-6 lg:-right-4'
+              : '-right-10 top-1/2 -translate-y-1/2 !h-8 !w-8 sm:-right-12 md:-right-8 lg:-right-4 '
           }
         />
       </Carousel>
@@ -112,7 +116,7 @@ export default function SyncedCarousel({
           {images.map((image, i) => (
             <CarouselItem
               key={i}
-              className={`pl-2 basis-1/4 shrink-0 cursor-pointer ${
+              className={`pl-2 basis-1/4 shrink-0 cursor-pointer  ${
                 selectedIndex === i ? 'opacity-100' : 'opacity-50'
               }`}
               onClick={() => onThumbClick(i)}
@@ -120,7 +124,11 @@ export default function SyncedCarousel({
               <img
                 src={image.url}
                 alt={image.alt || `Thumbnail ${i + 1}`}
-                className="w-full h-20 object-contain"
+                className={
+                  isModal
+                    ? 'w-full h-40 sm:h-20 md:h-28 lg:h-32  object-contain'
+                    : 'w-full h-20 sm:h-20 md:h-28 lg:h-32 object-cover'
+                }
               />
             </CarouselItem>
           ))}
