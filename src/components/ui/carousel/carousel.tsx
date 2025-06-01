@@ -74,12 +74,12 @@ export default function SyncedCarousel({
         </DialogTrigger>
         <CarouselPrevious
           className={
-            isModal ? '-left-6 top-1/2 -translate-y-1/2 !h-6 !w-6' : undefined
+            isModal ? '-left-6 top-1/2 -translate-y-1/2 !h-8 !w-8' : undefined
           }
         />
         <CarouselNext
           className={
-            isModal ? '-right-6 top-1/2 -translate-y-1/2 !h-6 !w-6' : undefined
+            isModal ? '-right-6 top-1/2 -translate-y-1/2 !h-8 !w-8' : undefined
           }
         />
       </Carousel>
