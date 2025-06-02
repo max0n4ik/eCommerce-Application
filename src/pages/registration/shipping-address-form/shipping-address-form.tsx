@@ -4,9 +4,20 @@ import { Button } from '@/components/ui/button';
 import { Tooltip } from '@/components/ui/error-message/error-message';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { completeSignUp } from '@/services/create-client';
 import useRegistrationStore from '@/store/registration';
-import { countryToAlpha2, defaultAddressForm } from '@/utils/constantes';
+import {
+  allowedCountriesArray,
+  countryToAlpha2,
+  defaultAddressForm,
+} from '@/utils/constantes';
 import type {
   RegistrationAddress,
   RegistrationStepProps,
@@ -24,21 +35,27 @@ export default function ShippingAddressForm({
     defaultAddressForm.billingAddressFlag
   );
   const billingCheckboxName = 'billingAddressFlag';
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    const { name, type, value, checked } = e.target;
-    if (name == billingCheckboxName) {
-      setAsBillingAddrState(checked);
+  const handleFieldChange = (name: string, value: string | boolean): void => {
+    if (name === billingCheckboxName && typeof value === 'boolean') {
+      setAsBillingAddrState(value);
     }
+
     setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value,
+      [name]: value,
     }));
+
     setErrors((prevErrors) => {
       return Object.fromEntries(
         Object.entries(prevErrors).filter(([key]) => key !== name)
       );
     });
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    const { name, type, value, checked } = e.target;
+    const fieldValue = type === 'checkbox' ? checked : value;
+    handleFieldChange(name, fieldValue);
   };
 
   const {
@@ -116,14 +133,29 @@ export default function ShippingAddressForm({
       <div className="grid gap-6">
         <div className="grid gap-2 relative">
           <Label htmlFor="country">Country</Label>
-          <Input
-            id="country"
-            type="text"
-            name="country"
-            placeholder="Country"
+          <Select
             value={formData.country}
-            onChange={handleChange}
-          />
+            onValueChange={(value) => handleFieldChange('country', value)}
+          >
+            <SelectTrigger id="country">
+              <SelectValue placeholder="Select country"></SelectValue>
+            </SelectTrigger>
+            <SelectContent
+              sideOffset={8}
+              className="z-50 max-h-60 overflow-y-auto rounded-md border border-primary bg-popover shadow-xl text-title-color "
+              position="popper"
+            >
+              {allowedCountriesArray.map((country) => (
+                <SelectItem
+                  key={country}
+                  value={country}
+                  className="pl-8 pr-4 py-2 text-base font-medium hover:bg-zinc-600 focus:bg-accent transition-colors"
+                >
+                  {country}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           {errors.country && (
             <div className="absolute left-0 top-full mt-1">
               <Tooltip message={errors.country} />

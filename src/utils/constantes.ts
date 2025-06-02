@@ -43,6 +43,7 @@ export const allowedCountries = new Set([
   'Sweden',
 ]);
 
+export const allowedCountriesArray = [...allowedCountries];
 export const countryToAlpha2 = {
   Austria: 'AT',
   Belgium: 'BE',
