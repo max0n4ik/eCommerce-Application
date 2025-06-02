@@ -21,8 +21,10 @@ const useUserStore = create<UserStore>((set) => ({
     set({ loading: true, error: null });
     try {
       const data = await fetchUserProfile();
+      console.log('user data:', data);
       set({ user: data.user, addresses: data.addresses, loading: false });
     } catch (error) {
+      console.error('fetchUser error:', error);
       set({
         error: error instanceof Error ? error.message : 'Failed to load user',
         loading: false,

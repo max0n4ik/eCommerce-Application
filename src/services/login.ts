@@ -1,10 +1,12 @@
 import type { Customer } from '@commercetools/platform-sdk';
 
+import { fetchCustomerAccessToken } from './auth-token';
 import { apiRoot } from './create-client';
 
 export type LoginResult = {
   success: boolean;
   customer?: Customer;
+  accessToken?: string;
   error?: string;
 };
 
@@ -25,9 +27,19 @@ export async function login(
         }
         throw error;
       });
+
+    let accessToken: string | undefined;
+    try {
+      accessToken = await fetchCustomerAccessToken(email, password);
+      console.log('accessToken:', accessToken);
+    } catch (tokenError) {
+      console.error('Failed to fetch access token after login:', tokenError);
+    }
+
     return {
       success: true,
       customer: response.body.customer,
+      accessToken,
     };
   } catch (error: unknown) {
     const errorMessage =
