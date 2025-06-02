@@ -54,3 +54,18 @@ export interface DiscountPrice {
   category: string;
   value: number;
 }
+
+export interface DetailedProductInterface {
+  name: string;
+  description?: string;
+  images: { url: string; alt: string }[];
+  permyriad?: number;
+  price: number;
+  priceCurrency: string;
+  category?: CategoryReference[];
+  attributes?: Attribute[];
+}
+export interface ProductCategoriesInterface {
+  typeId: string;
+  id: string;
+}

@@ -49,6 +49,18 @@ export async function fetchProductById(
     .get()
     .execute()
     .then((response) => {
-      return { body: response.body };
+      return response;
+    });
+}
+export async function fetchProductDiscount(
+  id: string
+): Promise<ClientResponse<ProductDiscount>> {
+  return apiRoot
+    .productDiscounts()
+    .withId({ ID: id })
+    .get()
+    .execute()
+    .then((response) => {
+      return response;
     });
 }
