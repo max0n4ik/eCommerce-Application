@@ -27,11 +27,19 @@ type CatalogStore = {
   productLoading: boolean;
   error: string | null;
   selectedCategory: string;
+  filters: {
+    priceRange: { min: number; max: number } | null;
+    attributes: Record<string, string[]>;
+  };
   fetchProducts: () => Promise<void>;
   fetchCategories: () => Promise<void>;
   fetchDiscount: () => Promise<void>;
   fetchProduct: (id: string) => Promise<void>;
   setSelectedCategory: (category: string) => void;
+  setFilters: (filters: {
+    priceRange: { min: number; max: number } | null;
+    attributes: Record<string, string[]>;
+  }) => void;
 };
 
 const useCatalogStore = create<CatalogStore>((set, get) => ({
@@ -43,6 +51,10 @@ const useCatalogStore = create<CatalogStore>((set, get) => ({
   productLoading: true,
   error: null,
   selectedCategory: 'all',
+  filters: {
+    priceRange: null,
+    attributes: {},
+  },
   fetchProducts: async (): Promise<void> => {
     set({ loading: true, error: null });
     try {
@@ -141,6 +153,7 @@ const useCatalogStore = create<CatalogStore>((set, get) => ({
   },
   setSelectedCategory: (category: string): void =>
     set({ selectedCategory: category }),
+  setFilters: (filters): void => set({ filters }),
 }));
 
 export default useCatalogStore;

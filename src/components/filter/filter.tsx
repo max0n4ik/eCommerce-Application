@@ -1,92 +1,98 @@
 import { useState } from 'react';
 
-import type { ProductCardI } from '@/utils/interfaces';
+import { Slider } from '@/components/ui/slider';
+import { useUrlParams } from '@/hooks/use-url-params';
 
 interface FilterProps {
-  products: ProductCardI[];
-  onFilterChange: (filteredProducts: ProductCardI[]) => void;
+  onFilterChange: (filters: {
+    priceRange: { min: number; max: number } | null;
+    attributes: Record<string, string[]>;
+  }) => void;
 }
 
 export default function Filter({
-  products,
   onFilterChange,
-}: FilterProps): React.JSX.Element {
-  const [priceRange, setPriceRange] = useState<{ min: number; max: number }>({
-    min: 0,
-    max: 100,
-  });
-  const [heightRange, setHeightRange] = useState<{ min: number; max: number }>({
-    min: 0,
-    max: 100,
-  });
+}: FilterProps): React.ReactElement {
+  const { updateParams, getParams } = useUrlParams();
+  const params = getParams();
 
-  const handlePriceChange = (type: 'min' | 'max', value: number): void => {
-    setPriceRange((prev) => ({ ...prev, [type]: value }));
-    filterProducts();
-  };
+  const [priceRange, setPriceRange] = useState<[number, number]>([
+    Number(params.minPrice) || 0,
+    Number(params.maxPrice) || 300,
+  ]);
 
-  const handleHeightChange = (type: 'min' | 'max', value: number): void => {
-    setHeightRange((prev) => ({ ...prev, [type]: value }));
-    filterProducts();
-  };
+  const [heightRange, setHeightRange] = useState<[number, number]>([
+    Number(params.minHeight) || 0,
+    Number(params.maxHeight) || 200,
+  ]);
 
-  const filterProducts = (): void => {
-    const filtered = products.filter((product) => {
-      const price = product.salePrice || product.price;
-      const height =
-        product.attributes?.find((attr) => attr.name === 'height')?.value[0] ||
-        0;
-
-      return (
-        price >= priceRange.min &&
-        price <= priceRange.max &&
-        height >= heightRange.min &&
-        height <= heightRange.max
-      );
+  const handlePriceChange = (value: number[]): void => {
+    const newRange = value as [number, number];
+    setPriceRange(newRange);
+    updateParams({
+      minPrice: newRange[0].toString(),
+      maxPrice: newRange[1].toString(),
     });
+    onFilterChange({
+      priceRange: {
+        min: newRange[0],
+        max: newRange[1],
+      },
+      attributes: {
+        height: [`${heightRange[0]}-${heightRange[1]}`],
+      },
+    });
+  };
 
-    onFilterChange(filtered);
+  const handleHeightChange = (value: number[]): void => {
+    const newRange = value as [number, number];
+    setHeightRange(newRange);
+    updateParams({
+      minHeight: newRange[0].toString(),
+      maxHeight: newRange[1].toString(),
+    });
+    onFilterChange({
+      priceRange: {
+        min: priceRange[0],
+        max: priceRange[1],
+      },
+      attributes: {
+        height: [`${newRange[0]}-${newRange[1]}`],
+      },
+    });
   };
 
   return (
-    <div className="">
-      <div className="mb-4">
-        <h4 className="font-medium mb-2">Price</h4>
-        <div className="flex gap-2">
-          <input
-            type="number"
-            value={priceRange.min}
-            onChange={(e) => handlePriceChange('min', Number(e.target.value))}
-            className="w-24 p-2 border rounded"
-            placeholder="Мин"
-          />
-          <input
-            type="number"
-            value={priceRange.max}
-            onChange={(e) => handlePriceChange('max', Number(e.target.value))}
-            className="w-24 p-2 border rounded"
-            placeholder="Макс"
-          />
+    <div className="grid grid-cols-2 gap-6">
+      <div className="space-y-4">
+        <h3 className="text-lg font-medium">Price</h3>
+        <Slider
+          value={priceRange}
+          onValueChange={handlePriceChange}
+          min={0}
+          max={300}
+          step={10}
+          className="w-full"
+        />
+        <div className="flex justify-between text-sm text-muted-foreground">
+          <span>{priceRange[0]} $</span>
+          <span>{priceRange[1]} $</span>
         </div>
       </div>
 
-      <div>
-        <h4 className="font-medium mb-2">Hight</h4>
-        <div className="flex gap-2">
-          <input
-            type="number"
-            value={heightRange.min}
-            onChange={(e) => handleHeightChange('min', Number(e.target.value))}
-            className="w-24 p-2 border rounded"
-            placeholder="Мин"
-          />
-          <input
-            type="number"
-            value={heightRange.max}
-            onChange={(e) => handleHeightChange('max', Number(e.target.value))}
-            className="w-24 p-2 border rounded"
-            placeholder="Макс"
-          />
+      <div className="space-y-4">
+        <h3 className="text-lg font-medium">Height</h3>
+        <Slider
+          value={heightRange}
+          onValueChange={handleHeightChange}
+          min={0}
+          max={100}
+          step={5}
+          className="w-full"
+        />
+        <div className="flex justify-between text-sm text-muted-foreground">
+          <span>{heightRange[0]} cm</span>
+          <span>{heightRange[1]} cm</span>
         </div>
       </div>
     </div>

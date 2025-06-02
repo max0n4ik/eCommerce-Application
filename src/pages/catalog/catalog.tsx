@@ -4,13 +4,16 @@ import { useEffect } from 'react';
 import garden from '@/assets/images/plant_background.png';
 import { Filter } from '@/components/filter';
 import { ProductCard } from '@/components/product-card';
-import { Button } from '@/components/ui/button';
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { useUrlParams } from '@/hooks/use-url-params';
 import useCatalogStore from '@/store/catalog';
 import {
   findCategoryById,
@@ -30,7 +33,11 @@ export default function Catalog(): React.JSX.Element {
     categories,
     selectedCategory,
     setSelectedCategory,
+    filters,
+    setFilters,
   } = useCatalogStore();
+
+  const { updateParams, getParams } = useUrlParams();
 
   useEffect(() => {
     fetchProducts();
@@ -40,9 +47,52 @@ export default function Catalog(): React.JSX.Element {
     fetchCategories();
   }, [fetchCategories]);
 
+  useEffect(() => {
+    const params = getParams();
+    if (params.category) {
+      setSelectedCategory(params.category);
+    }
+  }, [getParams, setSelectedCategory]);
+
+  const handleCategoryChange = (value: string): void => {
+    setSelectedCategory(value);
+    updateParams({ category: value === 'all' ? undefined : value });
+  };
+
+  const handleFilterChange = (newFilters: {
+    priceRange: { min: number; max: number } | null;
+    attributes: Record<string, string[]>;
+  }): void => {
+    setFilters(newFilters);
+  };
+
   const filteredProducts = products.filter((product) => {
-    if (selectedCategory === 'all') return true;
-    return product.category?.some((cat) => cat.id === selectedCategory);
+    // Фильтрация по категории
+    if (
+      selectedCategory !== 'all' &&
+      !product.category?.some((cat) => cat.id === selectedCategory)
+    ) {
+      return false;
+    }
+
+    // Фильтрация по цене
+    if (filters.priceRange) {
+      const price = product.salePrice || product.price;
+      if (price < filters.priceRange.min || price > filters.priceRange.max) {
+        return false;
+      }
+    }
+
+    // Фильтрация по атрибутам
+    if (Object.keys(filters.attributes).length > 0) {
+      return Object.entries(filters.attributes).every(([key, values]) => {
+        const attribute = product.attributes?.find((attr) => attr.name === key);
+        if (!attribute) return false;
+        return values.includes(attribute.value.toString());
+      });
+    }
+
+    return true;
   });
 
   const { category: currentCategory, parent: parentCategory } =
@@ -90,7 +140,7 @@ export default function Catalog(): React.JSX.Element {
 
         <div className="flex items-center text-white z-10 gap-2">
           <button
-            onClick={() => setSelectedCategory('all')}
+            onClick={() => handleCategoryChange('all')}
             className="hover:underline"
           >
             Catalog
@@ -99,7 +149,7 @@ export default function Catalog(): React.JSX.Element {
             <>
               <span>&gt;</span>
               <button
-                onClick={() => setSelectedCategory(parentCategory.id)}
+                onClick={() => handleCategoryChange(parentCategory.id)}
                 className="hover:underline"
               >
                 {parentCategory.name}
@@ -110,7 +160,7 @@ export default function Catalog(): React.JSX.Element {
             <>
               <span>&gt;</span>
               <button
-                onClick={() => setSelectedCategory(currentCategory.id)}
+                onClick={() => handleCategoryChange(currentCategory.id)}
                 className="hover:underline"
               >
                 {currentCategory.name}
@@ -122,28 +172,47 @@ export default function Catalog(): React.JSX.Element {
 
       <div className="flex flex-col gap-4 p-4">
         <div className="flex flex-wrap gap-2 justify-center items-center">
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button variant={'outline'}>
-                <SlidersHorizontal />
-                Filter
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-50">
-              <Filter
-                products={products}
-                onFilterChange={() => {
-                  console.log('filter changed');
-                }}
-              ></Filter>
-            </PopoverContent>
-          </Popover>
+          <Sheet>
+            <SheetTrigger className="h-10 px-4 py-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0">
+              <SlidersHorizontal />
+              Filter
+            </SheetTrigger>
+            <SheetContent>
+              <SheetHeader>
+                <SheetTitle>Filter</SheetTitle>
+                <SheetDescription>
+                  Select parameters for filtering products
+                </SheetDescription>
+              </SheetHeader>
+              <Filter onFilterChange={handleFilterChange} />
+            </SheetContent>
+          </Sheet>
+
+          {/* Отображение активных фильтров */}
+          {(filters.priceRange ||
+            Object.keys(filters.attributes).length > 0) && (
+            <div className="flex flex-wrap gap-2">
+              {filters.priceRange && (
+                <div className="bg-primary/20 px-3 py-1 rounded-full text-sm">
+                  Price: {filters.priceRange.min} - {filters.priceRange.max}
+                </div>
+              )}
+              {Object.entries(filters.attributes).map(([key, values]) => (
+                <div
+                  key={key}
+                  className="bg-primary/20 px-3 py-1 rounded-full text-sm"
+                >
+                  {key}: {values.join(', ')}
+                </div>
+              ))}
+            </div>
+          )}
 
           <ToggleGroup
             type="single"
             className="bg-primary rounded-xl p-1"
             value={selectedCategory}
-            onValueChange={(value) => value && setSelectedCategory(value)}
+            onValueChange={(value) => value && handleCategoryChange(value)}
           >
             <ToggleGroupItem
               value="all"
@@ -169,7 +238,7 @@ export default function Catalog(): React.JSX.Element {
               type="single"
               className="bg-primary rounded-xl p-1"
               value={selectedCategory}
-              onValueChange={(value) => value && setSelectedCategory(value)}
+              onValueChange={(value) => value && handleCategoryChange(value)}
             >
               {subCategories.map((category) => (
                 <ToggleGroupItem
