@@ -1,7 +1,15 @@
+import { SlidersHorizontal } from 'lucide-react';
 import { useEffect } from 'react';
 
 import garden from '@/assets/images/plant_background.png';
+import { Filter } from '@/components/filter';
 import { ProductCard } from '@/components/product-card';
+import { Button } from '@/components/ui/button';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import useCatalogStore from '@/store/catalog';
 import {
@@ -113,7 +121,24 @@ export default function Catalog(): React.JSX.Element {
       </div>
 
       <div className="flex flex-col gap-4 p-4">
-        <div className="flex flex-wrap gap-2 justify-center">
+        <div className="flex flex-wrap gap-2 justify-center items-center">
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant={'outline'}>
+                <SlidersHorizontal />
+                Filter
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-50">
+              <Filter
+                products={products}
+                onFilterChange={() => {
+                  console.log('filter changed');
+                }}
+              ></Filter>
+            </PopoverContent>
+          </Popover>
+
           <ToggleGroup
             type="single"
             className="bg-primary rounded-xl p-1"
