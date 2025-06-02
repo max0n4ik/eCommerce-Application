@@ -94,11 +94,9 @@ export const getSubCategories = (
   if (parentCategory?.children) {
     return parentCategory.children;
   }
-
   if (currentCategory?.children) {
     return currentCategory.children;
   }
-
   return [];
 };
 

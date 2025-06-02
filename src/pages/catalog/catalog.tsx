@@ -20,6 +20,11 @@ import {
   getSubCategories,
   shouldShowSubCategories,
 } from '@/utils/catalog';
+import {
+  filterProducts,
+  getUrlParamsFromFilters,
+  initializeFiltersFromUrl,
+} from '@/utils/filter-products';
 import type { ProductCardI } from '@/utils/interfaces';
 import type { NestedCategory } from '@/utils/types';
 
@@ -52,7 +57,8 @@ export default function Catalog(): React.JSX.Element {
     if (params.category) {
       setSelectedCategory(params.category);
     }
-  }, [getParams, setSelectedCategory]);
+    setFilters(initializeFiltersFromUrl(params, filters));
+  }, [filters, getParams, setFilters, setSelectedCategory]);
 
   const handleCategoryChange = (value: string): void => {
     setSelectedCategory(value);
@@ -64,46 +70,17 @@ export default function Catalog(): React.JSX.Element {
     attributes: Record<string, string[]>;
   }): void => {
     setFilters(newFilters);
+    updateParams(getUrlParamsFromFilters(newFilters));
   };
 
-  const filteredProducts = products.filter((product) => {
-    // Фильтрация по категории
-    if (
-      selectedCategory !== 'all' &&
-      !product.category?.some((cat) => cat.id === selectedCategory)
-    ) {
-      return false;
-    }
-
-    // Фильтрация по цене
-    if (filters.priceRange) {
-      const price = product.salePrice || product.price;
-      if (price < filters.priceRange.min || price > filters.priceRange.max) {
-        return false;
-      }
-    }
-
-    // Фильтрация по атрибутам
-    if (Object.keys(filters.attributes).length > 0) {
-      return Object.entries(filters.attributes).every(([key, values]) => {
-        const attribute = product.attributes?.find((attr) => attr.name === key);
-        if (!attribute) return false;
-        return values.includes(attribute.value.toString());
-      });
-    }
-
-    return true;
-  });
-
+  const filteredProducts = filterProducts(products, selectedCategory, filters);
   const { category: currentCategory, parent: parentCategory } =
     findCategoryById(selectedCategory, categories as NestedCategory[]);
-
   const showSubCategories = shouldShowSubCategories(
     selectedCategory,
     currentCategory,
     parentCategory
   );
-
   const subCategories = getSubCategories(currentCategory, parentCategory);
 
   if (loading) {
@@ -188,7 +165,6 @@ export default function Catalog(): React.JSX.Element {
             </SheetContent>
           </Sheet>
 
-          {/* Отображение активных фильтров */}
           {(filters.priceRange ||
             Object.keys(filters.attributes).length > 0) && (
             <div className="flex flex-wrap gap-2">
