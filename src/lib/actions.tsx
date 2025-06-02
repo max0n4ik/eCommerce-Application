@@ -47,15 +47,12 @@ export async function authenticate(
       validatedFields.data.password
     );
 
-    console.log('login result:', result);
-
     if (!result.success) {
       return { message: result.error || 'Error' };
     }
 
     authStore.setIsAuth(true);
     if (result.accessToken) {
-      console.log('Сохраняем токен:', result.accessToken);
       authStore.setAccessToken(result.accessToken);
 
       const client = new ClientBuilder()
@@ -69,7 +66,6 @@ export async function authenticate(
 
       try {
         await api.me().get().execute();
-        console.log('Доп. запрос выполнен, grant_type: password активирован');
       } catch (extraError) {
         console.warn('Ошибка при дополнительном запросе:', extraError);
       }

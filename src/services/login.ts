@@ -31,7 +31,6 @@ export async function login(
     let accessToken: string | undefined;
     try {
       accessToken = await fetchCustomerAccessToken(email, password);
-      console.log('accessToken:', accessToken);
     } catch (tokenError) {
       console.error('Failed to fetch access token after login:', tokenError);
     }

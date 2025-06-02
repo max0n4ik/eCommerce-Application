@@ -4,36 +4,44 @@ import {
 } from '@commercetools/platform-sdk';
 import { ClientBuilder } from '@commercetools/sdk-client-v2';
 
-import { useAuthStore } from '@/store/login';
 import type { User, Address } from '@/utils/types';
 
-export function createCustomerApiRoot(): ByProjectKeyRequestBuilder {
-  const token = useAuthStore.getState().accessToken;
+export function createCustomerApiRoot(
+  token: string
+): ByProjectKeyRequestBuilder {
   const apiUrl = import.meta.env.VITE_API_URL;
   const projectKey = import.meta.env.VITE_PROJECT_KEY;
-
-  console.log('token:', token);
-  console.log('VITE_API_URL:', apiUrl);
-  console.log('VITE_PROJECT_KEY:', projectKey);
 
   if (!token || !apiUrl || !projectKey) {
     throw new Error('Missing API configuration or access token');
   }
 
+  const authorizedFetch: typeof fetch = (input, init = {}) => {
+    const headers = new Headers(init.headers);
+    headers.set('Authorization', `Bearer ${token}`);
+
+    return fetch(input, {
+      ...init,
+      headers,
+    });
+  };
+
   const client = new ClientBuilder()
-    .withExistingTokenFlow(token)
-    .withHttpMiddleware({ host: apiUrl, fetch })
+    .withHttpMiddleware({
+      host: apiUrl,
+      fetch: authorizedFetch,
+    })
     .build();
 
   return createApiBuilderFromCtpClient(client).withProjectKey({ projectKey });
 }
 
-export async function fetchUserProfile(): Promise<{
+export async function fetchUserProfile(token: string): Promise<{
   user: User;
   addresses: Address[];
 }> {
   try {
-    const apiRoot = createCustomerApiRoot();
+    const apiRoot = createCustomerApiRoot(token);
     const response = await apiRoot.me().get().execute();
     const customer = response.body;
 

@@ -2,20 +2,16 @@ import { useEffect } from 'react';
 
 import { AddressList } from '@/components/profile/address-list';
 import { UserInfo } from '@/components/profile/user-info';
-import { authStore } from '@/store/login';
+import { useAuthStore } from '@/store/login';
 import useUserStore from '@/store/user';
 
 export default function Profile(): React.JSX.Element {
   const { user, addresses, loading, error, fetchUser } = useUserStore();
-  const accessToken = authStore.accessToken;
-  console.log('Текущий токен в store:', accessToken);
+  const accessToken = useAuthStore((s) => s.accessToken);
 
   useEffect(() => {
     if (accessToken) {
-      console.log('accessToken found, fetching user...');
       fetchUser();
-    } else {
-      console.log('No accessToken yet, waiting...');
     }
   }, [accessToken, fetchUser]);
 
