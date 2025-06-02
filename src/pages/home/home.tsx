@@ -3,9 +3,13 @@ import { Link } from 'react-router-dom';
 
 import Bonsai from '@/assets/images/bonsai.png';
 import Cactus from '@/assets/images/cactus.png';
+import ExcellentServices from '@/assets/images/excellent-services.png';
+import FastDelivery from '@/assets/images/fast-delivery.png';
+import HighQuality from '@/assets/images/high-quality.png';
 import IndoorPlants from '@/assets/images/indoor-plants.png';
 import MainPlantImage from '@/assets/images/main-banner-image.png';
 import Succulent from '@/assets/images/succulent.png';
+import WidePlant from '@/assets/images/wide-plant.png';
 import { ROUTES } from '@/utils/constantes';
 
 export default function Home(): JSX.Element {
@@ -55,7 +59,71 @@ export default function Home(): JSX.Element {
           </div>
         </div>
       </section>
-      <section className="pt-[40px] bg-white pb-[100px] flex flex-col md:flex-row md:justify-between text-[23px] font-medium font-sans text-[#2A2A2A] items-center">
+      <section className="py-10 px-5 bg-white shadow-[0_4px_12px_-3px_rgba(0,0,0,0.07),_0_-6px_20px_-6px_rgba(0,0,0,0.25)]">
+        <div className="flex flex-wrap gap-y-6 gap-x-4 justify-center sm:justify-between">
+          <div className="flex items-center gap-4 w-[100%] xs:w-[48%] sm:w-[48%] lg:w-[23%] max-w-[320px]">
+            <img
+              src={HighQuality}
+              alt="HighQuality"
+              className="w-[52px] h-[52px]"
+            ></img>
+            <div>
+              <h4 className="text-lg lg:text-[19.8px] font-bold font-serif text-[#2A2A2A]">
+                High Quality Plants
+              </h4>
+              <p className="text-sm lg:text-[15.6px] font-regular font-inter text-[#5A5A5A]">
+                A line about the service you&apos;e mentioned above.
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-4 w-[100%] xs:w-[48%] sm:w-[48%] lg:w-[23%] max-w-[320px]">
+            <img
+              src={WidePlant}
+              alt="WidePLant"
+              className="w-[52px] h-[52px]"
+            ></img>
+            <div>
+              <h4 className="text-lg lg:text-[19.8px] font-bold font-serif text-[#2A2A2A]">
+                Wide Plant Range
+              </h4>
+              <p className="text-sm lg:text-[15.6px] font-regular font-inter text-[#5A5A5A]">
+                A line about the service you&apos;e mentioned above.
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-4 w-[100%] xs:w-[48%] sm:w-[48%] lg:w-[23%] max-w-[320px]">
+            <img
+              src={ExcellentServices}
+              alt="ExcellentServices"
+              className="w-[52px] h-[52px]"
+            ></img>
+            <div>
+              <h4 className="text-lg lg:text-[19.8px] font-bold font-serif text-[#2A2A2A]">
+                Excellent Services
+              </h4>
+              <p className="text-sm lg:text-[15.6px] font-regular font-inter text-[#5A5A5A]">
+                A line about the service you&apos;e mentioned above.
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-4 w-[100%] xs:w-[48%] sm:w-[48%] lg:w-[23%] max-w-[320px]">
+            <img
+              src={FastDelivery}
+              alt="FastDelivery"
+              className="w-[52px] h-[52px]"
+            ></img>
+            <div>
+              <h4 className="text-lg lg:text-[19.8px] font-bold font-serif text-[#2A2A2A]">
+                Fast Delivery
+              </h4>
+              <p className="text-sm lg:text-[15.6px] font-regular font-inter text-[#5A5A5A]">
+                A line about the service you&apos;e mentioned above.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section className="pt-[40px] bg-white pb-[100px] flex flex-col md:flex-row md:justify-between text-[23px] font-medium font-sans text-[#2A2A2A] items-center shadow-[inset_0_6px_30px_-6px_rgba(0,0,0,0.25)]">
         <div className="text-center w-fit">
           <img
             src={Cactus}
@@ -99,7 +167,13 @@ export default function Home(): JSX.Element {
             headline. Make sure you keep it short and attractive.
           </p>
           <Link to={ROUTES.CATALOG}>
-            <button className="text-[13.2px] text-[#FFFFFF] bg-[#586F69] py-[17px] px-[27px]">
+            <button
+              className="text-[12px] sm:text-[13px] md:text-[14px] lg:text-[15px] 
+             text-white bg-[#586F69] 
+             py-[10px] sm:py-[12px] md:py-[15px] lg:py-[17px] 
+             px-[16px] sm:px-[20px] md:px-[24px] lg:px-[27px] 
+             hover:bg-[#3d504b] transition-colors duration-200"
+            >
               VIEW ALL PLANTS
             </button>
           </Link>
@@ -120,7 +194,13 @@ export default function Home(): JSX.Element {
           lacus vel facilisis.
         </p>
         <Link to={ROUTES.ABOUT}>
-          <button className="bg-[#586F69] mb-[26px] px-[25px] py-[15px] text-[13.2px] uppercase text-white">
+          <button
+            className="text-[12px] sm:text-[13px] md:text-[14px] lg:text-[15px] 
+             text-white bg-[#586F69] 
+             py-[10px] sm:py-[12px] md:py-[15px] lg:py-[17px] 
+             px-[16px] sm:px-[20px] md:px-[24px] lg:px-[27px] 
+             hover:bg-[#3d504b] transition-colors duration-200"
+          >
             Read More
           </button>
         </Link>
