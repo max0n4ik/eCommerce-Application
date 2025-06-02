@@ -57,7 +57,10 @@ export default function Catalog(): React.JSX.Element {
     if (params.category) {
       setSelectedCategory(params.category);
     }
-    setFilters(initializeFiltersFromUrl(params, filters));
+    const initialFilters = initializeFiltersFromUrl(params, filters);
+    if (JSON.stringify(initialFilters) !== JSON.stringify(filters)) {
+      setFilters(initialFilters);
+    }
   }, [filters, getParams, setFilters, setSelectedCategory]);
 
   const handleCategoryChange = (value: string): void => {
