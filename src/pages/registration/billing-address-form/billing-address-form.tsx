@@ -1,40 +1,54 @@
-import React from 'react';
+import type { Address } from '@commercetools/platform-sdk';
+import React, { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Tooltip } from '@/components/ui/error-message/error-message';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { cn } from '@/lib/utils';
-import { registration } from '@/services/create-client';
-import { authStore } from '@/store/login';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { completeSignUp } from '@/services/create-client';
 import useRegistrationStore from '@/store/registration';
-import { countryToAlpha2, defaultAddressForm } from '@/utils/constantes';
+import {
+  allowedCountriesArray,
+  countryToAlpha2,
+  defaultAddressForm,
+} from '@/utils/constantes';
 import type {
   RegistrationAddress,
-  RegistrationStepProps,
+  RegistrationBillingFormProps,
 } from '@/utils/interfaces';
 import { registrationAddressSchema } from '@/utils/validations';
 
-const formSchema = registrationAddressSchema;
-
-export default function RegistrationFormThird({
-  onNext,
-  className,
-  isSignUpStep = false,
+export default function BillingAddressForm({
   ...props
-}: React.ComponentPropsWithoutRef<'form'> &
-  RegistrationStepProps & { isSignUpStep?: boolean }): React.JSX.Element {
+}: RegistrationBillingFormProps): React.JSX.Element {
   const [formData, setFormData] =
-    React.useState<RegistrationAddress>(defaultAddressForm);
-  const [errors, setErrors] = React.useState<{ [key: string]: string }>({});
+    useState<RegistrationAddress>(defaultAddressForm);
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [registrationError, setRegistrationError] = React.useState<string>('');
+  const {
+    email,
+    password,
+    firstName,
+    lastName,
+    dateOfBirth,
+    asDefaultShipping,
+    shippingAddress,
+    setBillingAddress,
+  } = useRegistrationStore();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    const { name, type, value, checked } = e.target;
+  const handleFieldChange = (name: string, value: string | boolean): void => {
     setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value,
+      [name]: value,
     }));
+
     setErrors((prevErrors) => {
       return Object.fromEntries(
         Object.entries(prevErrors).filter(([key]) => key !== name)
@@ -42,13 +56,18 @@ export default function RegistrationFormThird({
     });
   };
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    const { name, value, type, checked } = e.target;
+    const fieldValue = type === 'checkbox' ? checked : value;
+    handleFieldChange(name, fieldValue);
+  };
+
   const validateForm = (): boolean => {
-    const result = formSchema.safeParse(formData);
+    const result = registrationAddressSchema.safeParse(formData);
     if (!result.success) {
       const newErrors: { [key: string]: string } = {};
       result.error.errors.forEach((err) => {
-        const field = err.path[0] as string;
-        newErrors[field] = err.message;
+        newErrors[err.path[0]] = err.message;
       });
       setErrors(newErrors);
       return false;
@@ -56,90 +75,79 @@ export default function RegistrationFormThird({
     setErrors({});
     return true;
   };
-
-  const { addAddress } = useRegistrationStore();
-
   const onSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
-    if (!validateForm()) return;
+    if (!validateForm()) {
+      return;
+    }
 
     setRegistrationError('');
 
-    const addressToSave = {
+    const address: Address = {
       streetName: formData.street,
       postalCode: formData.postalCode,
       city: formData.city,
       country:
         countryToAlpha2[formData.country as keyof typeof countryToAlpha2],
+
       department: formData.house,
-      isDefaultShipping: formData.isDefault,
-      isDefaultBilling: formData.isBilling,
     };
 
-    addAddress([addressToSave], {
-      asShipping: formData.isDefault,
-      asBilling: formData.isBilling,
-    });
+    setBillingAddress(address, formData.asDefaultBillingAddress);
 
-    const isFinalStep = formData.isDefault && formData.isBilling;
-    if (isFinalStep && isSignUpStep) {
-      try {
-        const { email, password, firstName, lastName, dateOfBirth, addresses } =
-          useRegistrationStore.getState();
-
-        const formattedDateOfBirth = dateOfBirth.toISOString().split('T')[0];
-        const updatedAddresses = [...addresses, addressToSave];
-        const userData = {
-          email,
-          password,
-          firstName,
-          lastName,
-          dateOfBirth: formattedDateOfBirth,
-          addresses: [...addresses, addressToSave],
-          defaultShippingAddress: formData.isDefault
-            ? updatedAddresses.length - 1
-            : undefined,
-          defaultBillingAddress: formData.isBilling
-            ? updatedAddresses.length - 1
-            : undefined,
-        };
-
-        await registration(userData);
-        authStore.setIsAuth(true);
-      } catch (error: unknown) {
-        const errorMessage =
-          error instanceof Error ? error.message : 'Unknown error';
-        setRegistrationError(errorMessage);
-        return;
-      }
+    try {
+      await completeSignUp({
+        email,
+        password,
+        firstName,
+        lastName,
+        dateOfBirth,
+        asDefaultShipping,
+        shippingAddress,
+        asDefaultBilling: formData.asDefaultBillingAddress,
+        billingAddress: address,
+      });
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Unknown error';
+      setRegistrationError(errorMessage);
     }
-
-    onNext();
   };
 
   return (
-    <form
-      onSubmit={onSubmit}
-      className={cn('flex flex-col gap-6', className)}
-      {...props}
-    >
+    <form onSubmit={onSubmit} className="flex flex-col gap-6" {...props}>
       <div className="flex flex-col items-center gap-2 text-center">
         <h1 className="text-2xl font-bold capitalize">Registration</h1>
         <p className="text-balance text-sm text-muted-foreground">
-          Enter your Shipping address
+          Enter your Billing address
         </p>
       </div>
       <div className="grid gap-6">
         <div className="grid gap-2 relative">
           <Label htmlFor="country">Country</Label>
-          <Input
-            id="country"
-            type="text"
-            name="country"
-            placeholder="Country"
+          <Select
             value={formData.country}
-            onChange={handleChange}
-          />
+            onValueChange={(value) => handleFieldChange('country', value)}
+          >
+            <SelectTrigger id="country">
+              <SelectValue placeholder="Select country"></SelectValue>
+            </SelectTrigger>
+            <SelectContent
+              sideOffset={8}
+              className="z-50 max-h-60 overflow-y-auto rounded-md border border-primary bg-popover shadow-xl text-title-color "
+              position="popper"
+            >
+              {allowedCountriesArray.map((country) => (
+                <SelectItem
+                  key={country}
+                  value={country}
+                  className="pl-8 pr-4 py-2 text-base font-medium hover:bg-zinc-600 focus:bg-accent transition-colors"
+                >
+                  {country}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           {errors.country && (
             <div className="absolute left-0 top-full mt-1">
               <Tooltip message={errors.country} />
@@ -220,38 +228,25 @@ export default function RegistrationFormThird({
             )}
           </div>
         </div>
-        <div>
-          <div className="flex gap-5">
-            <Input
-              id="useDefault"
-              name="isDefault"
-              type="checkbox"
-              className="w-3 h-3"
-              checked={formData.isDefault}
-              onChange={handleChange}
-            />
-            <Label htmlFor="useDefault">Use as default</Label>
-          </div>
-          <div className="flex gap-5">
-            <Input
-              id="useAsBilling"
-              name="isBilling"
-              type="checkbox"
-              className="w-3 h-3"
-              checked={formData.isBilling}
-              onChange={handleChange}
-            />
-            <Label htmlFor="useAsBilling">Use this address as billing</Label>
-          </div>
+        <div className="flex gap-5">
+          <Input
+            id="asDefaultBillingAddress"
+            type="checkbox"
+            name="asDefaultBillingAddress"
+            className="w-3 h-3"
+            checked={formData.asDefaultBillingAddress}
+            onChange={handleChange}
+          />
+          <Label htmlFor="useDefault">Use as default</Label>
         </div>
-        <Button type="submit" className="w-full">
-          {isSignUpStep ? 'Sign Up' : 'Next'}
-        </Button>
         {registrationError && (
           <p className="text-sm font-medium text-destructive">
             {registrationError}
           </p>
         )}
+        <Button type="submit" className="w-full">
+          Sign up
+        </Button>
       </div>
     </form>
   );
