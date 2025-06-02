@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import { useUrlParams } from '@/hooks/use-url-params';
 
@@ -25,6 +26,31 @@ export default function Filter({
     Number(params.minHeight) || 0,
     Number(params.maxHeight) || 200,
   ]);
+
+  const resetFilters = (): void => {
+    const defaultPriceRange: [number, number] = [0, 300];
+    const defaultHeightRange: [number, number] = [0, 200];
+
+    setPriceRange(defaultPriceRange);
+    setHeightRange(defaultHeightRange);
+
+    updateParams({
+      minPrice: defaultPriceRange[0].toString(),
+      maxPrice: defaultPriceRange[1].toString(),
+      minHeight: defaultHeightRange[0].toString(),
+      maxHeight: defaultHeightRange[1].toString(),
+    });
+
+    onFilterChange({
+      priceRange: {
+        min: defaultPriceRange[0],
+        max: defaultPriceRange[1],
+      },
+      attributes: {
+        height: [`${defaultHeightRange[0]}-${defaultHeightRange[1]}`],
+      },
+    });
+  };
 
   const handlePriceChange = (value: number[]): void => {
     const newRange = value as [number, number];
@@ -63,38 +89,44 @@ export default function Filter({
   };
 
   return (
-    <div className="grid grid-cols-2 gap-6">
-      <div className="space-y-4">
-        <h3 className="text-lg font-medium">Price</h3>
-        <Slider
-          value={priceRange}
-          onValueChange={handlePriceChange}
-          min={0}
-          max={300}
-          step={10}
-          className="w-full"
-        />
-        <div className="flex justify-between text-sm text-muted-foreground">
-          <span>{priceRange[0]} $</span>
-          <span>{priceRange[1]} $</span>
+    <div className="space-y-6">
+      <div className="grid grid-cols-2 gap-6">
+        <div className="space-y-4">
+          <h3 className="text-lg font-medium">Price</h3>
+          <Slider
+            value={priceRange}
+            onValueChange={handlePriceChange}
+            min={0}
+            max={300}
+            step={10}
+            className="w-full"
+          />
+          <div className="flex justify-between text-sm text-muted-foreground">
+            <span>{priceRange[0]} $</span>
+            <span>{priceRange[1]} $</span>
+          </div>
+        </div>
+
+        <div className="space-y-4">
+          <h3 className="text-lg font-medium">Height</h3>
+          <Slider
+            value={heightRange}
+            onValueChange={handleHeightChange}
+            min={0}
+            max={100}
+            step={5}
+            className="w-full"
+          />
+          <div className="flex justify-between text-sm text-muted-foreground">
+            <span>{heightRange[0]} cm</span>
+            <span>{heightRange[1]} cm</span>
+          </div>
         </div>
       </div>
 
-      <div className="space-y-4">
-        <h3 className="text-lg font-medium">Height</h3>
-        <Slider
-          value={heightRange}
-          onValueChange={handleHeightChange}
-          min={0}
-          max={100}
-          step={5}
-          className="w-full"
-        />
-        <div className="flex justify-between text-sm text-muted-foreground">
-          <span>{heightRange[0]} cm</span>
-          <span>{heightRange[1]} cm</span>
-        </div>
-      </div>
+      <Button variant="outline" onClick={resetFilters} className="w-full">
+        Reset filters
+      </Button>
     </div>
   );
 }
