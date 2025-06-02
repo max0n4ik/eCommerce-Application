@@ -1,37 +1,33 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { RegistrationFormCombined } from './registration-form-combined';
+import BillingAddressForm from './billing-address-form/billing-address-form';
 import { RegistrationFormFirst } from './registration-form-first';
 import { RegistrationFormSecond } from './registration-form-second';
+import { ShippingAddressForm } from './shipping-address-form';
 
 import gardenImage from '@/assets/images/garden.png';
 import { ROUTES } from '@/utils/constantes';
 
 export default function Registration(): React.JSX.Element {
   const [step, setStep] = useState(1);
-  const handleNext = (useAsBilling?: boolean): void => {
-    if (step === 3) {
-      if (useAsBilling) {
-        console.log('Регистрация выполнена, пропускаем шаг 4');
-      } else {
-        setStep(4);
-      }
-    } else {
-      setStep((prev) => prev + 1);
-    }
+  const handleNext = (): void => {
+    setStep(step + 1);
   };
 
   const renderStep = (): React.JSX.Element | null => {
     switch (step) {
       case 1: {
-        return <RegistrationFormFirst onNext={() => handleNext()} />;
+        return <RegistrationFormFirst onNext={handleNext} />;
       }
       case 2: {
-        return <RegistrationFormSecond onNext={() => handleNext()} />;
+        return <RegistrationFormSecond onNext={handleNext} />;
       }
       case 3: {
-        return <RegistrationFormCombined />;
+        return <ShippingAddressForm onNext={handleNext} />;
+      }
+      case 4: {
+        return <BillingAddressForm />;
       }
       default: {
         return null;
