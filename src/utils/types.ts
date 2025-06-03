@@ -20,3 +20,21 @@ export type PrivateRouteProps = PropsWithChildren & {
 export type NestedCategory = CategoryCard & {
   children: NestedCategory[];
 };
+
+export type User = {
+  id: string;
+  firstName: string;
+  lastName: string;
+  dateOfBirth: string;
+};
+
+export type Address = {
+  id: string;
+  street: string;
+  city: string;
+  state: string;
+  zip: string;
+  country: string;
+  isDefaultBilling?: boolean;
+  isDefaultShipping?: boolean;
+};
