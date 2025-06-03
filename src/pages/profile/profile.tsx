@@ -2,30 +2,22 @@ import { useEffect } from 'react';
 
 import { AddressList } from '@/components/profile/address-list';
 import { UserInfo } from '@/components/profile/user-info';
-import { useAuthStore } from '@/store/login';
 import useUserStore from '@/store/user';
 
 export default function Profile(): React.JSX.Element {
   const { user, addresses, loading, error, fetchUser } = useUserStore();
-  const accessToken = useAuthStore((s) => s.accessToken);
 
   useEffect(() => {
-    if (accessToken) {
-      fetchUser();
-    }
-  }, [accessToken, fetchUser]);
+    fetchUser();
+  }, [fetchUser]);
 
-  if (loading) {
-    return <div className="text-center p-10">Loading...</div>;
-  }
-
-  if (error || !user) {
+  if (loading) return <div className="text-center p-10">Loading...</div>;
+  if (error || !user)
     return (
       <div className="text-center text-red-500">
         {error ?? 'User not found'}
       </div>
     );
-  }
 
   return (
     <div className="max-w-4xl mx-auto p-4">

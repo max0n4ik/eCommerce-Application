@@ -1,30 +1,36 @@
 import {
   createApiBuilderFromCtpClient,
-  type CustomerDraft,
-  type CustomerSignInResult,
+  type ByProjectKeyRequestBuilder,
 } from '@commercetools/platform-sdk';
+import { ClientBuilder } from '@commercetools/sdk-client-v2';
 
 import { ctpClient } from './build-client';
 
-import { authStore } from '@/store/login';
 import type { CustomerDataInterface } from '@/utils/interfaces';
 
+const apiUrl = import.meta.env.VITE_API_URL;
+const projectKey = import.meta.env.VITE_PROJECT_KEY;
+
 export const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
-  projectKey: import.meta.env.VITE_PROJECT_KEY,
+  projectKey,
 });
 
-export async function signUpCustomer(
-  data: CustomerDraft
-): Promise<CustomerSignInResult> {
-  const response = await apiRoot
-    .customers()
-    .post({
-      body: data,
-    })
-    .execute();
+export function createAuthenticatedApiRoot(
+  token: string
+): ByProjectKeyRequestBuilder {
+  const authorizedFetch: typeof fetch = (input, init = {}) => {
+    const headers = new Headers(init.headers);
+    headers.set('Authorization', `Bearer ${token}`);
+    return fetch(input, { ...init, headers });
+  };
 
-  return response.body;
+  const client = new ClientBuilder()
+    .withHttpMiddleware({ host: apiUrl, fetch: authorizedFetch })
+    .build();
+
+  return createApiBuilderFromCtpClient(client).withProjectKey({ projectKey });
 }
+
 export async function completeSignUp(
   customerData: CustomerDataInterface
 ): Promise<void> {
@@ -61,17 +67,21 @@ export async function completeSignUp(
     }
   }
 
-  await signUpCustomer({
-    email,
-    password,
-    firstName,
-    lastName,
-    dateOfBirth: formattedDateOfBirth,
-    addresses,
-    defaultShippingAddress,
-    defaultBillingAddress,
-    shippingAddresses,
-    billingAddresses,
-  });
-  authStore.setIsAuth(true);
+  await apiRoot
+    .customers()
+    .post({
+      body: {
+        email,
+        password,
+        firstName,
+        lastName,
+        dateOfBirth: formattedDateOfBirth,
+        addresses,
+        defaultShippingAddress,
+        defaultBillingAddress,
+        shippingAddresses,
+        billingAddresses,
+      },
+    })
+    .execute();
 }

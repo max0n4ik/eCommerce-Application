@@ -1,7 +1,8 @@
 import { create } from 'zustand';
 
+import { useAuthStore } from './auth-store';
+
 import { fetchUserProfile } from '@/services/user';
-import { useAuthStore } from '@/store/login';
 import type { User, Address } from '@/utils/types';
 
 type UserStore = {
@@ -10,6 +11,7 @@ type UserStore = {
   loading: boolean;
   error: string | null;
   fetchUser: () => Promise<void>;
+  clearUser: () => void;
 };
 
 const useUserStore = create<UserStore>((set) => ({
@@ -20,21 +22,18 @@ const useUserStore = create<UserStore>((set) => ({
 
   fetchUser: async (): Promise<void> => {
     set({ loading: true, error: null });
+    const token = useAuthStore.getState().accessToken;
+    if (!token) return set({ error: 'No token', loading: false });
+
     try {
-      const token = useAuthStore.getState().accessToken;
-      if (!token) throw new Error('Access token is missing');
-
-      const data = await fetchUserProfile(token);
-
-      set({ user: data.user, addresses: data.addresses, loading: false });
-    } catch (error) {
-      console.error('fetchUser error:', error);
-      set({
-        error: error instanceof Error ? error.message : 'Failed to load user',
-        loading: false,
-      });
+      const result = await fetchUserProfile(token);
+      set({ user: result.user, addresses: result.addresses, loading: false });
+    } catch {
+      set({ error: 'Failed to load user', loading: false });
     }
   },
+
+  clearUser: (): void => set({ user: null, addresses: [] }),
 }));
 
 export default useUserStore;
