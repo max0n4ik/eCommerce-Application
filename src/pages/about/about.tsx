@@ -2,7 +2,7 @@ import AboutUs from '@/assets/images/about-us.png';
 import Collaboration from '@/assets/images/collaboration.jpg';
 import Elizaveta from '@/assets/images/elizaveta.png';
 import Margarita from '@/assets/images/margarita.jpeg';
-import Maxim from '@/assets/images/maxim.jpeg';
+import Maxim from '@/assets/images/maxim.png';
 import Olga from '@/assets/images/olga.jpeg';
 import RSSchoolLogo from '@/assets/images/rss-logo.svg';
 import GitHubLogo from '@/assets/images/st-github.png';

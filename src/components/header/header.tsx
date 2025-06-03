@@ -24,8 +24,8 @@ export default function Header(): React.JSX.Element {
         </Link>
         <nav className=" font-medium  items-center flex gap-4 text-base text-black font-sans uppercase">
           <Link to={ROUTES.HOME}>Home</Link>
-          <Link to={ROUTES.CART}>Cart</Link>
           <Link to={ROUTES.CATALOG}>Catalog</Link>
+          <Link to={ROUTES.ABOUT}>About</Link>
           {isAuth ? (
             <>
               <Link to={ROUTES.PROFILE}>Profile</Link>
@@ -37,6 +37,7 @@ export default function Header(): React.JSX.Element {
               <Link to={ROUTES.REGISTRATION}>Registration</Link>
             </>
           )}
+          <Link to={ROUTES.CART}>Cart</Link>
         </nav>
       </header>
     </>
