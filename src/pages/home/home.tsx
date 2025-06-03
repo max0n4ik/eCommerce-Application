@@ -5,6 +5,14 @@ import Bonsai from '@/assets/images/bonsai.png';
 import Cactus from '@/assets/images/cactus.png';
 import ExcellentServices from '@/assets/images/excellent-services.png';
 import FastDelivery from '@/assets/images/fast-delivery.png';
+import Grid1 from '@/assets/images/grid1.png';
+import Grid2 from '@/assets/images/grid2.png';
+import Grid3 from '@/assets/images/grid3.png';
+import Grid4 from '@/assets/images/grid4.png';
+import Grid5 from '@/assets/images/grid5.png';
+import Grid6 from '@/assets/images/grid6.png';
+import Grid7 from '@/assets/images/grid7.png';
+import Grid8 from '@/assets/images/grid8.png';
 import HighQuality from '@/assets/images/high-quality.png';
 import IndoorPlants from '@/assets/images/indoor-plants.png';
 import MainPlantImage from '@/assets/images/main-banner-image.png';
@@ -210,6 +218,26 @@ export default function Home(): JSX.Element {
         <p className="text-[30px] lg:text-[40px] text-[#586F69] font-bold font-serif">
           #Petal&Pot
         </p>
+      </section>
+      <section className="grid-banner-section">
+        <div className="grid-banner-container">
+          <img className="grid-banner-img area-b" src={Grid7} alt="Grid7"></img>
+          <img className="grid-banner-img area-c" src={Grid8} alt="Grid8"></img>
+          <img className="grid-banner-img area-d" src={Grid4} alt="Grid4"></img>
+
+          <img className="grid-banner-img area-e" src={Grid2} alt="Grid2"></img>
+          <img className="grid-banner-img area-g" src={Grid6} alt="Grid6"></img>
+
+          <img className="grid-banner-img area-h" src={Grid5} alt="Grid5"></img>
+
+          <img className="grid-banner-img area-k" src={Grid3} alt="Grid3"></img>
+
+          <img
+            className="grid-banner-img  area-l"
+            src={Grid1}
+            alt="Grid1"
+          ></img>
+        </div>
       </section>
     </>
   );
