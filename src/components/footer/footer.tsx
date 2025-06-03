@@ -31,8 +31,8 @@ export default function Footer(): React.JSX.Element {
             <nav className="font-medium flex gap-4 font-sans text-[14.5px] text-[#586F69] flex-col leading-3">
               <Link to={`${ROUTES.HOME}#home`}>Home</Link>
               <Link to={ROUTES.CART}>Cart</Link>
-              <Link to={ROUTES.LOGIN}>Login</Link>
-              <Link to={ROUTES.REGISTRATION}>Registration</Link>
+              <Link to={ROUTES.CATALOG}>Catalog</Link>
+              <Link to={ROUTES.ABOUT}>About Us</Link>
             </nav>
           </div>
           <div className="flex flex-col gap-5 pt-3">
