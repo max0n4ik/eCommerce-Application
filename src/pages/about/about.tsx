@@ -1,3 +1,5 @@
+import React from 'react';
+
 import AboutUs from '@/assets/images/about-us.png';
 import Collaboration from '@/assets/images/collaboration.jpg';
 import Elizaveta from '@/assets/images/elizaveta.png';
@@ -7,7 +9,7 @@ import Olga from '@/assets/images/olga.jpeg';
 import RSSchoolLogo from '@/assets/images/rss-logo.svg';
 import GitHubLogo from '@/assets/images/st-github.png';
 
-export default function About(): JSX.Element {
+export default function About(): React.JSX.Element {
   return (
     <>
       <section className="bc-section-background pt-8 pb-14">
@@ -51,7 +53,7 @@ export default function About(): JSX.Element {
           <div className="text-[#676867] font-sans text-[14px] sm:text-[14.5px] md:text-[18px] lg:text-[20px]">
             <p className="mt-4 leading-relaxed">
               This website is the result of collaboration between talented
-              alumni of{' '}
+              alumni of
               <a
                 href="https://rs.school/"
                 className="font-semibold text-[hsl(50,100%,56%)]  hover:scale-105 inline-block transition-transform duration-300 ease-out"

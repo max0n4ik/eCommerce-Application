@@ -11,6 +11,7 @@ export const ROUTES = {
   LOGOUT: '/logout',
   NOTFOUND: '*',
   PRODUCT: 'product/:id',
+  CONTACTS: '/contacts',
 } as const;
 
 export const allowedCountries = new Set([

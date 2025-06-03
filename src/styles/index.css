@@ -171,6 +171,8 @@ border-border -> подставляется значение из --border и т
 @layer base {
   * {
     @apply border-border;
+
+    scroll-behavior: smooth;
   }
 
   body {

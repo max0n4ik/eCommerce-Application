@@ -23,7 +23,7 @@ import { ROUTES } from '@/utils/constantes';
 export default function Home(): JSX.Element {
   return (
     <>
-      <section className="bc-section-background ">
+      <section className="bc-section-background " id="home">
         <div className="flex flex-col lg:flex-row lg:justify-between items-center px-5 py-10">
           <div className="flex flex-col gap-4">
             <div>
