@@ -1,8 +1,8 @@
 import type { JSX } from 'react';
 import { Link } from 'react-router-dom';
 
-import Bonsai from '@/assets/images/bonsai.png';
-import Cactus from '@/assets/images/cactus.png';
+// import Bonsai from '@/assets/images/bonsai.png';
+// import Cactus from '@/assets/images/cactus.png';
 import ExcellentServices from '@/assets/images/excellent-services.png';
 import FastDelivery from '@/assets/images/fast-delivery.png';
 import Grid1 from '@/assets/images/grid1.png';
@@ -14,9 +14,9 @@ import Grid6 from '@/assets/images/grid6.png';
 import Grid7 from '@/assets/images/grid7.png';
 import Grid8 from '@/assets/images/grid8.png';
 import HighQuality from '@/assets/images/high-quality.png';
-import IndoorPlants from '@/assets/images/indoor-plants.png';
+// import IndoorPlants from '@/assets/images/indoor-plants.png';
 import MainPlantImage from '@/assets/images/main-banner-image.png';
-import Succulent from '@/assets/images/succulent.png';
+// import Succulent from '@/assets/images/succulent.png';
 import WidePlant from '@/assets/images/wide-plant.png';
 import { ROUTES } from '@/utils/constantes';
 
@@ -131,7 +131,7 @@ export default function Home(): JSX.Element {
           </div>
         </div>
       </section>
-      <section className="pt-[40px] bg-white pb-[100px] flex flex-col md:flex-row md:justify-between text-[23px] font-medium font-sans text-[#2A2A2A] items-center shadow-[inset_0_6px_30px_-6px_rgba(0,0,0,0.25)]">
+      {/* <section className="pt-[40px] bg-white pb-[100px] flex flex-col md:flex-row md:justify-between text-[23px] font-medium font-sans text-[#2A2A2A] items-center shadow-[inset_0_6px_30px_-6px_rgba(0,0,0,0.25)]">
         <div className="text-center w-fit">
           <img
             src={Cactus}
@@ -164,7 +164,7 @@ export default function Home(): JSX.Element {
           />
           <p>Pots →</p>
         </div>
-      </section>
+      </section> */}
       <section className="font-sans pb-[100px] pt-[21px] px-[20px] lg:px-[50px] bc-section-background">
         <h2 className="text-[30px] lg:text-[43px] font-bold font-serif mb-5 text-[#2A2A2A]">
           Promotional codes for today
