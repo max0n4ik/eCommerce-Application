@@ -20,12 +20,6 @@ import {
   getSubCategories,
   shouldShowSubCategories,
 } from '@/utils/catalog';
-import {
-  filterProducts,
-  getUrlParamsFromFilters,
-  initializeFiltersFromUrl,
-} from '@/utils/filter-products';
-import type { ProductCardI } from '@/utils/interfaces';
 import type { NestedCategory } from '@/utils/types';
 
 export default function Catalog(): React.JSX.Element {
@@ -39,10 +33,11 @@ export default function Catalog(): React.JSX.Element {
     selectedCategory,
     setSelectedCategory,
     filters,
+    fetchFilteredProducts,
     setFilters,
   } = useCatalogStore();
 
-  const { updateParams, getParams } = useUrlParams();
+  const { initFromUrl, updateParams } = useUrlParams();
 
   useEffect(() => {
     fetchProducts();
@@ -53,34 +48,44 @@ export default function Catalog(): React.JSX.Element {
   }, [fetchCategories]);
 
   useEffect(() => {
-    const params = getParams();
-    if (params.category) {
-      setSelectedCategory(params.category);
-    }
-    const initialFilters = initializeFiltersFromUrl(params, filters);
-    if (JSON.stringify(initialFilters) !== JSON.stringify(filters)) {
-      setFilters(initialFilters);
-    }
-  }, [filters, getParams, setFilters, setSelectedCategory]);
+    const filters = initFromUrl();
+    fetchFilteredProducts(filters);
+  }, [initFromUrl, fetchFilteredProducts]);
 
   const handleCategoryChange = (value: string): void => {
-    setSelectedCategory(value);
-    updateParams({ category: value === 'all' ? undefined : value });
+    const categoryId = value === 'all' ? null : value;
+    const updatedFilters = {
+      ...filters,
+      filter: {
+        ...filters.filter,
+        category: categoryId,
+      },
+    };
+
+    setSelectedCategory(categoryId);
+    setFilters(updatedFilters);
+    updateParams(updatedFilters);
+    fetchFilteredProducts(updatedFilters);
   };
 
-  const handleFilterChange = (newFilters: {
-    priceRange: { min: number; max: number } | null;
-    attributes: Record<string, string[]>;
-  }): void => {
-    setFilters(newFilters);
-    updateParams(getUrlParamsFromFilters(newFilters));
+  const handleSheetClose = (): void => {
+    const updatedFilters = {
+      ...filters,
+      filter: {
+        ...filters.filter,
+        category: selectedCategory,
+      },
+    };
+
+    setFilters(updatedFilters);
+    updateParams(updatedFilters);
+    fetchFilteredProducts(updatedFilters);
   };
 
-  const filteredProducts = filterProducts(products, selectedCategory, filters);
   const { category: currentCategory, parent: parentCategory } =
-    findCategoryById(selectedCategory, categories as NestedCategory[]);
+    findCategoryById(selectedCategory || '', categories as NestedCategory[]);
   const showSubCategories = shouldShowSubCategories(
-    selectedCategory,
+    selectedCategory || '',
     currentCategory,
     parentCategory
   );
@@ -136,7 +141,7 @@ export default function Catalog(): React.JSX.Element {
               </button>
             </>
           )}
-          {currentCategory && selectedCategory !== 'all' && (
+          {currentCategory && selectedCategory && (
             <>
               <span>&gt;</span>
               <button
@@ -152,7 +157,7 @@ export default function Catalog(): React.JSX.Element {
 
       <div className="flex flex-col gap-4 p-4">
         <div className="flex flex-wrap gap-2 justify-center items-center">
-          <Sheet>
+          <Sheet onOpenChange={(open) => !open && handleSheetClose()}>
             <SheetTrigger className="h-10 px-4 py-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0">
               <SlidersHorizontal />
               Filter
@@ -164,33 +169,35 @@ export default function Catalog(): React.JSX.Element {
                   Select parameters for filtering products
                 </SheetDescription>
               </SheetHeader>
-              <Filter onFilterChange={handleFilterChange} />
+              <Filter />
             </SheetContent>
           </Sheet>
 
-          {(filters.priceRange ||
-            Object.keys(filters.attributes).length > 0) && (
+          {/* {(filters.filter.price ||
+            Object.keys(filters.filter.attributes).length > 0) && (
             <div className="flex flex-wrap gap-2">
-              {filters.priceRange && (
+              {filters.filter.price && (
                 <div className="bg-primary/20 px-3 py-1 rounded-full text-sm">
-                  Price: {filters.priceRange.min} - {filters.priceRange.max}
+                  Price: {filters.filter.price.min} - {filters.filter.price.max}
                 </div>
               )}
-              {Object.entries(filters.attributes).map(([key, values]) => (
-                <div
-                  key={key}
-                  className="bg-primary/20 px-3 py-1 rounded-full text-sm"
-                >
-                  {key}: {values.join(', ')}
-                </div>
-              ))}
+              {Object.entries(filters.filter.attributes).map(
+                ([key, values]) => (
+                  <div
+                    key={key}
+                    className="bg-primary/20 px-3 py-1 rounded-full text-sm"
+                  >
+                    {key}: {values.join(', ')}
+                  </div>
+                )
+              )}
             </div>
-          )}
+          )} */}
 
           <ToggleGroup
             type="single"
             className="bg-primary rounded-xl p-1"
-            value={selectedCategory}
+            value={selectedCategory || 'all'}
             onValueChange={(value) => value && handleCategoryChange(value)}
           >
             <ToggleGroupItem
@@ -216,7 +223,7 @@ export default function Catalog(): React.JSX.Element {
             <ToggleGroup
               type="single"
               className="bg-primary rounded-xl p-1"
-              value={selectedCategory}
+              value={selectedCategory || 'all'}
               onValueChange={(value) => value && handleCategoryChange(value)}
             >
               {subCategories.map((category) => (
@@ -234,9 +241,10 @@ export default function Catalog(): React.JSX.Element {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
-        {filteredProducts.map((p: ProductCardI) => (
-          <ProductCard key={p.id} {...p} />
-        ))}
+        {filters.filteredCatalog?.map((filteredProduct) => {
+          const product = products.find((p) => p.id === filteredProduct.id);
+          return product ? <ProductCard key={product.id} {...product} /> : null;
+        })}
       </div>
     </div>
   );

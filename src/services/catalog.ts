@@ -3,9 +3,12 @@ import type {
   ClientResponse,
   Product,
   ProductDiscount,
+  ProductPagedSearchResponse,
 } from '@commercetools/platform-sdk';
 
 import { apiRoot } from './create-client';
+
+import type { FilterI } from '@/utils/interfaces';
 
 export function fetchCatalogProducts(): Promise<ClientResponse<Product[]>> {
   return apiRoot
@@ -59,6 +62,46 @@ export async function fetchProductDiscount(
     .productDiscounts()
     .withId({ ID: id })
     .get()
+    .execute()
+    .then((response) => {
+      return response;
+    });
+}
+
+export async function fetchCatalogFilteredProducts(
+  filter: FilterI
+): Promise<ClientResponse<ProductPagedSearchResponse>> {
+  return apiRoot
+    .products()
+    .search()
+    .post({
+      body: {
+        query: {
+          filter: [
+            ...(filter.filter.category
+              ? [
+                  {
+                    exact: {
+                      field: 'categories',
+                      value: filter.filter.category,
+                    },
+                  },
+                ]
+              : []),
+            {
+              range: {
+                field: 'variants.prices.centAmount',
+                fieldType: 'long',
+                gte: filter.filter.price.min,
+                lte: filter.filter.price.max,
+              },
+            },
+          ],
+        },
+        limit: 40,
+        offset: 0,
+      },
+    })
     .execute()
     .then((response) => {
       return response;

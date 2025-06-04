@@ -1,44 +1,53 @@
 import { useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-interface FilterParams {
-  category?: string;
-  minPrice?: string;
-  maxPrice?: string;
-  minHeight?: string;
-  maxHeight?: string;
-}
+import useCatalogStore from '@/store/catalog';
+import {
+  getUrlParamsFromFilters,
+  initializeFiltersFromUrl,
+} from '@/utils/filter-products';
+import type { FilterI } from '@/utils/interfaces';
 
 export const useUrlParams = (): {
-  updateParams: (params: FilterParams) => void;
-  getParams: () => FilterParams;
+  updateParams: (params: FilterI) => void;
+  initFromUrl: () => FilterI;
 } => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const { setFilters, setSelectedCategory } = useCatalogStore();
 
   const updateParams = useCallback(
-    (params: FilterParams) => {
-      const newParams = new URLSearchParams(searchParams);
+    (params: FilterI) => {
+      const urlParams = getUrlParamsFromFilters(params);
+      const newParams = new URLSearchParams();
 
-      Object.entries(params).forEach(([key, value]) => {
-        if (value === undefined || value === '') {
-          newParams.delete(key);
-        } else {
+      Object.entries(urlParams).forEach(([key, value]) => {
+        if (value) {
           newParams.set(key, value);
         }
       });
 
       setSearchParams(newParams);
+      setFilters(params);
     },
-    [searchParams, setSearchParams]
+    [setSearchParams, setFilters]
   );
 
-  const getParams = useCallback((): FilterParams => {
-    const params: FilterParams = {};
-    searchParams.forEach((value, key) => {
-      params[key as keyof FilterParams] = value;
+  const initFromUrl = useCallback((): FilterI => {
+    const params = Object.fromEntries(searchParams.entries());
+    const filters = initializeFiltersFromUrl(params, {
+      filter: {
+        price: { min: 0, max: 30000 },
+        attributes: {},
+      },
     });
-    return params;
-  }, [searchParams]);
 
-  return { updateParams, getParams };
+    if (filters.filter.category) {
+      setSelectedCategory(filters.filter.category);
+    }
+
+    setFilters(filters);
+    return filters;
+  }, [searchParams, setFilters, setSelectedCategory]);
+
+  return { updateParams, initFromUrl };
 };

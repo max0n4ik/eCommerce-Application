@@ -1,10 +1,5 @@
-import type { ProductCardI } from './interfaces';
+import type { FilterI } from './interfaces';
 import type { NestedCategory } from './types';
-
-interface FilterOptions {
-  priceRange: { min: number; max: number } | null;
-  attributes: Record<string, string[]>;
-}
 
 interface UrlParams {
   category?: string;
@@ -14,91 +9,41 @@ interface UrlParams {
   maxHeight?: string;
 }
 
-export function filterProducts(
-  products: ProductCardI[],
-  selectedCategory: string,
-  filters: FilterOptions
-): ProductCardI[] {
-  return products.filter((product) => {
-    if (
-      selectedCategory !== 'all' &&
-      !product.category?.some((cat) => cat.id === selectedCategory)
-    ) {
-      return false;
-    }
-
-    if (filters.priceRange) {
-      const rawPrice = product.salePrice || product.price;
-      const price =
-        typeof rawPrice === 'string'
-          ? Number.parseFloat(rawPrice) / 100
-          : rawPrice / 100;
-
-      if (price < filters.priceRange.min || price > filters.priceRange.max) {
-        return false;
-      }
-    }
-
-    if (Object.keys(filters.attributes).length > 0) {
-      const passedAttributes = Object.entries(filters.attributes).every(
-        ([key, values]) => {
-          if (key === 'height') {
-            const heightRange = values[0].split('-').map(Number);
-            const heightAttribute = product.attributes?.find(
-              (attr) => attr.name === 'height'
-            );
-            if (!heightAttribute) {
-              return false;
-            }
-            const height = Number(heightAttribute.value);
-            return height >= heightRange[0] && height <= heightRange[1];
-          }
-          return true;
-        }
-      );
-
-      if (!passedAttributes) {
-        return false;
-      }
-    }
-
-    return true;
-  });
-}
-
 export function initializeFiltersFromUrl(
   params: UrlParams,
-  currentFilters: FilterOptions
-): FilterOptions {
-  const newFilters = { ...currentFilters };
+  currentFilter: FilterI
+): FilterI {
+  const newFilters = { ...currentFilter };
 
   if (params.minPrice || params.maxPrice) {
-    newFilters.priceRange = {
+    newFilters.filter.price = {
       min: Number(params.minPrice) || 0,
-      max: Number(params.maxPrice) || 300,
+      max: Number(params.maxPrice) || 30000,
     };
   }
 
-  if (params.minHeight || params.maxHeight) {
-    newFilters.attributes = {
-      ...newFilters.attributes,
-      height: [`${params.minHeight || 0}-${params.maxHeight || 200}`],
-    };
+  if (params.category) {
+    newFilters.filter.category = params.category;
   }
 
   return newFilters;
 }
 
-export function getUrlParamsFromFilters(filters: FilterOptions): UrlParams {
+export function getUrlParamsFromFilters(filters: FilterI): UrlParams {
   const params: UrlParams = {};
 
-  if (filters.priceRange) {
-    params.minPrice = filters.priceRange.min.toString();
-    params.maxPrice = filters.priceRange.max.toString();
+  if (filters.filter.price) {
+    params.minPrice = filters.filter.price.min.toString();
+    params.maxPrice = filters.filter.price.max.toString();
   }
 
-  if (filters.attributes.height?.[0]) {
-    const [minHeight, maxHeight] = filters.attributes.height[0].split('-');
+  if (filters.filter.category) {
+    params.category = filters.filter.category;
+  }
+
+  if (filters.filter.attributes?.height?.[0]) {
+    const [minHeight, maxHeight] =
+      filters.filter.attributes.height[0].split('-');
     params.minHeight = minHeight;
     params.maxHeight = maxHeight;
   }

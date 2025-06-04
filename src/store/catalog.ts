@@ -8,6 +8,7 @@ import {
   fetchCatalogCategories,
   fetchCatalogProductsDiscount,
   fetchProductById,
+  fetchCatalogFilteredProducts,
 } from '@/services/catalog';
 import { getDiscount } from '@/utils/catalog';
 import { nestCategories } from '@/utils/catalog';
@@ -16,9 +17,10 @@ import type {
   DetailedProductInterface,
   DiscountPrice,
   ProductCardI,
+  FilterI,
 } from '@/utils/interfaces';
 
-type CatalogStore = {
+export type CatalogStore = {
   products: ProductCardI[];
   categories: CategoryCard[];
   discounts: DiscountPrice[];
@@ -26,20 +28,15 @@ type CatalogStore = {
   loading: boolean;
   productLoading: boolean;
   error: string | null;
-  selectedCategory: string;
-  filters: {
-    priceRange: { min: number; max: number } | null;
-    attributes: Record<string, string[]>;
-  };
+  selectedCategory: string | null;
+  filters: FilterI;
   fetchProducts: () => Promise<void>;
   fetchCategories: () => Promise<void>;
   fetchDiscount: () => Promise<void>;
   fetchProduct: (id: string) => Promise<void>;
-  setSelectedCategory: (category: string) => void;
-  setFilters: (filters: {
-    priceRange: { min: number; max: number } | null;
-    attributes: Record<string, string[]>;
-  }) => void;
+  fetchFilteredProducts: (filters: FilterI) => Promise<void>;
+  setSelectedCategory: (category: string | null) => void;
+  setFilters: (filter: Pick<FilterI, 'filter'>) => void;
 };
 
 const useCatalogStore = create<CatalogStore>((set, get) => ({
@@ -50,10 +47,10 @@ const useCatalogStore = create<CatalogStore>((set, get) => ({
   loading: false,
   productLoading: true,
   error: null,
-  selectedCategory: 'all',
+  selectedCategory: null,
   filters: {
-    priceRange: null,
-    attributes: {},
+    filter: { price: { min: 0, max: 30000 }, attributes: {}, category: null },
+    filteredCatalog: [],
   },
   fetchProducts: async (): Promise<void> => {
     set({ loading: true, error: null });
@@ -113,6 +110,22 @@ const useCatalogStore = create<CatalogStore>((set, get) => ({
       });
     }
   },
+  fetchFilteredProducts: async (filters: FilterI): Promise<void> => {
+    try {
+      const response = await fetchCatalogFilteredProducts(filters);
+      set({
+        filters: {
+          filter: filters.filter,
+          filteredCatalog: response.body.results,
+        },
+        loading: false,
+      });
+    } catch (error) {
+      set({
+        error: error instanceof Error ? error.message : 'Something went wrong',
+      });
+    }
+  },
 
   fetchProduct: async (id: string): Promise<void> => {
     try {
@@ -151,9 +164,10 @@ const useCatalogStore = create<CatalogStore>((set, get) => ({
       });
     }
   },
-  setSelectedCategory: (category: string): void =>
+  setSelectedCategory: (category: string | null): void =>
     set({ selectedCategory: category }),
-  setFilters: (filters): void => set({ filters }),
+  setFilters: (filter: Pick<FilterI, 'filter'>): void =>
+    set({ filters: filter }),
 }));
 
 export default useCatalogStore;

@@ -1,91 +1,45 @@
-import { useState } from 'react';
-
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import { useUrlParams } from '@/hooks/use-url-params';
+import useCatalogStore from '@/store/catalog';
 
-interface FilterProps {
-  onFilterChange: (filters: {
-    priceRange: { min: number; max: number } | null;
-    attributes: Record<string, string[]>;
-  }) => void;
-}
-
-export default function Filter({
-  onFilterChange,
-}: FilterProps): React.ReactElement {
-  const { updateParams, getParams } = useUrlParams();
-  const params = getParams();
-
-  const [priceRange, setPriceRange] = useState<[number, number]>([
-    Number(params.minPrice) || 0,
-    Number(params.maxPrice) || 300,
-  ]);
-
-  const [heightRange, setHeightRange] = useState<[number, number]>([
-    Number(params.minHeight) || 0,
-    Number(params.maxHeight) || 200,
-  ]);
-
-  const resetFilters = (): void => {
-    const defaultPriceRange: [number, number] = [0, 300];
-    const defaultHeightRange: [number, number] = [0, 200];
-
-    setPriceRange(defaultPriceRange);
-    setHeightRange(defaultHeightRange);
-
-    updateParams({
-      minPrice: defaultPriceRange[0].toString(),
-      maxPrice: defaultPriceRange[1].toString(),
-      minHeight: defaultHeightRange[0].toString(),
-      maxHeight: defaultHeightRange[1].toString(),
-    });
-
-    onFilterChange({
-      priceRange: {
-        min: defaultPriceRange[0],
-        max: defaultPriceRange[1],
-      },
-      attributes: {
-        height: [`${defaultHeightRange[0]}-${defaultHeightRange[1]}`],
-      },
-    });
-  };
+export default function Filter(): React.ReactElement {
+  const { filters } = useCatalogStore();
+  const { updateParams } = useUrlParams();
 
   const handlePriceChange = (value: number[]): void => {
-    const newRange = value as [number, number];
-    setPriceRange(newRange);
-    updateParams({
-      minPrice: newRange[0].toString(),
-      maxPrice: newRange[1].toString(),
-    });
-    onFilterChange({
-      priceRange: {
-        min: newRange[0],
-        max: newRange[1],
+    const newFilters = {
+      ...filters,
+      filter: {
+        ...filters.filter,
+        price: { min: value[0], max: value[1] },
       },
-      attributes: {
-        height: [`${heightRange[0]}-${heightRange[1]}`],
-      },
-    });
+    };
+    updateParams(newFilters);
   };
 
   const handleHeightChange = (value: number[]): void => {
-    const newRange = value as [number, number];
-    setHeightRange(newRange);
-    updateParams({
-      minHeight: newRange[0].toString(),
-      maxHeight: newRange[1].toString(),
-    });
-    onFilterChange({
-      priceRange: {
-        min: priceRange[0],
-        max: priceRange[1],
+    const newFilters = {
+      ...filters,
+      filter: {
+        ...filters.filter,
+        attributes: {
+          ...filters.filter.attributes,
+          height: [`${value[0]}-${value[1]}`],
+        },
       },
-      attributes: {
-        height: [`${newRange[0]}-${newRange[1]}`],
+    };
+    updateParams(newFilters);
+  };
+
+  const resetFilters = (): void => {
+    const defaultFilters = {
+      filter: {
+        price: { min: 0, max: 30000 },
+        attributes: {},
       },
-    });
+    };
+    updateParams(defaultFilters);
   };
 
   return (
@@ -94,23 +48,27 @@ export default function Filter({
         <div className="space-y-4">
           <h3 className="text-lg font-medium">Price</h3>
           <Slider
-            value={priceRange}
+            value={[filters.filter.price.min, filters.filter.price.max]}
             onValueChange={handlePriceChange}
             min={0}
-            max={300}
-            step={10}
+            max={30000}
+            step={1000}
             className="w-full"
           />
           <div className="flex justify-between text-sm text-muted-foreground">
-            <span>{priceRange[0]} $</span>
-            <span>{priceRange[1]} $</span>
+            <span>{filters.filter.price.min / 100} $</span>
+            <span>{filters.filter.price.max / 100} $</span>
           </div>
         </div>
 
         <div className="space-y-4">
           <h3 className="text-lg font-medium">Height</h3>
           <Slider
-            value={heightRange}
+            value={
+              filters.filter.attributes?.height?.[0]
+                ?.split('-')
+                .map(Number) || [0, 100]
+            }
             onValueChange={handleHeightChange}
             min={0}
             max={100}
@@ -118,8 +76,12 @@ export default function Filter({
             className="w-full"
           />
           <div className="flex justify-between text-sm text-muted-foreground">
-            <span>{heightRange[0]} cm</span>
-            <span>{heightRange[1]} cm</span>
+            <span>
+              {filters.filter.attributes?.height?.[0]?.split('-')[0] || 0} cm
+            </span>
+            <span>
+              {filters.filter.attributes?.height?.[0]?.split('-')[1] || 100} cm
+            </span>
           </div>
         </div>
       </div>
