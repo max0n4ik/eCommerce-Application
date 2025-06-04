@@ -42,7 +42,7 @@
 
   font-size: 1.15em;
 
-  background: #fff;
+  background: var(--primary);
 
   transition: all 0.3s ease-in-out;
 }

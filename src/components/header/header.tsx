@@ -104,10 +104,10 @@ export default function Header(): React.JSX.Element {
             customCrossIcon={false}
           >
             <button
-              className="absolute top-4 right-4 text-3xl text-[#586F69] z-50"
+              className="absolute top-4 right-4 text-3xl z-50  transition-transform duration-200 hover:scale-110 cursor-pointer"
               onClick={() => setMenuOpen(false)}
             >
-              <span className="icon-cross text-[25px]"></span>
+              <span className="icon-cross text-[25px] text-accent transition-transform duration-200 hover:scale-110 cursor-pointer"></span>
             </button>
             <Link className="menu-item" to={ROUTES.HOME} onClick={closeMenu}>
               Home
@@ -157,7 +157,7 @@ export default function Header(): React.JSX.Element {
           </Menu>
           {!menuOpen && (
             <button
-              className="z-50 relative text-3xl text-[#586F69]"
+              className="z-50 relative text-3xl text-[#586F69]  transition-transform duration-200 hover:scale-110 cursor-pointer"
               onClick={() => setMenuOpen(true)}
             >
               <span className="icon-burger text-[30px]"></span>
