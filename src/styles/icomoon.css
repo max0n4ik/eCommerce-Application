@@ -1,0 +1,35 @@
+@font-face {
+  font-family: icomoon;
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+  src: url('/fonts/icomoon.eot?u24joy');
+  src:
+    url('/fonts/icomoon.eot?u24joy#iefix') format('embedded-opentype'),
+    url('/fonts/icomoon.ttf?u24joy') format('truetype'),
+    url('/fonts/icomoon.woff?u24joy') format('woff'),
+    url('/fonts/icomoon.svg?u24joy#icomoon') format('svg');
+}
+
+[class^='icon-'],
+[class*=' icon-'] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: icomoon, sans-serif !important;
+  font-weight: normal;
+  font-style: normal;
+  font-variant: normal;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1;
+  text-transform: none;
+}
+
+.icon-burger::before {
+  content: '\e9bd';
+}
+
+.icon-cross::before {
+  content: '\ea0f';
+}
