@@ -2,24 +2,14 @@ import { useEffect, useState } from 'react';
 import { slide as Menu } from 'react-burger-menu';
 import { HashLink as Link } from 'react-router-hash-link';
 
-import CartIcon from '@/assets/images/bag.png';
-import EnterIcon from '@/assets/images/enter.png';
+import { AuthSection } from './auth-section';
+
 import Logo from '@/assets/images/logo.png';
-import LogoutIcon from '@/assets/images/logout.png';
-import ProfileIcon from '@/assets/images/profile.png';
-import { useAuthStore } from '@/store/login';
-import { useIsAuth } from '@/store/selector';
 import { ROUTES } from '@/utils/constantes';
 
 export default function Header(): React.JSX.Element {
-  const isAuth = useIsAuth();
-  const logout = useAuthStore((state) => state.logout);
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const handleLogout = (): void => {
-    logout();
-    setMenuOpen(false);
-  };
   useEffect(() => {
     if (menuOpen) {
       document.body.classList.add('no-scroll');
@@ -59,39 +49,7 @@ export default function Header(): React.JSX.Element {
             </Link>
           </div>
           <div className="flex items-center gap-4 ml-auto">
-            {isAuth ? (
-              <>
-                <Link className="menu-item" to={ROUTES.PROFILE}>
-                  <img
-                    src={ProfileIcon}
-                    alt="ProfileIcon"
-                    className="w-[25px] h-[25px]"
-                  />
-                </Link>
-                <button onClick={handleLogout}>
-                  <img
-                    src={LogoutIcon}
-                    alt="LogoutIcon"
-                    className="w-[25px] h-[25px]"
-                  />
-                </button>
-              </>
-            ) : (
-              <Link className="menu-item" to={ROUTES.LOGIN}>
-                <img
-                  src={EnterIcon}
-                  alt="EnterIcon"
-                  className="w-[25px] h-[25px]"
-                />
-              </Link>
-            )}
-            <Link className="menu-item" to={ROUTES.CART}>
-              <img
-                src={CartIcon}
-                alt="CartIcon"
-                className="w-[25px] h-[25px]"
-              />
-            </Link>
+            <AuthSection />
           </div>
         </nav>
 
@@ -121,39 +79,7 @@ export default function Header(): React.JSX.Element {
             <Link className="menu-item" to="#contacts" onClick={closeMenu}>
               Contacts
             </Link>
-            {isAuth ? (
-              <>
-                <Link className="menu-item" to={ROUTES.PROFILE}>
-                  <img
-                    src={ProfileIcon}
-                    alt="ProfileIcon"
-                    className="menu-item w-[25px] h-[25px]"
-                  />
-                </Link>
-                <button onClick={handleLogout}>
-                  <img
-                    src={LogoutIcon}
-                    alt="LogoutIcon"
-                    className="w-[25px] h-[25px]"
-                  />
-                </button>
-              </>
-            ) : (
-              <Link className="menu-item" to={ROUTES.LOGIN}>
-                <img
-                  src={EnterIcon}
-                  alt="EnterIcon"
-                  className="w-[25px] h-[25px]"
-                />
-              </Link>
-            )}
-            <Link className="menu-item" to={ROUTES.CART} onClick={closeMenu}>
-              <img
-                src={CartIcon}
-                alt="CartIcon"
-                className="w-[25px] h-[25px]"
-              />
-            </Link>
+            <AuthSection />
           </Menu>
           {!menuOpen && (
             <button
