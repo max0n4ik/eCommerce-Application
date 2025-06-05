@@ -1,7 +1,8 @@
 import { SlidersHorizontal } from 'lucide-react';
-import { useEffect } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import garden from '@/assets/images/plant_background.png';
+import { CategoryToggle } from '@/components/category-toggle';
 import { Filter } from '@/components/filter';
 import { ProductCard } from '@/components/product-card';
 import {
@@ -12,7 +13,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { useUrlParams } from '@/hooks/use-url-params';
 import useCatalogStore from '@/store/catalog';
 import {
@@ -20,6 +20,8 @@ import {
   getSubCategories,
   shouldShowSubCategories,
 } from '@/utils/catalog';
+import { FILTER_CONSTANTS } from '@/utils/constantes';
+import type { FilterI } from '@/utils/interfaces';
 import type { NestedCategory } from '@/utils/types';
 
 export default function Catalog(): React.JSX.Element {
@@ -38,6 +40,7 @@ export default function Catalog(): React.JSX.Element {
   } = useCatalogStore();
 
   const { initFromUrl, updateParams } = useUrlParams();
+  const [temporaryFilters, setTemporaryFilters] = useState<FilterI>(filters);
 
   useEffect(() => {
     fetchProducts();
@@ -49,6 +52,7 @@ export default function Catalog(): React.JSX.Element {
 
   useEffect(() => {
     const filters = initFromUrl();
+    setTemporaryFilters(filters);
     fetchFilteredProducts(filters);
   }, [initFromUrl, fetchFilteredProducts]);
 
@@ -64,32 +68,48 @@ export default function Catalog(): React.JSX.Element {
 
     setSelectedCategory(categoryId);
     setFilters(updatedFilters);
+    setTemporaryFilters(updatedFilters);
     updateParams(updatedFilters);
     fetchFilteredProducts(updatedFilters);
+  };
+
+  const handleBackCategory = (): void => {
+    if (parentCategory) {
+      handleCategoryChange(parentCategory.id);
+    } else {
+      handleCategoryChange('all');
+    }
+  };
+
+  const handleFiltersChange = (newFilters: FilterI): void => {
+    setTemporaryFilters(newFilters);
   };
 
   const handleSheetClose = (): void => {
-    const updatedFilters = {
-      ...filters,
-      filter: {
-        ...filters.filter,
-        category: selectedCategory,
-      },
-    };
-
-    setFilters(updatedFilters);
-    updateParams(updatedFilters);
-    fetchFilteredProducts(updatedFilters);
+    setFilters(temporaryFilters);
+    updateParams(temporaryFilters);
+    fetchFilteredProducts(temporaryFilters);
   };
 
-  const { category: currentCategory, parent: parentCategory } =
-    findCategoryById(selectedCategory || '', categories as NestedCategory[]);
-  const showSubCategories = shouldShowSubCategories(
-    selectedCategory || '',
-    currentCategory,
-    parentCategory
+  const { category: currentCategory, parent: parentCategory } = useMemo(
+    () =>
+      findCategoryById(selectedCategory || '', categories as NestedCategory[]),
+    [selectedCategory, categories]
   );
-  const subCategories = getSubCategories(currentCategory, parentCategory);
+
+  const showSubCategories = useMemo(
+    () =>
+      shouldShowSubCategories(
+        selectedCategory || '',
+        currentCategory,
+        parentCategory
+      ),
+    [selectedCategory, currentCategory, parentCategory]
+  );
+  const subCategories = useMemo(
+    () => getSubCategories(currentCategory, parentCategory),
+    [currentCategory, parentCategory]
+  );
 
   if (loading) {
     return (
@@ -169,19 +189,28 @@ export default function Catalog(): React.JSX.Element {
                   Select parameters for filtering products
                 </SheetDescription>
               </SheetHeader>
-              <Filter />
+              <Filter
+                filters={temporaryFilters}
+                onFiltersChange={handleFiltersChange}
+              />
             </SheetContent>
           </Sheet>
 
-          {/* {(filters.filter.price ||
-            Object.keys(filters.filter.attributes).length > 0) && (
+          {(temporaryFilters.filter.price ||
+            Object.keys(temporaryFilters.filter.attributes || {}).length >
+              0) && (
             <div className="flex flex-wrap gap-2">
-              {filters.filter.price && (
+              {temporaryFilters.filter.price && (
                 <div className="bg-primary/20 px-3 py-1 rounded-full text-sm">
-                  Price: {filters.filter.price.min} - {filters.filter.price.max}
+                  Price:{' '}
+                  {temporaryFilters.filter.price.min /
+                    FILTER_CONSTANTS.PRICE.DIVIDE}{' '}
+                  -{' '}
+                  {temporaryFilters.filter.price.max /
+                    FILTER_CONSTANTS.PRICE.DIVIDE}
                 </div>
               )}
-              {Object.entries(filters.filter.attributes).map(
+              {Object.entries(temporaryFilters.filter.attributes || {}).map(
                 ([key, values]) => (
                   <div
                     key={key}
@@ -192,52 +221,27 @@ export default function Catalog(): React.JSX.Element {
                 )
               )}
             </div>
-          )} */}
+          )}
 
-          <ToggleGroup
-            type="single"
-            className="bg-primary rounded-xl p-1"
-            value={selectedCategory || 'all'}
-            onValueChange={(value) => value && handleCategoryChange(value)}
-          >
-            <ToggleGroupItem
-              value="all"
-              className="text-white data-[state=on]:bg-white/20 px-5 rounded-xl"
-            >
-              All
-            </ToggleGroupItem>
-            {categories.map((category) => (
-              <ToggleGroupItem
-                key={category.id}
-                value={category.id}
-                className="text-white data-[state=on]:bg-white/20 uppercase px-5 rounded-xl"
-              >
-                {category.name}
-              </ToggleGroupItem>
-            ))}
-          </ToggleGroup>
-        </div>
-
-        {showSubCategories && (
-          <div className="flex flex-wrap gap-2 justify-center">
-            <ToggleGroup
-              type="single"
-              className="bg-primary rounded-xl p-1"
-              value={selectedCategory || 'all'}
-              onValueChange={(value) => value && handleCategoryChange(value)}
-            >
-              {subCategories.map((category) => (
-                <ToggleGroupItem
-                  key={category.id}
-                  value={category.id}
-                  className="text-white data-[state=on]:bg-white/20 uppercase px-5 rounded-xl"
-                >
-                  {category.name}
-                </ToggleGroupItem>
-              ))}
-            </ToggleGroup>
+          <div className="relative flex justify-center">
+            {showSubCategories ? (
+              <CategoryToggle
+                categories={subCategories}
+                selectedCategory={selectedCategory}
+                onCategoryChange={handleCategoryChange}
+                onBack={handleBackCategory}
+                showBackButton
+              />
+            ) : (
+              <CategoryToggle
+                categories={categories as NestedCategory[]}
+                selectedCategory={selectedCategory}
+                onCategoryChange={handleCategoryChange}
+                showBackButton={false}
+              />
+            )}
           </div>
-        )}
+        </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">

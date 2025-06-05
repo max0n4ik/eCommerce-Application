@@ -1,12 +1,17 @@
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
-import { useUrlParams } from '@/hooks/use-url-params';
-import useCatalogStore from '@/store/catalog';
+import { FILTER_CONSTANTS } from '@/utils/constantes';
+import type { FilterI } from '@/utils/interfaces';
 
-export default function Filter(): React.ReactElement {
-  const { filters } = useCatalogStore();
-  const { updateParams } = useUrlParams();
+interface FilterProps {
+  filters: FilterI;
+  onFiltersChange: (filters: FilterI) => void;
+}
 
+export default function Filter({
+  filters,
+  onFiltersChange,
+}: FilterProps): React.ReactElement {
   const handlePriceChange = (value: number[]): void => {
     const newFilters = {
       ...filters,
@@ -15,7 +20,7 @@ export default function Filter(): React.ReactElement {
         price: { min: value[0], max: value[1] },
       },
     };
-    updateParams(newFilters);
+    onFiltersChange(newFilters);
   };
 
   const handleHeightChange = (value: number[]): void => {
@@ -29,17 +34,20 @@ export default function Filter(): React.ReactElement {
         },
       },
     };
-    updateParams(newFilters);
+    onFiltersChange(newFilters);
   };
 
   const resetFilters = (): void => {
-    const defaultFilters = {
+    const defaultFilters: FilterI = {
       filter: {
-        price: { min: 0, max: 30000 },
+        price: {
+          min: FILTER_CONSTANTS.PRICE.MIN,
+          max: FILTER_CONSTANTS.PRICE.MAX,
+        },
         attributes: {},
       },
     };
-    updateParams(defaultFilters);
+    onFiltersChange(defaultFilters);
   };
 
   return (
@@ -50,14 +58,18 @@ export default function Filter(): React.ReactElement {
           <Slider
             value={[filters.filter.price.min, filters.filter.price.max]}
             onValueChange={handlePriceChange}
-            min={0}
-            max={30000}
-            step={1000}
+            min={FILTER_CONSTANTS.PRICE.MIN}
+            max={FILTER_CONSTANTS.PRICE.MAX}
+            step={FILTER_CONSTANTS.PRICE.STEP}
             className="w-full"
           />
           <div className="flex justify-between text-sm text-muted-foreground">
-            <span>{filters.filter.price.min / 100} $</span>
-            <span>{filters.filter.price.max / 100} $</span>
+            <span>
+              {filters.filter.price.min / FILTER_CONSTANTS.PRICE.DIVIDE} $
+            </span>
+            <span>
+              {filters.filter.price.max / FILTER_CONSTANTS.PRICE.DIVIDE} $
+            </span>
           </div>
         </div>
 
@@ -70,17 +82,21 @@ export default function Filter(): React.ReactElement {
                 .map(Number) || [0, 100]
             }
             onValueChange={handleHeightChange}
-            min={0}
-            max={100}
-            step={5}
+            min={FILTER_CONSTANTS.HEIGHT.MIN}
+            max={FILTER_CONSTANTS.HEIGHT.MAX}
+            step={FILTER_CONSTANTS.HEIGHT.STEP}
             className="w-full"
           />
           <div className="flex justify-between text-sm text-muted-foreground">
             <span>
-              {filters.filter.attributes?.height?.[0]?.split('-')[0] || 0} cm
+              {filters.filter.attributes?.height?.[0]?.split('-')[0] ||
+                FILTER_CONSTANTS.HEIGHT.MIN}{' '}
+              cm
             </span>
             <span>
-              {filters.filter.attributes?.height?.[0]?.split('-')[1] || 100} cm
+              {filters.filter.attributes?.height?.[0]?.split('-')[1] ||
+                FILTER_CONSTANTS.HEIGHT.MAX}{' '}
+              cm
             </span>
           </div>
         </div>
