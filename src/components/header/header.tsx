@@ -20,11 +20,11 @@ export default function Header(): React.JSX.Element {
         </h2>
       </Link>
 
-      <nav className="hidden md:flex flex-1 items-center justify-between ml-4">
-        <div className="flex justify-center flex-1 gap-6 font-medium text-base text-black font-sans uppercase">
+      <nav className="hidden md:flex flex-1 items-center justify-between ml-2">
+        <div className="flex justify-center flex-1 gap-5 font-medium text-base text-black font-sans uppercase">
           <NavLinks />
         </div>
-        <div className="flex items-center gap-4 ml-auto">
+        <div className="flex items-center gap-3 ml-auto">
           <AuthSection />
         </div>
       </nav>
@@ -43,9 +43,10 @@ export default function Header(): React.JSX.Element {
           >
             <span className="icon-cross text-[25px] text-accent"></span>
           </button>
-
-          <NavLinks onItemClick={closeMenu} />
-          <AuthSection onItemClick={closeMenu} />
+          <div className="pt-8 flex flex-col gap-6 pl-6 pr-6">
+            <NavLinks onItemClick={closeMenu} />
+            <AuthSection onItemClick={closeMenu} />
+          </div>
         </Menu>
 
         {!menuOpen && (
