@@ -1,10 +1,7 @@
 import { HashLink as Link } from 'react-router-hash-link';
 
 import { ROUTES } from '@/utils/constantes';
-
-type NavLinksProps = {
-  onItemClick?: () => void;
-};
+import type { NavLinksProps } from '@/utils/interfaces';
 
 export function NavLinks({ onItemClick }: NavLinksProps): React.JSX.Element {
   return (

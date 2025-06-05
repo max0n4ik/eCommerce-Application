@@ -7,10 +7,7 @@ import ProfileIcon from '@/assets/images/profile.png';
 import { useAuthStore } from '@/store/login';
 import { useIsAuth } from '@/store/selector';
 import { ROUTES } from '@/utils/constantes';
-
-type AuthSectionProps = {
-  onItemClick?: () => void;
-};
+import type { AuthSectionProps } from '@/utils/interfaces';
 
 export function AuthSection({
   onItemClick,
