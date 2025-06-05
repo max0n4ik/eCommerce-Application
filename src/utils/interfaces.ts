@@ -90,23 +90,11 @@ export interface FilterI {
     price: { max: number; min: number };
     attributes?: Record<string, string[]>;
     category?: string | null;
+    sort: {
+      field: 'name' | 'variants.prices.centAmount';
+      language: 'en';
+      order: 'asc' | 'desc';
+    };
   };
   filteredCatalog?: ProductSearchResult[];
 }
-
-export type UseMobileMenuResult = {
-  menuOpen: boolean;
-  setMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  closeMenu: () => void;
-  openMenu: () => void;
-  toggleMenu: () => void;
-};
-
-export type AuthSectionProps = {
-  onItemClick?: () => void;
-};
-
-export type NavLinksProps = {
-  onItemClick?: () => void;
-};
-
