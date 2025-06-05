@@ -4,7 +4,7 @@ import CartIcon from '@/assets/images/bag.png';
 import EnterIcon from '@/assets/images/enter.png';
 import LogoutIcon from '@/assets/images/logout.png';
 import ProfileIcon from '@/assets/images/profile.png';
-import { useAuthStore } from '@/store/login';
+import { useAuthStore } from '@/store/auth-store';
 import { useIsAuth } from '@/store/selector';
 import { ROUTES } from '@/utils/constantes';
 import type { AuthSectionProps } from '@/utils/interfaces';

@@ -1,8 +1,6 @@
 import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
-import {
-  createAuthForPasswordFlow,
-  ClientBuilder,
-} from '@commercetools/sdk-client-v2';
+import type { Customer } from '@commercetools/platform-sdk';
+import { ClientBuilder } from '@commercetools/sdk-client-v2';
 
 import { useAuthStore } from '@/store/auth-store';
 
@@ -15,59 +13,48 @@ const {
   VITE_SCOPES,
 } = import.meta.env;
 
-type TokenInfo = {
-  access_token: string;
-  expires_in: number;
-  scope: string;
-  token_type: string;
-};
-
-type TokenProviderLike = {
-  getTokenInfo: () => Promise<TokenInfo>;
-};
-
 export async function loginCustomer(
   email: string,
   password: string
-): Promise<{ customer: unknown; token: string }> {
-  const authMiddleware = createAuthForPasswordFlow({
-    host: VITE_AUTH_URL,
-    projectKey: VITE_PROJECT_KEY,
-    credentials: {
-      clientId: VITE_CLIENT_ID,
-      clientSecret: VITE_CLIENT_SECRET,
-      user: {
-        username: email,
-        password,
-      },
+): Promise<{ token: string; customer: Customer }> {
+  const tokenUrl = `${VITE_AUTH_URL}/oauth/${VITE_PROJECT_KEY}/customers/token`;
+
+  const response = await fetch(tokenUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      Authorization: `Basic ${btoa(`${VITE_CLIENT_ID}:${VITE_CLIENT_SECRET}`)}`,
     },
-    scopes: VITE_SCOPES.split(' '),
-    fetch,
+    body: new URLSearchParams({
+      grant_type: 'password',
+      username: email,
+      password,
+      scope: VITE_SCOPES,
+    }),
   });
+
+  const json = await response.json();
+
+  if (!response.ok) {
+    console.error('Ошибка получения токена:', json);
+    throw new Error(json.error_description || 'Login failed');
+  }
+
+  const token = json.access_token;
 
   const client = new ClientBuilder()
     .withHttpMiddleware({ host: VITE_API_URL, fetch })
-    .withAuthMiddleware(authMiddleware)
+    .withExistingTokenFlow(token)
     .build();
 
   const apiRoot = createApiBuilderFromCtpClient(client).withProjectKey({
     projectKey: VITE_PROJECT_KEY,
   });
 
-  const response = await apiRoot.me().get().execute();
+  const customer = await apiRoot.me().get().execute();
 
-  const tokenProvider = (
-    authMiddleware as unknown as { tokenProvider: TokenProviderLike }
-  ).tokenProvider;
-  const tokenInfo = await tokenProvider.getTokenInfo();
-  const token = tokenInfo.access_token;
+  useAuthStore.getState().setAccessToken(token);
+  useAuthStore.getState().setIsAuth(true);
 
-  const { setAccessToken, setIsAuth } = useAuthStore.getState();
-  setAccessToken(token);
-  setIsAuth(true);
-
-  return {
-    customer: response.body,
-    token,
-  };
+  return { token, customer: customer.body };
 }
