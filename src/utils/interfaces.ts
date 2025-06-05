@@ -3,6 +3,7 @@ import type {
   BaseAddress,
   CategoryReference,
   LocalizedString,
+  ProductSearchResult,
 } from '@commercetools/platform-sdk';
 
 export interface RegistrationAddress {
@@ -82,4 +83,13 @@ export interface CustomerDataInterface {
   asDefaultBilling?: boolean;
   shippingAddress?: BaseAddress;
   billingAddress?: BaseAddress;
+}
+
+export interface FilterI {
+  filter: {
+    price: { max: number; min: number };
+    attributes?: Record<string, string[]>;
+    category?: string | null;
+  };
+  filteredCatalog?: ProductSearchResult[];
 }

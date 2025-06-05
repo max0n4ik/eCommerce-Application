@@ -50,13 +50,13 @@ border-border -> подставляется значение из --border и т
     --chart-4: oklch(38% 0.04 165.64deg);
     --chart-5: oklch(23% 0.02 168.57deg);
     --sidebar: oklch(91% 0.02 106.71deg);
-    --sidebar-foreground: oklch(31% 0.01 84.57deg);
-    --sidebar-primary: oklch(47% 0.05 164.39deg);
-    --sidebar-primary-foreground: oklch(100% 0 0deg);
-    --sidebar-accent: oklch(86% 0.02 165.76deg);
-    --sidebar-accent-foreground: oklch(38% 0.04 165.64deg);
-    --sidebar-border: oklch(86% 0.02 110.11deg);
-    --sidebar-ring: oklch(47% 0.05 164.39deg);
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
     --title-color: oklch(52.13% 0.0288 177.47deg);
     --description-color: oklch(0% 0 0deg);
     --bar-color: oklch(51.61% 0.002 145.55deg);
@@ -84,6 +84,7 @@ border-border -> подставляется значение из --border и т
       0 1px 3px 0px hsl(0deg 0% 10.2% / 10%),
       0 8px 10px -1px hsl(0deg 0% 10.2% / 10%);
     --shadow-2xl: 0 1px 3px 0px hsl(0deg 0% 10.2% / 25%);
+    --sidebar-background: 0 0% 98%;
   }
 
   /* 
@@ -120,13 +121,13 @@ border-border -> подставляется значение из --border и т
     --chart-4: oklch(57% 0.06 164.35deg);
     --chart-5: oklch(52% 0.05 164.51deg);
     --sidebar: oklch(26% 0.01 176.3deg);
-    --sidebar-foreground: oklch(91% 0.01 106.64deg);
-    --sidebar-primary: oklch(61% 0.06 163.7deg);
-    --sidebar-primary-foreground: oklch(23% 0.02 168.57deg);
-    --sidebar-accent: oklch(52% 0.05 164.51deg);
-    --sidebar-accent-foreground: oklch(91% 0.01 106.64deg);
-    --sidebar-border: oklch(38% 0.01 164.47deg);
-    --sidebar-ring: oklch(61% 0.06 163.7deg);
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
     --bar-color: oklch(51.61% 0.002 145.55deg);
     --title-color: oklch(52.13% 0.0288 177.47deg);
     --light-bar-color: oklch(11.47% 0 0deg);
@@ -154,6 +155,7 @@ border-border -> подставляется значение из --border и т
       0 1px 3px 0px hsl(0deg 0% 10.2% / 10%),
       0 8px 10px -1px hsl(0deg 0% 10.2% / 10%);
     --shadow-2xl: 0 1px 3px 0px hsl(0deg 0% 10.2% / 25%);
+    --sidebar-background: 240 5.9% 10%;
   }
 }
 
