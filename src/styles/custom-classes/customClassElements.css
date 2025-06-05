@@ -31,6 +31,80 @@
   }
 }
 
+.bm-menu {
+  position: relative;
+  z-index: 40;
+
+  display: flex;
+  flex-direction: column;
+
+  padding: 3.5em 1.5em 1em;
+
+  font-size: 1.15em;
+
+  background: var(--primary);
+
+  transition: all 0.3s ease-in-out;
+}
+
+.menu-item {
+  display: block;
+
+  margin: 10px 0;
+
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #000;
+  text-decoration: none;
+  text-transform: uppercase;
+
+  transition: transform 0.2s ease-in-out;
+}
+
+.menu-item:hover {
+  transform: scale(1.07);
+}
+
+.bm-overlay {
+  position: fixed !important;
+  z-index: 30;
+  top: 0;
+  left: 0;
+
+  width: 100vw;
+  height: 100vh;
+
+  background: rgb(0 0 0 / 60%);
+
+  transition: opacity 0.3s ease-in-out;
+}
+
+.bm-burger-button,
+.bm-cross-button,
+.bm-cross {
+  display: none !important;
+}
+
+#close-burger {
+  cursor: pointer;
+
+  position: absolute;
+  z-index: 50;
+  top: 16px;
+  right: 16px;
+
+  border: none;
+
+  font-size: 2rem;
+  color: #586f69;
+
+  background: none;
+}
+
+.bm-menu-wrap {
+  top: 0;
+}
+
 .grid-banner-section {
   overflow: hidden;
   height: auto;

@@ -3,6 +3,7 @@ import type {
   BaseAddress,
   CategoryReference,
   LocalizedString,
+  ProductSearchResult,
 } from '@commercetools/platform-sdk';
 
 export interface RegistrationAddress {
@@ -83,3 +84,28 @@ export interface CustomerDataInterface {
   shippingAddress?: BaseAddress;
   billingAddress?: BaseAddress;
 }
+
+export interface FilterI {
+  filter: {
+    price: { max: number; min: number };
+    attributes?: Record<string, string[]>;
+    category?: string | null;
+  };
+  filteredCatalog?: ProductSearchResult[];
+}
+
+export type UseMobileMenuResult = {
+  menuOpen: boolean;
+  setMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  closeMenu: () => void;
+  openMenu: () => void;
+  toggleMenu: () => void;
+};
+
+export type AuthSectionProps = {
+  onItemClick?: () => void;
+};
+
+export type NavLinksProps = {
+  onItemClick?: () => void;
+};

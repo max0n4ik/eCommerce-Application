@@ -114,3 +114,17 @@ export const defaultAddressForm: RegistrationAddress = {
   billingAddressFlag: false,
   asDefaultBillingAddress: false,
 };
+
+export const FILTER_CONSTANTS = {
+  PRICE: {
+    MIN: 0,
+    MAX: 30000,
+    STEP: 1000,
+    DIVIDE: 100,
+  },
+  HEIGHT: {
+    MIN: 0,
+    MAX: 100,
+    STEP: 5,
+  },
+} as const;
