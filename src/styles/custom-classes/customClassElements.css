@@ -85,7 +85,7 @@
   display: none !important;
 }
 
-.bm-menu button {
+#close-burger {
   cursor: pointer;
 
   position: absolute;

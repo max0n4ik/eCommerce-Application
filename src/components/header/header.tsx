@@ -38,6 +38,7 @@ export default function Header(): React.JSX.Element {
           customCrossIcon={false}
         >
           <button
+            id="close-burger"
             className="absolute top-4 right-4 text-3xl z-50 transition-transform duration-200 hover:scale-110 cursor-pointer"
             onClick={closeMenu}
           >
