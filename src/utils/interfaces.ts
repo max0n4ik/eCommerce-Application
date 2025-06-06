@@ -90,6 +90,11 @@ export interface FilterI {
     price: { max: number; min: number };
     attributes?: Record<string, string[]>;
     category?: string | null;
+    sort: {
+      field: 'name' | 'variants.prices.centAmount';
+      language: 'en';
+      order: 'asc' | 'desc';
+    };
   };
   filteredCatalog?: ProductSearchResult[];
 }
@@ -109,3 +114,4 @@ export type AuthSectionProps = {
 export type NavLinksProps = {
   onItemClick?: () => void;
 };
+

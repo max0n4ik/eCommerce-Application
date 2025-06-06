@@ -49,7 +49,12 @@ const useCatalogStore = create<CatalogStore>((set, get) => ({
   error: null,
   selectedCategory: null,
   filters: {
-    filter: { price: { min: 0, max: 30000 }, attributes: {}, category: null },
+    filter: {
+      price: { min: 0, max: 30000 },
+      attributes: {},
+      category: null,
+      sort: { field: 'name', language: 'en', order: 'asc' },
+    },
     filteredCatalog: [],
   },
   fetchProducts: async (): Promise<void> => {

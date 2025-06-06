@@ -45,6 +45,11 @@ export default function Filter({
           max: FILTER_CONSTANTS.PRICE.MAX,
         },
         attributes: {},
+        sort: {
+          field: 'name',
+          language: 'en',
+          order: 'asc',
+        },
       },
     };
     onFiltersChange(defaultFilters);

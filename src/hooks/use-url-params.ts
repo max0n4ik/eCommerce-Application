@@ -36,6 +36,11 @@ export const useUrlParams = (): {
     const params = Object.fromEntries(searchParams.entries());
     const filters = initializeFiltersFromUrl(params, {
       filter: {
+        sort: {
+          field: 'name',
+          language: 'en',
+          order: 'asc',
+        },
         price: { min: 0, max: 30000 },
         attributes: {},
       },
