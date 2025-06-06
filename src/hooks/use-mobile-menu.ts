@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-import type { UseMobileMenuResult } from '@/utils/interfaces';
+import type { UseMobileMenuResult } from '@/utils/types';
 
 export function useMobileMenu(): UseMobileMenuResult {
   const [menuOpen, setMenuOpen] = useState(false);

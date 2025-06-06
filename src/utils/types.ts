@@ -38,3 +38,19 @@ export type Address = {
   isDefaultBilling?: boolean;
   isDefaultShipping?: boolean;
 };
+
+export type UseMobileMenuResult = {
+  menuOpen: boolean;
+  setMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  closeMenu: () => void;
+  openMenu: () => void;
+  toggleMenu: () => void;
+};
+
+export type AuthSectionProps = {
+  onItemClick?: () => void;
+};
+
+export type NavLinksProps = {
+  onItemClick?: () => void;
+};

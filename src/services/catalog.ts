@@ -98,6 +98,13 @@ export async function fetchCatalogFilteredProducts(
             },
           ],
         },
+        sort: [
+          {
+            field: filter.filter.sort.field,
+            language: 'en',
+            order: filter.filter.sort.order,
+          },
+        ],
         limit: 40,
         offset: 0,
       },
