@@ -1,6 +1,7 @@
 import {
   createApiBuilderFromCtpClient,
   type ByProjectKeyRequestBuilder,
+  type CustomerDraft,
 } from '@commercetools/platform-sdk';
 import { ClientBuilder } from '@commercetools/sdk-client-v2';
 
@@ -10,7 +11,14 @@ import { ctpClient } from './build-client';
 import type { CustomerDataInterface } from '@/utils/interfaces';
 
 const apiUrl = import.meta.env.VITE_API_URL;
+if (!apiUrl) {
+  throw new Error('VITE_API_URL не определён');
+}
+
 const projectKey = import.meta.env.VITE_PROJECT_KEY;
+if (!projectKey) {
+  throw new Error('VITE_PROJECT_KEY не определён');
+}
 
 export const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
   projectKey,
@@ -19,21 +27,16 @@ export const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
 export function createAuthenticatedApiRoot(
   token: string
 ): ByProjectKeyRequestBuilder {
-  const authorizedFetch: typeof fetch = (input, init = {}) => {
-    const headers = new Headers(init.headers);
-    headers.set('Authorization', `Bearer ${token}`);
-    return fetch(input, { ...init, headers });
-  };
-
   const client = new ClientBuilder()
-    .withHttpMiddleware({ host: apiUrl, fetch: authorizedFetch })
+    .withHttpMiddleware({ host: apiUrl, fetch })
+    .withExistingTokenFlow(`Bearer ${token}`, { force: true })
     .build();
 
   return createApiBuilderFromCtpClient(client).withProjectKey({ projectKey });
 }
 
 export async function completeSignUp(
-  customerData: CustomerDataInterface
+  data: CustomerDataInterface
 ): Promise<void> {
   const {
     email,
@@ -45,27 +48,20 @@ export async function completeSignUp(
     asDefaultBilling,
     shippingAddress,
     billingAddress,
-  } = customerData;
-
-  const formattedDateOfBirth = dateOfBirth.toISOString().split('T')[0];
+  } = data;
 
   if (!shippingAddress) {
-    throw new Error("Can't process sign up without Shipping Address");
+    throw new Error('Нужен shippingAddress для регистрации');
   }
 
-  const addresses = [shippingAddress];
-  const shippingAddresses = [0];
-  const billingAddresses = [0];
-
-  const defaultShippingAddress = asDefaultShipping ? 0 : undefined;
-  let defaultBillingAddress: number | undefined = undefined;
+  const dob = dateOfBirth.toISOString().split('T')[0];
+  const addresses: CustomerDraft['addresses'] = [shippingAddress];
+  const shippingAddresses = [0] as number[];
+  const billingAddresses: number[] = [];
 
   if (billingAddress) {
     addresses.push(billingAddress);
-    billingAddresses[0] = 1;
-    if (asDefaultBilling) {
-      defaultBillingAddress = 1;
-    }
+    billingAddresses.push(1);
   }
 
   await apiRoot
@@ -76,15 +72,21 @@ export async function completeSignUp(
         password,
         firstName,
         lastName,
-        dateOfBirth: formattedDateOfBirth,
+        dateOfBirth: dob,
         addresses,
-        defaultShippingAddress,
-        defaultBillingAddress,
+        defaultShippingAddress: asDefaultShipping ? 0 : undefined,
+        defaultBillingAddress:
+          asDefaultBilling && billingAddress ? 1 : undefined,
         shippingAddresses,
         billingAddresses,
       },
     })
     .execute();
 
-  await loginCustomer(email, password);
+  const { token } = await loginCustomer(email, password);
+
+  const { useAuthStore } = await import('@/store/auth-store');
+  const { setAccessToken, setIsAuth } = useAuthStore.getState();
+  setAccessToken(token);
+  setIsAuth(true);
 }
