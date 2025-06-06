@@ -1,6 +1,11 @@
 import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 import type { Customer } from '@commercetools/platform-sdk';
-import { ClientBuilder } from '@commercetools/sdk-client-v2';
+import {
+  ClientBuilder,
+  createAuthForPasswordFlow,
+  type PasswordAuthMiddlewareOptions,
+  type TokenCache,
+} from '@commercetools/sdk-client-v2';
 
 import { useAuthStore } from '@/store/auth-store';
 
@@ -17,44 +22,54 @@ export async function loginCustomer(
   email: string,
   password: string
 ): Promise<{ token: string; customer: Customer }> {
-  const tokenUrl = `${VITE_AUTH_URL}/oauth/${VITE_PROJECT_KEY}/customers/token`;
+  let capturedToken = '';
 
-  const response = await fetch(tokenUrl, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      Authorization: `Basic ${btoa(`${VITE_CLIENT_ID}:${VITE_CLIENT_SECRET}`)}`,
+  const tokenCache: TokenCache = {
+    get: () => ({ token: '', expirationTime: 0 }),
+    set: (cache) => {
+      capturedToken = cache.token;
     },
-    body: new URLSearchParams({
-      grant_type: 'password',
-      username: email,
-      password,
-      scope: VITE_SCOPES,
-    }),
-  });
+  };
 
-  const json = await response.json();
+  const passwordFlowOptions: PasswordAuthMiddlewareOptions = {
+    host: VITE_AUTH_URL as string,
+    projectKey: VITE_PROJECT_KEY as string,
+    credentials: {
+      clientId: VITE_CLIENT_ID as string,
+      clientSecret: VITE_CLIENT_SECRET as string,
+      user: {
+        username: email,
+        password,
+      },
+    },
+    scopes: (VITE_SCOPES as string).split(' '),
+    tokenCache,
+    fetch,
+  };
 
-  if (!response.ok) {
-    console.error('Ошибка получения токена:', json);
-    throw new Error(json.error_description || 'Login failed');
-  }
-
-  const token = json.access_token;
+  const authMiddleware = createAuthForPasswordFlow(passwordFlowOptions);
 
   const client = new ClientBuilder()
-    .withHttpMiddleware({ host: VITE_API_URL, fetch })
-    .withExistingTokenFlow(token)
+    .withAuthMiddleware(authMiddleware)
+    .withHttpMiddleware({ host: VITE_API_URL as string, fetch })
     .build();
 
   const apiRoot = createApiBuilderFromCtpClient(client).withProjectKey({
-    projectKey: VITE_PROJECT_KEY,
+    projectKey: VITE_PROJECT_KEY as string,
   });
 
-  const customer = await apiRoot.me().get().execute();
+  const response = await apiRoot.me().get().execute();
+  const customer: Customer = response.body;
 
-  useAuthStore.getState().setAccessToken(token);
+  if (!capturedToken) {
+    throw new Error('Failed to obtain access token via SDK');
+  }
+
+  useAuthStore.getState().setAccessToken(capturedToken);
   useAuthStore.getState().setIsAuth(true);
 
-  return { token, customer: customer.body };
+  return {
+    token: capturedToken,
+    customer,
+  };
 }

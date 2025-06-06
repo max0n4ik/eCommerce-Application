@@ -4,6 +4,7 @@ import {
 } from '@commercetools/platform-sdk';
 import { ClientBuilder } from '@commercetools/sdk-client-v2';
 
+import { loginCustomer } from './auth-service';
 import { ctpClient } from './build-client';
 
 import type { CustomerDataInterface } from '@/utils/interfaces';
@@ -57,7 +58,7 @@ export async function completeSignUp(
   const billingAddresses = [0];
 
   const defaultShippingAddress = asDefaultShipping ? 0 : undefined;
-  let defaultBillingAddress = undefined;
+  let defaultBillingAddress: number | undefined = undefined;
 
   if (billingAddress) {
     addresses.push(billingAddress);
@@ -84,4 +85,6 @@ export async function completeSignUp(
       },
     })
     .execute();
+
+  await loginCustomer(email, password);
 }

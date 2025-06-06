@@ -10,6 +10,7 @@ const PrivateRoute = ({
   reverse,
 }: PrivateRouteProps): React.JSX.Element => {
   const isAuth = useIsAuth();
+
   if (reverse) {
     return isAuth ? <Navigate to={ROUTES.HOME} /> : <>{children}</>;
   }
