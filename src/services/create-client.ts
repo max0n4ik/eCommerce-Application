@@ -1,32 +1,42 @@
 import {
   createApiBuilderFromCtpClient,
+  type ByProjectKeyRequestBuilder,
   type CustomerDraft,
-  type CustomerSignInResult,
 } from '@commercetools/platform-sdk';
+import { ClientBuilder } from '@commercetools/sdk-client-v2';
 
+import { loginCustomer } from './auth-service';
 import { ctpClient } from './build-client';
 
-import { authStore } from '@/store/login';
 import type { CustomerDataInterface } from '@/utils/interfaces';
 
+const apiUrl = import.meta.env.VITE_API_URL;
+if (!apiUrl) {
+  throw new Error('VITE_API_URL не определён');
+}
+
+const projectKey = import.meta.env.VITE_PROJECT_KEY;
+if (!projectKey) {
+  throw new Error('VITE_PROJECT_KEY не определён');
+}
+
 export const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
-  projectKey: import.meta.env.VITE_PROJECT_KEY,
+  projectKey,
 });
 
-export async function signUpCustomer(
-  data: CustomerDraft
-): Promise<CustomerSignInResult> {
-  const response = await apiRoot
-    .customers()
-    .post({
-      body: data,
-    })
-    .execute();
+export function createAuthenticatedApiRoot(
+  token: string
+): ByProjectKeyRequestBuilder {
+  const client = new ClientBuilder()
+    .withHttpMiddleware({ host: apiUrl, fetch })
+    .withExistingTokenFlow(`Bearer ${token}`, { force: true })
+    .build();
 
-  return response.body;
+  return createApiBuilderFromCtpClient(client).withProjectKey({ projectKey });
 }
+
 export async function completeSignUp(
-  customerData: CustomerDataInterface
+  data: CustomerDataInterface
 ): Promise<void> {
   const {
     email,
@@ -38,40 +48,45 @@ export async function completeSignUp(
     asDefaultBilling,
     shippingAddress,
     billingAddress,
-  } = customerData;
-
-  const formattedDateOfBirth = dateOfBirth.toISOString().split('T')[0];
+  } = data;
 
   if (!shippingAddress) {
-    throw new Error("Can't process sign up without Shipping Address");
+    throw new Error('Нужен shippingAddress для регистрации');
   }
 
-  const addresses = [shippingAddress];
-  const shippingAddresses = [0];
-  const billingAddresses = [0];
-
-  const defaultShippingAddress = asDefaultShipping ? 0 : undefined;
-  let defaultBillingAddress = undefined;
+  const dob = dateOfBirth.toISOString().split('T')[0];
+  const addresses: CustomerDraft['addresses'] = [shippingAddress];
+  const shippingAddresses = [0] as number[];
+  const billingAddresses: number[] = [];
 
   if (billingAddress) {
     addresses.push(billingAddress);
-    billingAddresses[0] = 1;
-    if (asDefaultBilling) {
-      defaultBillingAddress = 1;
-    }
+    billingAddresses.push(1);
   }
 
-  await signUpCustomer({
-    email,
-    password,
-    firstName,
-    lastName,
-    dateOfBirth: formattedDateOfBirth,
-    addresses,
-    defaultShippingAddress,
-    defaultBillingAddress,
-    shippingAddresses,
-    billingAddresses,
-  });
-  authStore.setIsAuth(true);
+  await apiRoot
+    .customers()
+    .post({
+      body: {
+        email,
+        password,
+        firstName,
+        lastName,
+        dateOfBirth: dob,
+        addresses,
+        defaultShippingAddress: asDefaultShipping ? 0 : undefined,
+        defaultBillingAddress:
+          asDefaultBilling && billingAddress ? 1 : undefined,
+        shippingAddresses,
+        billingAddresses,
+      },
+    })
+    .execute();
+
+  const { token } = await loginCustomer(email, password);
+
+  const { useAuthStore } = await import('@/store/auth-store');
+  const { setAccessToken, setIsAuth } = useAuthStore.getState();
+  setAccessToken(token);
+  setIsAuth(true);
 }
