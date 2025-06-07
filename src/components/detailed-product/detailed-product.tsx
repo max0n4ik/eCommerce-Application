@@ -16,7 +16,7 @@ export default function DetailedProduct({
   const [currenImageIndex, setCurrentImageIndex] = useState(0);
   return (
     <div className="flex flex-row max-[780px]:flex-col  max-[780px]:items-center justify-center gap-10 p-[50px] max-w-screen-xl mx-auto">
-      <div className="w-1/2">
+      <div className="w-1/2 max-[780px]:w-full flex flex-col gap-4">
         <Dialog>
           <SyncedCarousel
             images={images}
@@ -25,7 +25,7 @@ export default function DetailedProduct({
           />
           <DialogContent
             aria-describedby={undefined}
-            className="flex justify-center items-center p-4 sm:p-4 md:p-8 w-full max-w-sm sm:max-w-sm md:max-w-2xl max-h-[80vh] sm:max-h-[85vh] md:max-h-[90vh] overflow-y-auto"
+            className="flex justify-center items-center w-full max-w-[385px] max-h-[55vh] p-4  sm:p-4 md:p-8 max-w-sm sm:max-w-sm md:max-w-2xl  md:[max-height:fit-content] overflow-y-auto"
           >
             <DialogTitle></DialogTitle>
             <div className="w-full">
