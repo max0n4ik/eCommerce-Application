@@ -33,17 +33,21 @@ export function AuthSection({
             <img
               src={LogoutIcon}
               alt="LogoutIcon"
-              className="w-[25px] h-[25px]"
+              className="w-[22px] h-[22px]  ml-[4px]"
             />
           </button>
         </>
       ) : (
         <Link className="menu-item" to={ROUTES.LOGIN} onClick={onItemClick}>
-          <img src={EnterIcon} alt="EnterIcon" className="w-[25px] h-[25px]" />
+          <img
+            src={EnterIcon}
+            alt="EnterIcon"
+            className="w-[22px] h-[22px] ml-[2px]"
+          />
         </Link>
       )}
       <Link className="menu-item" to={ROUTES.CART} onClick={onItemClick}>
-        <img src={CartIcon} alt="CartIcon" className="w-[25px] h-[25px]" />
+        <img src={CartIcon} alt="CartIcon" className="w-[24px] h-[24px]" />
       </Link>
     </>
   );
