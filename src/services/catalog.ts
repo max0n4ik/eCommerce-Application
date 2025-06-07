@@ -88,6 +88,17 @@ export async function fetchCatalogFilteredProducts(
                   },
                 ]
               : []),
+            ...(filter.filter.search
+              ? [
+                  {
+                    fullText: {
+                      field: 'name',
+                      language: 'en',
+                      value: filter.filter.search,
+                    },
+                  },
+                ]
+              : []),
             {
               range: {
                 field: 'variants.prices.centAmount',

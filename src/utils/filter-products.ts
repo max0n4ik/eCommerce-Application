@@ -7,6 +7,7 @@ interface UrlParams {
   maxPrice?: string;
   minHeight?: string;
   maxHeight?: string;
+  search?: string;
 }
 
 export function initializeFiltersFromUrl(
@@ -26,6 +27,10 @@ export function initializeFiltersFromUrl(
     newFilters.filter.category = params.category;
   }
 
+  if (params.search) {
+    newFilters.filter.search = params.search;
+  }
+
   return newFilters;
 }
 
@@ -39,6 +44,10 @@ export function getUrlParamsFromFilters(filters: FilterI): UrlParams {
 
   if (filters.filter.category) {
     params.category = filters.filter.category;
+  }
+
+  if (filters.filter.search) {
+    params.search = filters.filter.search;
   }
 
   if (filters.filter.attributes?.height?.[0]) {

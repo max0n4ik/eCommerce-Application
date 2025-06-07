@@ -90,6 +90,7 @@ export interface FilterI {
     price: { max: number; min: number };
     attributes?: Record<string, string[]>;
     category?: string | null;
+    search?: string;
     sort: {
       field: 'name' | 'variants.prices.centAmount';
       language: 'en';
