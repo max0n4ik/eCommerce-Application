@@ -1,10 +1,11 @@
-import { SlidersHorizontal } from 'lucide-react';
+import { Search, SlidersHorizontal } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 
 import garden from '@/assets/images/plant_background.png';
 import { CategoryToggle } from '@/components/category-toggle';
 import { Filter } from '@/components/filter';
 import { ProductCard } from '@/components/product-card';
+import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
@@ -116,6 +117,29 @@ export default function Catalog(): React.JSX.Element {
     setFilters({ filter: updatedFilters.filter });
     updateParams(updatedFilters);
     fetchFilteredProducts(updatedFilters);
+  };
+
+  const [searchValue, setSearchValue] = useState('');
+
+  const handleSearch = (): void => {
+    const updatedFilters: FilterI = {
+      ...temporaryFilters,
+      filter: {
+        ...temporaryFilters.filter,
+        search: searchValue,
+      },
+    };
+
+    setTemporaryFilters(updatedFilters);
+    setFilters({ filter: updatedFilters.filter });
+    updateParams(updatedFilters);
+    fetchFilteredProducts(updatedFilters);
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>): void => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
   };
 
   const { category: currentCategory, parent: parentCategory } = useMemo(
@@ -283,6 +307,18 @@ export default function Catalog(): React.JSX.Element {
                 <SelectItem value="name-desc">Name: Z to A</SelectItem>
               </SelectContent>
             </Select>
+          </div>
+          <div className="relative">
+            <Input
+              placeholder="Search"
+              name="Search"
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              onKeyPress={handleKeyPress}
+            />
+            <button className="absolute top-2 right-3" onClick={handleSearch}>
+              <Search className="" />
+            </button>
           </div>
         </div>
       </div>

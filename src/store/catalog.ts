@@ -53,6 +53,7 @@ const useCatalogStore = create<CatalogStore>((set, get) => ({
       price: { min: 0, max: 30000 },
       attributes: {},
       category: null,
+      search: '',
       sort: { field: 'name', language: 'en', order: 'asc' },
     },
     filteredCatalog: [],
