@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 
+import AddToCartIcon from '@/assets/images/add-to-cart.png';
 import { formatPrice, getDiscountedPrice } from '@/utils/catalog';
 import type { ProductCardI } from '@/utils/interfaces';
 
@@ -44,6 +45,15 @@ export default function ProductCard({
                 {formatPrice(price)} <span className="ml-1 font-normal">$</span>
               </p>
             )}
+            <div>
+              <button className="transition-transform duration-300 ease-in-out hover:scale-110">
+                <img
+                  className="w-[30px] h-[30px]"
+                  src={AddToCartIcon}
+                  alt="add-to-cart"
+                ></img>
+              </button>
+            </div>
           </div>
         </div>
       </div>
