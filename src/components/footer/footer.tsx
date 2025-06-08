@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { HashLink as Link } from 'react-router-hash-link';
 
 import Facebook from '@/assets/images/facebook.png';
 import Instagram from '@/assets/images/instagram.png';
@@ -9,8 +9,8 @@ import { ROUTES } from '@/utils/constantes';
 export default function Footer(): React.JSX.Element {
   return (
     <>
-      <footer>
-        <div className="grid lg:grid-cols-[1fr_0.6fr_0.6fr] gap-[5vw] lg:p-[100px] p-[20px]">
+      <footer id="contacts" className="bc-section-background">
+        <div className="grid lg:grid-cols-[1fr_0.6fr_0.6fr] gap-[5vw] lg:p-[35px] p-[20px] py-15">
           <div className="flex flex-col gap-5">
             <Link to={ROUTES.HOME} className="flex items-center">
               <img src={Logo} alt="Logo" className="size-[51px]" />
@@ -29,10 +29,10 @@ export default function Footer(): React.JSX.Element {
               Quick Links
             </p>
             <nav className="font-medium flex gap-4 font-sans text-[14.5px] text-[#586F69] flex-col leading-3">
-              <Link to={ROUTES.HOME}>Home</Link>
+              <Link to={`${ROUTES.HOME}#home`}>Home</Link>
               <Link to={ROUTES.CART}>Cart</Link>
-              <Link to={ROUTES.LOGIN}>Login</Link>
-              <Link to={ROUTES.REGISTRATION}>Registration</Link>
+              <Link to={ROUTES.CATALOG}>Catalog</Link>
+              <Link to={ROUTES.ABOUT}>About Us</Link>
             </nav>
           </div>
           <div className="flex flex-col gap-5 pt-3">
@@ -64,7 +64,7 @@ export default function Footer(): React.JSX.Element {
             </div>
           </div>
         </div>
-        <div className="font-sans text-[14.5px] text-[#676867F2] lg:py-[47px] py-[20px] lg:pl-[100px] pl-[20px]">
+        <div className="font-sans text-[14.5px] text-[#676867F2] lg:py-[27px] py-[15px] lg:pl-[100px] pl-[20px]">
           Copyright © 2025 Petal&Pots Plants | Powered by Petal&Pots Plants
         </div>
       </footer>

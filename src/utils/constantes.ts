@@ -10,6 +10,8 @@ export const ROUTES = {
   CATALOG: '/catalog',
   LOGOUT: '/logout',
   NOTFOUND: '*',
+  PRODUCT: 'product/:id',
+  CONTACTS: '/contacts',
 } as const;
 
 export const allowedCountries = new Set([
@@ -42,6 +44,7 @@ export const allowedCountries = new Set([
   'Sweden',
 ]);
 
+export const allowedCountriesArray = [...allowedCountries];
 export const countryToAlpha2 = {
   Austria: 'AT',
   Belgium: 'BE',
@@ -107,6 +110,21 @@ export const defaultAddressForm: RegistrationAddress = {
   street: '',
   house: '',
   postalCode: '',
-  isDefault: false,
-  isBilling: false,
+  asDefaultShippingAddress: false,
+  billingAddressFlag: false,
+  asDefaultBillingAddress: false,
 };
+
+export const FILTER_CONSTANTS = {
+  PRICE: {
+    MIN: 0,
+    MAX: 30000,
+    STEP: 1000,
+    DIVIDE: 100,
+  },
+  HEIGHT: {
+    MIN: 0,
+    MAX: 100,
+    STEP: 5,
+  },
+} as const;

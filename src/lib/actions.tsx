@@ -1,10 +1,9 @@
 import { z } from 'zod';
 
-import { login } from '@/services/login';
-import { authStore } from '@/store/login';
+import { loginCustomer } from '@/services/auth-service';
 
 export const schema = z.object({
-  email: z.string().email('Invalid email address, (e.g., example@email.com)'),
+  email: z.string().email('Invalid email address'),
   password: z
     .string()
     .min(8, 'Password must be at least 8 characters')
@@ -22,10 +21,7 @@ export async function authenticate(
   formData: FormData
 ): Promise<{
   message: string;
-  errors?: {
-    email?: string[] | undefined;
-    password?: string[] | undefined;
-  };
+  errors?: { email?: string[]; password?: string[] };
 }> {
   const validatedFields = schema.safeParse({
     email: formData.get('email'),
@@ -40,18 +36,12 @@ export async function authenticate(
   }
 
   try {
-    const result = await login(
+    await loginCustomer(
       validatedFields.data.email,
       validatedFields.data.password
     );
-
-    if (!result.success) {
-      return { message: result.error || 'Error' };
-    }
-
-    authStore.setIsAuth(true);
     return { message: 'Login successful' };
-  } catch {
-    return { message: 'Error' };
+  } catch (error) {
+    return { message: (error as Error).message || 'Error' };
   }
 }
