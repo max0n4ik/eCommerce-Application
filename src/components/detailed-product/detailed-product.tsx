@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+import { Button } from '../ui/button';
 import SyncedCarousel from '../ui/carousel/carousel';
 import { Dialog, DialogContent, DialogTitle } from '../ui/modal/modal-utils';
 
@@ -70,6 +71,11 @@ export default function DetailedProduct({
           {description}
         </p>
         <span className=" inline-block h-[1px] w-full bg-[color:var(--light-bar-color)]"></span>
+        <div>
+          <Button className="bg-transparent border border-black capitalize text-black font-inter hover:bg-[#586F69] hover:text-white hover:border-[#586F69] hover:scale-105 transition-transform duration-200 ease-in-out cursor-pointer">
+            add to cart
+          </Button>
+        </div>
       </div>
     </div>
   );
