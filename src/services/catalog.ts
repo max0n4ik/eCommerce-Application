@@ -13,7 +13,7 @@ import type { FilterI } from '@/utils/interfaces';
 export function fetchCatalogProducts(): Promise<ClientResponse<Product[]>> {
   return apiRoot
     .products()
-    .get()
+    .get({ queryArgs: { limit: 50 } })
     .execute()
     .then((response) => {
       return { body: response.body.results };
