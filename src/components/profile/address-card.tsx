@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import type { BaseAddress } from '@commercetools/platform-sdk';
+import React, { useState, useEffect, type FormEvent } from 'react';
 
 import type { AddressUpdates } from '@/services/user';
 import useUserStore from '@/store/user';
@@ -10,57 +11,129 @@ export function AddressCard({
   address: Address;
 }): React.JSX.Element {
   const { editingAddressId, toggleAddressEdit, saveAddress } = useUserStore();
-  const [form, setForm] = useState<
-    Partial<Omit<Address, 'id' | 'isDefaultBilling' | 'isDefaultShipping'>>
-  >({});
   const isEditing = editingAddressId === address.id;
+
+  // Храним сразу BaseAddress поля
+  const [form, setForm] = useState<
+    Omit<BaseAddress, 'id' | 'key' | 'type' | 'fields'>
+  >({
+    streetName: '',
+    streetNumber: '',
+    additionalStreetInfo: undefined,
+    postalCode: '',
+    city: '',
+    region: '',
+    state: undefined,
+    country: '',
+    company: undefined,
+    department: undefined,
+    building: undefined,
+    apartment: undefined,
+    pOBox: undefined,
+    phone: undefined,
+    mobile: undefined,
+    email: undefined,
+    fax: undefined,
+    additionalAddressInfo: undefined,
+    externalId: undefined,
+  });
+
+  // При входе в режим редактирования заполняем form из вашего Address
+  useEffect(() => {
+    if (isEditing) {
+      const [streetName, streetNumber = ''] = address.street.split(' ');
+      setForm((f) => ({
+        ...f,
+        streetName,
+        streetNumber,
+        postalCode: address.zip,
+        city: address.city,
+        region: address.state,
+        country: address.country,
+      }));
+    }
+  }, [isEditing, address]);
+
+  const cardBase =
+    'rounded-xl border transition-transform hover:shadow-xl hover:-translate-y-1 ';
+  // читаемый фон и бордер для дефолтных адресов
+  const readOnlyBg =
+    address.isDefaultBilling || address.isDefaultShipping
+      ? 'bg-[rgba(129,129,129,0.12)] border-[#586F69]'
+      : 'bg-white border-[#E5E7EB]';
 
   if (isEditing) {
     return (
       <form
-        onSubmit={(e) => {
+        onSubmit={(e: FormEvent) => {
           e.preventDefault();
           saveAddress({ id: address.id, ...form } as AddressUpdates);
         }}
-        className="border rounded-xl p-4 bg-blue-50"
+        className={`${cardBase}${readOnlyBg} p-6`}
       >
-        <div className="grid gap-2 mb-2">
-          <input
-            defaultValue={address.street}
-            onChange={(e) => setForm((f) => ({ ...f, street: e.target.value }))}
-            className="border p-2 rounded"
-          />
-          <input
-            defaultValue={address.city}
-            onChange={(e) => setForm((f) => ({ ...f, city: e.target.value }))}
-            className="border p-2 rounded"
-          />
-          <input
-            defaultValue={address.state}
-            onChange={(e) => setForm((f) => ({ ...f, state: e.target.value }))}
-            className="border p-2 rounded"
-          />
-          <input
-            defaultValue={address.zip}
-            onChange={(e) => setForm((f) => ({ ...f, zip: e.target.value }))}
-            className="border p-2 rounded"
-          />
-          <input
-            defaultValue={address.country}
-            onChange={(e) =>
-              setForm((f) => ({ ...f, country: e.target.value }))
-            }
-            className="border p-2 rounded"
-          />
+        <div className="grid grid-cols-2 gap-4 mb-4">
+          {[
+            {
+              id: 'streetName',
+              label: 'Street Name',
+              key: 'streetName',
+              value: form.streetName,
+            },
+            {
+              id: 'streetNumber',
+              label: 'House Number',
+              key: 'streetNumber',
+              value: form.streetNumber,
+            },
+            { id: 'city', label: 'City', key: 'city', value: form.city },
+            {
+              id: 'region',
+              label: 'Region',
+              key: 'region',
+              value: form.region,
+            },
+            {
+              id: 'postalCode',
+              label: 'Postal Code',
+              key: 'postalCode',
+              value: form.postalCode,
+            },
+            {
+              id: 'country',
+              label: 'Country',
+              key: 'country',
+              value: form.country,
+            },
+          ].map(({ id, label, key, value }) => (
+            <div key={id}>
+              <label
+                htmlFor={id}
+                className="block text-[#586F69] font-medium mb-1"
+              >
+                {label}
+              </label>
+              <input
+                id={id}
+                value={value}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, [key]: e.target.value }))
+                }
+                className="w-full p-2 border border-[#E5E7EB] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#586F69]"
+              />
+            </div>
+          ))}
         </div>
-        <div className="flex gap-2">
-          <button type="submit" className="btn btn-primary text-sm">
+        <div className="flex gap-4">
+          <button
+            type="submit"
+            className="flex-1 bg-[#586F69] hover:opacity-90 text-white font-semibold py-2 rounded-lg"
+          >
             Save
           </button>
           <button
             type="button"
             onClick={() => toggleAddressEdit(address.id)}
-            className="btn btn-secondary text-sm"
+            className="flex-1 border border-[#586F69] text-[#586F69] hover:bg-[rgba(129,129,129,0.12)] py-2 rounded-lg"
           >
             Cancel
           </button>
@@ -70,27 +143,31 @@ export function AddressCard({
   }
 
   return (
-    <div
-      className={`border rounded-xl p-4 ${address.isDefaultBilling || address.isDefaultShipping ? 'bg-green-50 border-green-500' : 'bg-gray-50'}`}
-    >
-      <div className="flex justify-between items-center mb-2">
-        <span>
-          {address.street}, {address.city}, {address.state} {address.zip}
-        </span>
+    <div className={`${cardBase}${readOnlyBg} p-5`}>
+      <div className="flex justify-between items-start mb-3">
+        <div>
+          <p className="text-[#586F69] font-semibold">
+            {address.street}, {address.city}, {address.state} {address.zip}
+          </p>
+          <p className="text-[#638179]">{address.country}</p>
+        </div>
         <button
           onClick={() => toggleAddressEdit(address.id)}
-          className="text-xs text-blue-600"
+          className="text-[#586F69] hover:opacity-90 text-sm font-medium"
         >
           Edit
         </button>
       </div>
-      <p>{address.country}</p>
-      <div className="mt-2 text-sm space-x-2">
+      <div className="flex flex-wrap gap-2 text-xs">
         {address.isDefaultBilling && (
-          <span className="text-blue-600">Default Billing</span>
+          <span className="bg-[#a7d4c8] text-[#586F69] px-2 py-1 rounded-full">
+            Default Billing
+          </span>
         )}
         {address.isDefaultShipping && (
-          <span className="text-purple-600">Default Shipping</span>
+          <span className="bg-[#a7d4c8] text-[#586F69] px-2 py-1 rounded-full">
+            Default Shipping
+          </span>
         )}
       </div>
     </div>

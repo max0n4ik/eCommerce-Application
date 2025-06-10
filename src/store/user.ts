@@ -99,7 +99,7 @@ const useUserStore = create<UserStore>((set, get) => ({
       return;
     }
     try {
-      const updatedList = await updateAddress(
+      const { addresses: updatedList, version } = await updateAddress(
         token,
         current.id,
         current.version,
@@ -109,6 +109,7 @@ const useUserStore = create<UserStore>((set, get) => ({
         addresses: updatedList,
         editingAddressId: null,
         loading: false,
+        user: { ...current, version },
       });
     } catch (error) {
       set({ error: (error as Error).message, loading: false });

@@ -22,67 +22,71 @@ export function UserInfo({ user }: UserInfoProps): React.JSX.Element {
     }
   }, [editingUser, user]);
 
+  const baseCardClasses =
+    'rounded-2xl shadow-lg border border-green-200 p-6 transition-transform hover:-translate-y-1 bg-gradient-to-br ';
+
   if (editingUser) {
     return (
-      <div className="bg-white rounded-xl shadow p-4 mb-6">
-        <h2 className="text-xl font-semibold mb-4">Edit Profile</h2>
+      <div className={baseCardClasses + 'from-[#9cc3b8] to-white mb-6'}>
+        <h2 className="text-2xl font-semibold text-[#586F69] mb-4">
+          Edit Profile
+        </h2>
         <form
           onSubmit={(e) => {
             e.preventDefault();
             saveUser(form);
           }}
-          className="space-y-3"
+          className="space-y-4"
         >
-          <div>
-            <label htmlFor="firstName" className="block text-sm">
-              First Name
-            </label>
-            <input
-              id="firstName"
-              type="text"
-              value={form.firstName || ''}
-              onChange={(e) =>
-                setForm((f) => ({ ...f, firstName: e.target.value }))
-              }
-              className="border rounded w-full p-2"
-            />
-          </div>
-          <div>
-            <label htmlFor="lastName" className="block text-sm">
-              Last Name
-            </label>
-            <input
-              id="lastName"
-              type="text"
-              value={form.lastName || ''}
-              onChange={(e) =>
-                setForm((f) => ({ ...f, lastName: e.target.value }))
-              }
-              className="border rounded w-full p-2"
-            />
-          </div>
-          <div>
-            <label htmlFor="dateOfBirth" className="block text-sm">
-              Date of Birth
-            </label>
-            <input
-              id="dateOfBirth"
-              type="date"
-              value={form.dateOfBirth || ''}
-              onChange={(e) =>
-                setForm((f) => ({ ...f, dateOfBirth: e.target.value }))
-              }
-              className="border rounded w-full p-2"
-            />
-          </div>
-          <div className="flex gap-2">
-            <button type="submit" className="btn btn-primary">
+          {[
+            {
+              id: 'firstName',
+              label: 'First Name',
+              value: form.firstName || '',
+              onChange: (v: string) => setForm((f) => ({ ...f, firstName: v })),
+            },
+            {
+              id: 'lastName',
+              label: 'Last Name',
+              value: form.lastName || '',
+              onChange: (v: string) => setForm((f) => ({ ...f, lastName: v })),
+            },
+            {
+              id: 'dateOfBirth',
+              label: 'Date of Birth',
+              value: form.dateOfBirth || '',
+              type: 'date',
+              onChange: (v: string) =>
+                setForm((f) => ({ ...f, dateOfBirth: v })),
+            },
+          ].map(({ id, label, value, onChange, type }) => (
+            <div key={id}>
+              <label
+                htmlFor={id}
+                className="block text-[#586F69] font-medium mb-1"
+              >
+                {label}
+              </label>
+              <input
+                id={id}
+                type={type || 'text'}
+                value={value}
+                onChange={(e) => onChange(e.target.value)}
+                className="w-full rounded-lg border border-[#586F69] bg-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-300"
+              />
+            </div>
+          ))}
+          <div className="flex gap-3">
+            <button
+              type="submit"
+              className="flex-1 bg-[#586F69] hover:bg-[#a3c1ba] text-white font-semibold px-4 py-2 rounded-lg shadow"
+            >
               Save
             </button>
             <button
               type="button"
               onClick={toggleUserEdit}
-              className="btn btn-secondary"
+              className="flex-1 bg-white border border-[#586F69] text-[#586F69] font-semibold px-4 py-2 rounded-lg hover:bg-[#e5e7e6] transition"
             >
               Cancel
             </button>
@@ -93,22 +97,27 @@ export function UserInfo({ user }: UserInfoProps): React.JSX.Element {
   }
 
   return (
-    <div className="bg-white rounded-xl shadow p-4 mb-6">
+    <div className={baseCardClasses + 'from-white to-green-50 mb-6'}>
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold">Profile</h2>
-        <button onClick={toggleUserEdit} className="text-sm text-blue-600">
+        <h2 className="text-2xl font-semibold text-[#586F69]">Profile</h2>
+        <button
+          onClick={toggleUserEdit}
+          className="text-[#586F69] hover:text-[#586F69] font-medium"
+        >
           Edit
         </button>
       </div>
-      <p>
-        <strong>First Name:</strong> {user.firstName}
-      </p>
-      <p>
-        <strong>Last Name:</strong> {user.lastName}
-      </p>
-      <p>
-        <strong>Date of Birth:</strong> {user.dateOfBirth}
-      </p>
+      <div className="space-y-2 text-[#586F69]">
+        <p>
+          <span className="font-medium">First Name:</span> {user.firstName}
+        </p>
+        <p>
+          <span className="font-medium">Last Name:</span> {user.lastName}
+        </p>
+        <p>
+          <span className="font-medium">Date of Birth:</span> {user.dateOfBirth}
+        </p>
+      </div>
     </div>
   );
 }

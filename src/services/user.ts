@@ -1,6 +1,8 @@
 import type {
-  CustomerUpdateAction,
+  BaseAddress,
   CustomerChangeAddressAction,
+  CustomerUpdate,
+  CustomerUpdateAction,
   CustomerSetFirstNameAction,
   CustomerSetLastNameAction,
   CustomerSetDateOfBirthAction,
@@ -134,54 +136,53 @@ export async function updateAddress(
   customerId: string,
   currentVersion: number,
   addressUpdates: AddressUpdates[]
-): Promise<Address[]> {
+): Promise<{ addresses: Address[]; version: number }> {
   const apiRoot = createAuthenticatedApiRoot(token);
 
-  const addressChangeActions: CustomerChangeAddressAction[] =
-    addressUpdates.map((upd) => {
-      const [streetName, streetNumber = ''] = (upd.street ?? '').split(' ');
-      return {
-        action: 'changeAddress',
-        addressId: upd.id,
-        address: {
-          streetName,
-          streetNumber,
-          city: upd.city ?? '',
-          region: upd.state ?? '',
-          postalCode: upd.zip ?? '',
-          country: upd.country ?? '',
-        },
-      } as CustomerChangeAddressAction;
-    });
+  const actions: CustomerChangeAddressAction[] = addressUpdates.map((upd) => {
+    const { id, streetName, streetNumber, ...rest } = upd as BaseAddress & {
+      id: string;
+    };
+    return {
+      action: 'changeAddress',
+      addressId: id,
+      address: { streetName, streetNumber, ...rest },
+    };
+  });
 
   const updateResponse = await apiRoot
     .customers()
     .withId({ ID: customerId })
     .post({
-      body: { version: currentVersion, actions: addressChangeActions },
+      body: {
+        version: currentVersion,
+        actions,
+      } as CustomerUpdate,
     })
     .execute();
+
   if (!updateResponse.body) {
-    throw new Error(
-      `Empty address update (status ${updateResponse.statusCode})`
-    );
+    throw new Error(`Empty response (${updateResponse.statusCode})`);
   }
   const updatedCustomer = updateResponse.body;
 
-  return (updatedCustomer.addresses ?? [])
-    .filter(
-      (addr): addr is Required<typeof addr> => typeof addr.id === 'string'
-    )
-    .map((addr) => ({
-      id: addr.id,
-      street: [addr.streetName, addr.streetNumber].filter(Boolean).join(' '),
-      city: addr.city ?? '',
-      state: addr.region ?? '',
-      zip: addr.postalCode ?? '',
-      country: addr.country ?? '',
+  const updatedAddresses: Address[] = (updatedCustomer.addresses ?? [])
+    .filter((a): a is Required<typeof a> => !!a.id)
+    .map((a) => ({
+      id: a.id,
+      street: [a.streetName, a.streetNumber].filter(Boolean).join(' '),
+      city: a.city ?? '',
+      state: a.region ?? '',
+      zip: a.postalCode ?? '',
+      country: a.country ?? '',
       isDefaultBilling:
-        updatedCustomer.billingAddressIds?.includes(addr.id) ?? false,
+        updatedCustomer.billingAddressIds?.includes(a.id) ?? false,
       isDefaultShipping:
-        updatedCustomer.shippingAddressIds?.includes(addr.id) ?? false,
+        updatedCustomer.shippingAddressIds?.includes(a.id) ?? false,
     }));
+
+  return {
+    addresses: updatedAddresses,
+    version: updatedCustomer.version,
+  };
 }
