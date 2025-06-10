@@ -83,6 +83,7 @@ export interface CustomerDataInterface {
   asDefaultBilling?: boolean;
   shippingAddress?: BaseAddress;
   billingAddress?: BaseAddress;
+  anonimId?: string;
 }
 
 export interface FilterI {

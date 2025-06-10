@@ -48,6 +48,7 @@ export async function completeSignUp(
     asDefaultBilling,
     shippingAddress,
     billingAddress,
+    anonimId,
   } = data;
 
   if (!shippingAddress) {
@@ -79,6 +80,7 @@ export async function completeSignUp(
           asDefaultBilling && billingAddress ? 1 : undefined,
         shippingAddresses,
         billingAddresses,
+        anonymousId: anonimId ?? undefined,
       },
     })
     .execute();
