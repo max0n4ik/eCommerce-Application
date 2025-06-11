@@ -6,7 +6,7 @@ import {
 import { ClientBuilder } from '@commercetools/sdk-client-v2';
 
 import { loginCustomer } from './auth-service';
-import { ctpClient } from './build-client';
+import { apiRoot } from './build-client';
 
 import type { CustomerDataInterface } from '@/utils/interfaces';
 
@@ -19,10 +19,6 @@ const projectKey = import.meta.env.VITE_PROJECT_KEY;
 if (!projectKey) {
   throw new Error('VITE_PROJECT_KEY не определён');
 }
-
-export const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
-  projectKey,
-});
 
 export function createAuthenticatedApiRoot(
   token: string

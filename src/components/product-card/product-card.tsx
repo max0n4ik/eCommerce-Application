@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 
 import AddToCartIcon from '@/assets/images/add-to-cart.png';
+import useUserStore from '@/store/user';
 import { formatPrice, getDiscountedPrice } from '@/utils/catalog';
 import type { ProductCardI } from '@/utils/interfaces';
 
@@ -13,8 +14,15 @@ export default function ProductCard({
   name,
   description,
 }: ProductCardI): React.JSX.Element {
+  const { addProductToCart } = useUserStore();
+
+  const handleAddToCart = (): void => {
+    addProductToCart(id);
+    console.log(`Adding ${id} to cart`);
+  };
+
   return (
-    <Link to={`/product/${id}`} className="block">
+    <Link to={`/product/${id}`} className="block relative">
       <div key={id} className="product-card cursor-pointer">
         {imageUrl ? (
           <img
@@ -25,35 +33,36 @@ export default function ProductCard({
         ) : (
           <div className="h-72 w-full bg-gray-100" />
         )}
-        <div className="p-4 flex flex-col gap-2">
+        <div className="p-3 flex flex-col gap-2">
           <h3 className="font-medium text-lg text-[var(--gray)]">{name}</h3>
           <h5 className="line-clamp-2">{description?.en}</h5>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 justify-between">
             {permyriad && permyriad > 0 ? (
-              <>
-                <p className="text-gray-400 line-through text-base">
-                  {formatPrice(price)}{' '}
-                  <span className="ml-1 font-normal">$</span>
-                </p>
+              <div>
                 <p className="text-base font-semibold text-red-600">
                   {formatPrice(getDiscountedPrice(price, permyriad))}{' '}
                   <span className="ml-1 font-normal">$</span>
                 </p>
-              </>
+                <p className="text-gray-400 line-through text-sm">
+                  {formatPrice(price)}{' '}
+                  <span className="ml-1 font-normal">$</span>
+                </p>
+              </div>
             ) : (
               <p className="text-base font-semibold text-gray-900">
                 {formatPrice(price)} <span className="ml-1 font-normal">$</span>
               </p>
             )}
-            <div>
-              <button className="transition-transform duration-300 ease-in-out hover:scale-110">
-                <img
-                  className="w-[30px] h-[30px]"
-                  src={AddToCartIcon}
-                  alt="add-to-cart"
-                ></img>
-              </button>
-            </div>
+            <button
+              onClick={handleAddToCart}
+              className="hover:pointer-events-auto transition-transform duration-300 ease-in-out hover:scale-110 z-100 absolute p-2 right-1"
+            >
+              <img
+                className="w-[30px] h-[30px]"
+                src={AddToCartIcon}
+                alt="add-to-cart"
+              ></img>
+            </button>
           </div>
         </div>
       </div>

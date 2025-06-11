@@ -6,7 +6,7 @@ import type {
   ProductPagedSearchResponse,
 } from '@commercetools/platform-sdk';
 
-import { apiRoot } from './create-client';
+import { apiRoot } from './build-client';
 
 import type { FilterI } from '@/utils/interfaces';
 

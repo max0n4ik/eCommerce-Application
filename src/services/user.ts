@@ -1,3 +1,11 @@
+import type {
+  ApiRequest,
+  Cart,
+  CartPagedQueryResponse,
+  ClientResponse,
+} from '@commercetools/platform-sdk';
+
+import { apiRootAnonim, apiRootWithToken } from './build-client';
 import { createAuthenticatedApiRoot } from './create-client';
 
 import type { User, Address } from '@/utils/types';
@@ -32,4 +40,66 @@ export async function fetchUserProfile(token: string): Promise<{
     }));
 
   return { user, addresses };
+}
+
+export async function createCart(): Promise<ClientResponse<Cart>> {
+  return apiRootWithToken
+    .me()
+    .carts()
+    .post({
+      body: {
+        currency: 'USD',
+        country: 'US',
+      },
+    })
+    .execute()
+    .then((response) => {
+      return response;
+    });
+}
+
+export async function fetchCart(): Promise<
+  ClientResponse<CartPagedQueryResponse>
+> {
+  return apiRootWithToken
+    .me()
+    .carts()
+    .get()
+    .execute()
+    .then((response) => {
+      return response;
+    });
+}
+export function createAnonymousUser(): void {
+  apiRootAnonim
+    .me()
+    .get()
+    .execute()
+    .catch((error) => {
+      if (error.statusCode !== 403) {
+        throw error;
+      }
+    });
+}
+export async function addProductToCart(
+  cartID: string,
+  productId: string
+): Promise<ApiRequest<Cart>> {
+  return apiRootWithToken
+    .me()
+    .carts()
+    .withId({ ID: cartID })
+    .post({
+      body: {
+        version: 1,
+        actions: [
+          {
+            action: 'addLineItem',
+            productId,
+            variantId: 1,
+            quantity: 1,
+          },
+        ],
+      },
+    });
 }

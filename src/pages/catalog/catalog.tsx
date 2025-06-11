@@ -6,7 +6,9 @@ import {
   CatalogProducts,
 } from '@/components/catalog';
 import { useUrlParams } from '@/hooks/use-url-params';
+import { createAnonymousUser } from '@/services/user';
 import useCatalogStore from '@/store/catalog';
+import useUserStore from '@/store/user';
 import {
   findCategoryById,
   getSubCategories,
@@ -30,8 +32,18 @@ export default function Catalog(): React.JSX.Element {
     setFilters,
   } = useCatalogStore();
 
+  const { fetchUserCartId } = useUserStore();
+
   const { initFromUrl, updateParams } = useUrlParams();
   const [temporaryFilters, setTemporaryFilters] = useState<FilterI>(filters);
+
+  useEffect(() => {
+    createAnonymousUser();
+  }, []);
+
+  useEffect(() => {
+    fetchUserCartId();
+  }, [fetchUserCartId]);
 
   useEffect(() => {
     fetchProducts();
