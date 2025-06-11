@@ -4,6 +4,7 @@ import { Button } from '../ui/button';
 import SyncedCarousel from '../ui/carousel/carousel';
 import { Dialog, DialogContent, DialogTitle } from '../ui/modal/modal-utils';
 
+import useUserStore from '@/store/user';
 import { formatPrice, getDiscountedPrice } from '@/utils/catalog';
 import type { DetailedProductInterface } from '@/utils/interfaces';
 
@@ -13,8 +14,17 @@ export default function DetailedProduct({
   description,
   permyriad,
   images = [],
+  id,
 }: DetailedProductInterface): React.JSX.Element {
   const [currenImageIndex, setCurrentImageIndex] = useState(0);
+
+  const { addProductToCart } = useUserStore();
+
+  const handleAddToCart = (): void => {
+    addProductToCart(id);
+    console.log(`Adding ${id} to cart`);
+  };
+
   return (
     <div className="flex flex-row max-[780px]:flex-col  max-[780px]:items-center justify-center gap-10 p-[50px] max-w-screen-xl mx-auto">
       <div className="w-1/2 max-[780px]:w-full flex flex-col gap-4">
@@ -26,7 +36,7 @@ export default function DetailedProduct({
           />
           <DialogContent
             aria-describedby={undefined}
-            className="flex justify-center items-center w-full max-w-[385px] max-h-[55vh] p-4  sm:p-4 md:p-8 max-w-sm sm:max-w-sm md:max-w-2xl  md:[max-height:fit-content] overflow-y-auto"
+            className="flex justify-center items-center w-full max-w-[385px] max-h-[55vh] p-4  sm:p-4 md:p-8 sm:max-w-sm md:max-w-2xl  md:[max-height:fit-content] overflow-y-auto"
           >
             <DialogTitle></DialogTitle>
             <div className="w-full">
@@ -72,7 +82,10 @@ export default function DetailedProduct({
         </p>
         <span className=" inline-block h-[1px] w-full bg-[color:var(--light-bar-color)]"></span>
         <div>
-          <Button className="bg-transparent border border-black capitalize text-black font-inter hover:bg-[#586F69] hover:text-white hover:border-[#586F69] hover:scale-105 transition-transform duration-200 ease-in-out cursor-pointer">
+          <Button
+            onClick={handleAddToCart}
+            className="bg-transparent border border-black capitalize text-black font-inter hover:bg-[#586F69] hover:text-white hover:border-[#586F69] hover:scale-105 transition-transform duration-200 ease-in-out cursor-pointer"
+          >
             add to cart
           </Button>
         </div>

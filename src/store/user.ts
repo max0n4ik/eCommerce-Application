@@ -16,7 +16,6 @@ type UserStore = {
   addresses: Address[];
   loading: boolean;
   error: string | null;
-  userId?: string;
   cartID: string;
   fetchUser: () => Promise<void>;
   clearUser: () => void;
@@ -30,7 +29,6 @@ const useUserStore = create<UserStore>((set) => ({
   addresses: [],
   loading: false,
   error: null,
-  userId: undefined,
   cartID: '',
 
   fetchUser: async (): Promise<void> => {
@@ -63,7 +61,7 @@ const useUserStore = create<UserStore>((set) => ({
   fetchUserCartId: async (): Promise<void> => {
     try {
       const response = await createCart();
-      set({ userId: response.body.anonymousId, cartID: response.body.id });
+      set({ cartID: response.body.id });
     } catch (error) {
       console.log(error);
     }

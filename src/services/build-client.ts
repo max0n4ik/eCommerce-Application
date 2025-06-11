@@ -20,8 +20,13 @@ const authMiddlewareOptions: AuthMiddlewareOptions = {
 };
 
 const { useAuthStore } = await import('@/store/auth-store');
-const { accessTokenAnonymous, setAccessTokenAnonymous } =
+const { accessTokenAnonymous, setAccessTokenAnonymous, userId, setUserId } =
   useAuthStore.getState();
+
+const anonymousId = crypto.randomUUID();
+if (!userId) {
+  setUserId(anonymousId);
+}
 
 const authAnonymousMiddlewareOptions: AuthMiddlewareOptions = {
   host: import.meta.env.VITE_AUTH_URL,
@@ -29,7 +34,7 @@ const authAnonymousMiddlewareOptions: AuthMiddlewareOptions = {
   credentials: {
     clientId: import.meta.env.VITE_CLIENT_ID,
     clientSecret: import.meta.env.VITE_CLIENT_SECRET,
-    anonymousId: crypto.randomUUID(),
+    anonymousId: userId || anonymousId,
   },
   tokenCache: {
     get: () => ({
