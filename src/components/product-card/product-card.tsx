@@ -1,10 +1,11 @@
+import { Check } from 'lucide-react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import AddToCartIcon from '@/assets/images/add-to-cart.png';
 import { useCartStore } from '@/store/cart-store';
 import { formatPrice, getDiscountedPrice } from '@/utils/catalog';
 import type { ProductCardI } from '@/utils/interfaces';
-
 export default function ProductCard({
   imageUrl,
   imageAlt,
@@ -15,8 +16,15 @@ export default function ProductCard({
   description,
 }: ProductCardI): React.JSX.Element {
   const { addToCart } = useCartStore();
-  const handleAddToCart = async (): Promise<void> => {
+  const [isAdded, setIsAdded] = useState(false);
+
+  const handleAddToCart = async (
+    e: React.MouseEvent<HTMLButtonElement>
+  ): Promise<void> => {
+    e.preventDefault();
+    e.stopPropagation();
     await addToCart(id, 1);
+    setIsAdded(true);
   };
 
   return (
@@ -53,13 +61,20 @@ export default function ProductCard({
             )}
             <button
               onClick={handleAddToCart}
-              className="hover:pointer-events-auto transition-transform duration-300 ease-in-out hover:scale-110 z-100 absolute p-2 right-1"
+              disabled={isAdded}
+              className={`hover:pointer-events-auto transition-transform duration-300 ease-in-out hover:scale-110 z-100 absolute p-2 right-1 ${
+                isAdded ? 'cursor-not-allowed' : ''
+              }`}
             >
-              <img
-                className="w-[30px] h-[30px]"
-                src={AddToCartIcon}
-                alt="add-to-cart"
-              ></img>
+              {isAdded ? (
+                <Check className="w-[30px] h-[30px] text-green-500" />
+              ) : (
+                <img
+                  className="w-[30px] h-[30px]"
+                  src={AddToCartIcon}
+                  alt="add-to-cart"
+                ></img>
+              )}
             </button>
           </div>
         </div>
