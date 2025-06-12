@@ -11,7 +11,6 @@ import {
 import type { DiscountCodeType, ProductType } from '../utils/types';
 
 interface CartState {
-  // State
   productsInCart: ProductType[];
   productsInCartSku: Set<string>;
   discountPromo: DiscountCodeType;
@@ -20,7 +19,6 @@ interface CartState {
   error: null | string;
   success: null | string;
 
-  // Actions
   initCart: () => Promise<void>;
   getCart: () => Promise<void>;
   addToCart: (
@@ -42,7 +40,6 @@ interface CartState {
 }
 
 export const useCartStore = create<CartState>((set, get) => ({
-  // Initial state
   productsInCart: [],
   productsInCartSku: new Set<string>(),
   discountPromo: {} as DiscountCodeType,
@@ -51,7 +48,6 @@ export const useCartStore = create<CartState>((set, get) => ({
   error: null,
   success: null,
 
-  // Actions
   addToCart: async (
     productId: string,
     quantity?: number,
@@ -298,7 +294,6 @@ export const useCartStore = create<CartState>((set, get) => ({
   },
 }));
 
-// Export a singleton instance if needed for compatibility
 export const cartStore = {
   getState: useCartStore.getState,
   setState: useCartStore.setState,
