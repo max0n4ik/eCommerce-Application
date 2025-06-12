@@ -100,25 +100,7 @@ export const customerSignUp = async (
     .execute();
 
   if (signUpCustomer.statusCode === 201) {
-    await apiWithPasswordFlow(email, password)
-      .customers()
-      .post({
-        body: {
-          email,
-          password,
-          firstName,
-          lastName,
-          dateOfBirth: dob,
-          addresses,
-          defaultShippingAddress: asDefaultShipping ? 0 : undefined,
-          defaultBillingAddress:
-            asDefaultBilling && billingAddress ? 1 : undefined,
-          shippingAddresses,
-          billingAddresses,
-          anonymousId: anonimId ?? undefined,
-        },
-      })
-      .execute();
+    await apiWithPasswordFlow(email, password).me().get().execute();
     if (localStorage.getItem('cartId')) await getActiveCart();
   }
   useAuthStore.getState().setIsAuth(true);
