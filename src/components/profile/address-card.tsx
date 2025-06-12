@@ -1,9 +1,54 @@
 import type { BaseAddress } from '@commercetools/platform-sdk';
 import React, { useState, useEffect, type FormEvent } from 'react';
 
+import { Tooltip } from '@/components/ui/error-message/error-message';
 import type { AddressUpdates } from '@/services/user';
 import useUserStore from '@/store/user';
 import type { Address } from '@/utils/types';
+
+type AddressForm = {
+  streetName: string;
+  streetNumber: string;
+  postalCode: string;
+  city: string;
+  region: string;
+  country: string;
+} & Partial<
+  Pick<
+    BaseAddress,
+    | 'additionalStreetInfo'
+    | 'state'
+    | 'company'
+    | 'department'
+    | 'building'
+    | 'apartment'
+    | 'pOBox'
+    | 'phone'
+    | 'mobile'
+    | 'email'
+    | 'fax'
+    | 'additionalAddressInfo'
+    | 'externalId'
+  >
+>;
+
+const EMPTY_ADDRESS: AddressForm = {
+  streetName: '',
+  streetNumber: '',
+  postalCode: '',
+  city: '',
+  region: '',
+  country: '',
+};
+
+const ADDRESS_FIELDS: Array<{ id: keyof AddressForm; label: string }> = [
+  { id: 'streetName', label: 'Street Name' },
+  { id: 'streetNumber', label: 'House Number' },
+  { id: 'city', label: 'City' },
+  { id: 'region', label: 'Region' },
+  { id: 'postalCode', label: 'Postal Code' },
+  { id: 'country', label: 'Country' },
+];
 
 export function AddressCard({
   address,
@@ -13,50 +58,39 @@ export function AddressCard({
   const { editingAddressId, toggleAddressEdit, saveAddress } = useUserStore();
   const isEditing = editingAddressId === address.id;
 
-  // Храним сразу BaseAddress поля
-  const [form, setForm] = useState<
-    Omit<BaseAddress, 'id' | 'key' | 'type' | 'fields'>
-  >({
-    streetName: '',
-    streetNumber: '',
-    additionalStreetInfo: undefined,
-    postalCode: '',
-    city: '',
-    region: '',
-    state: undefined,
-    country: '',
-    company: undefined,
-    department: undefined,
-    building: undefined,
-    apartment: undefined,
-    pOBox: undefined,
-    phone: undefined,
-    mobile: undefined,
-    email: undefined,
-    fax: undefined,
-    additionalAddressInfo: undefined,
-    externalId: undefined,
-  });
+  const [form, setForm] = useState<AddressForm>(() => EMPTY_ADDRESS);
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
-  // При входе в режим редактирования заполняем form из вашего Address
   useEffect(() => {
     if (isEditing) {
       const [streetName, streetNumber = ''] = address.street.split(' ');
-      setForm((f) => ({
-        ...f,
+      setForm({
+        ...EMPTY_ADDRESS,
         streetName,
         streetNumber,
         postalCode: address.zip,
         city: address.city,
         region: address.state,
         country: address.country,
-      }));
+      });
+      setErrors({});
     }
   }, [isEditing, address]);
 
+  const validate = (): boolean => {
+    const newErrors: Record<string, string> = {};
+    ADDRESS_FIELDS.forEach(({ id, label }) => {
+      const value = form[id];
+      if (typeof value === 'string' && value.trim() === '') {
+        newErrors[id] = `${label} is required`;
+      }
+    });
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const cardBase =
     'rounded-xl border transition-transform hover:shadow-xl hover:-translate-y-1 ';
-  // читаемый фон и бордер для дефолтных адресов
   const readOnlyBg =
     address.isDefaultBilling || address.isDefaultShipping
       ? 'bg-[rgba(129,129,129,0.12)] border-[#586F69]'
@@ -67,45 +101,14 @@ export function AddressCard({
       <form
         onSubmit={(e: FormEvent) => {
           e.preventDefault();
+          if (!validate()) return;
           saveAddress({ id: address.id, ...form } as AddressUpdates);
         }}
         className={`${cardBase}${readOnlyBg} p-6`}
       >
         <div className="grid grid-cols-2 gap-4 mb-4">
-          {[
-            {
-              id: 'streetName',
-              label: 'Street Name',
-              key: 'streetName',
-              value: form.streetName,
-            },
-            {
-              id: 'streetNumber',
-              label: 'House Number',
-              key: 'streetNumber',
-              value: form.streetNumber,
-            },
-            { id: 'city', label: 'City', key: 'city', value: form.city },
-            {
-              id: 'region',
-              label: 'Region',
-              key: 'region',
-              value: form.region,
-            },
-            {
-              id: 'postalCode',
-              label: 'Postal Code',
-              key: 'postalCode',
-              value: form.postalCode,
-            },
-            {
-              id: 'country',
-              label: 'Country',
-              key: 'country',
-              value: form.country,
-            },
-          ].map(({ id, label, key, value }) => (
-            <div key={id}>
+          {ADDRESS_FIELDS.map(({ id, label }) => (
+            <div key={id} className="relative">
               <label
                 htmlFor={id}
                 className="block text-[#586F69] font-medium mb-1"
@@ -114,12 +117,27 @@ export function AddressCard({
               </label>
               <input
                 id={id}
-                value={value}
-                onChange={(e) =>
-                  setForm((f) => ({ ...f, [key]: e.target.value }))
-                }
+                value={form[id] as string}
+                onChange={(e) => {
+                  setForm((f) => ({ ...f, [id]: e.target.value }));
+                  setErrors((prev) => {
+                    const restEntries = Object.entries(prev).filter(
+                      ([key]) => key !== id
+                    );
+                    const rest = Object.fromEntries(restEntries) as Record<
+                      string,
+                      string
+                    >;
+                    return rest;
+                  });
+                }}
                 className="w-full p-2 border border-[#E5E7EB] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#586F69]"
               />
+              {errors[id] && (
+                <div className="absolute left-0 top-full mt-1">
+                  <Tooltip message={errors[id]} />
+                </div>
+              )}
             </div>
           ))}
         </div>
@@ -160,12 +178,12 @@ export function AddressCard({
       </div>
       <div className="flex flex-wrap gap-2 text-xs">
         {address.isDefaultBilling && (
-          <span className="bg-[#a7d4c8] text-[#586F69] px-2 py-1 rounded-full">
+          <span className="bg-[rgba(129,129,129,0.12)] text-[#586F69] px-2 py-1 rounded-full">
             Default Billing
           </span>
         )}
         {address.isDefaultShipping && (
-          <span className="bg-[#a7d4c8] text-[#586F69] px-2 py-1 rounded-full">
+          <span className="bg-[rgba(129,129,129,0.12)] text-[#586F69] px-2 py-1 rounded-full">
             Default Shipping
           </span>
         )}

@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, type FormEvent } from 'react';
 
+import { Tooltip } from '@/components/ui/error-message/error-message';
 import type { ProfileUpdates } from '@/services/user';
 import useUserStore from '@/store/user';
 import type { User } from '@/utils/types';
@@ -8,9 +9,22 @@ interface UserInfoProps {
   user: User & { version: number };
 }
 
+type FieldId = 'firstName' | 'lastName' | 'dateOfBirth';
+
+const FIELD_CONFIG: Array<{
+  id: FieldId;
+  label: string;
+  type?: 'text' | 'date';
+}> = [
+  { id: 'firstName', label: 'First Name' },
+  { id: 'lastName', label: 'Last Name' },
+  { id: 'dateOfBirth', label: 'Date of Birth', type: 'date' },
+];
+
 export function UserInfo({ user }: UserInfoProps): React.JSX.Element {
   const { editingUser, toggleUserEdit, saveUser } = useUserStore();
   const [form, setForm] = useState<ProfileUpdates>({});
+  const [errors, setErrors] = useState<Partial<Record<FieldId, string>>>({});
 
   useEffect(() => {
     if (editingUser) {
@@ -19,11 +33,26 @@ export function UserInfo({ user }: UserInfoProps): React.JSX.Element {
         lastName: user.lastName,
         dateOfBirth: user.dateOfBirth,
       });
+      setErrors({});
     }
   }, [editingUser, user]);
 
+  const validate = (): boolean => {
+    const newErrors: Partial<Record<FieldId, string>> = {};
+    FIELD_CONFIG.forEach(({ id, label }) => {
+      const val = form[id as keyof ProfileUpdates] as string | undefined;
+      if (!val || val.trim() === '') {
+        newErrors[id] = `${label} is required`;
+      } else if ((id === 'firstName' || id === 'lastName') && /\d/.test(val)) {
+        newErrors[id] = `${label} cannot contain numbers`;
+      }
+    });
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const baseCardClasses =
-    'rounded-2xl shadow-lg border border-green-200 p-6 transition-transform hover:-translate-y-1 bg-gradient-to-br ';
+    'rounded-2xl shadow-lg border border-[#E5E7EB] p-6 transition-transform hover:-translate-y-1 bg-gradient-to-br ';
 
   if (editingUser) {
     return (
@@ -32,50 +61,53 @@ export function UserInfo({ user }: UserInfoProps): React.JSX.Element {
           Edit Profile
         </h2>
         <form
-          onSubmit={(e) => {
+          onSubmit={(e: FormEvent) => {
             e.preventDefault();
+            if (!validate()) return;
             saveUser(form);
           }}
           className="space-y-4"
         >
-          {[
-            {
-              id: 'firstName',
-              label: 'First Name',
-              value: form.firstName || '',
-              onChange: (v: string) => setForm((f) => ({ ...f, firstName: v })),
-            },
-            {
-              id: 'lastName',
-              label: 'Last Name',
-              value: form.lastName || '',
-              onChange: (v: string) => setForm((f) => ({ ...f, lastName: v })),
-            },
-            {
-              id: 'dateOfBirth',
-              label: 'Date of Birth',
-              value: form.dateOfBirth || '',
-              type: 'date',
-              onChange: (v: string) =>
-                setForm((f) => ({ ...f, dateOfBirth: v })),
-            },
-          ].map(({ id, label, value, onChange, type }) => (
-            <div key={id}>
-              <label
-                htmlFor={id}
-                className="block text-[#586F69] font-medium mb-1"
-              >
-                {label}
-              </label>
-              <input
-                id={id}
-                type={type || 'text'}
-                value={value}
-                onChange={(e) => onChange(e.target.value)}
-                className="w-full rounded-lg border border-[#586F69] bg-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-300"
-              />
-            </div>
-          ))}
+          {FIELD_CONFIG.map(({ id, label, type }) => {
+            const value = (form[id] || '') as string;
+            return (
+              <div key={id} className="relative">
+                <label
+                  htmlFor={id}
+                  className="block text-[#586F69] font-medium mb-1"
+                >
+                  {label}
+                </label>
+                <input
+                  id={id}
+                  type={type ?? 'text'}
+                  value={value}
+                  onChange={(e) => {
+                    const v = e.target.value;
+                    setForm((f) => ({ ...f, [id]: v }));
+                    setErrors((prev) => {
+                      const filtered = Object.entries(prev)
+                        .filter(([key]) => key !== id)
+                        .reduce(
+                          (obj, [key, msg]) => {
+                            obj[key as FieldId] = msg;
+                            return obj;
+                          },
+                          {} as Record<FieldId, string>
+                        );
+                      return filtered;
+                    });
+                  }}
+                  className="w-full rounded-lg border border-[#586F69] bg-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#586F69]"
+                />
+                {errors[id] && (
+                  <div className="absolute left-0 top-full mt-1">
+                    <Tooltip message={errors[id] ?? ''} />
+                  </div>
+                )}
+              </div>
+            );
+          })}
           <div className="flex gap-3">
             <button
               type="submit"
