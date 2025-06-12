@@ -11,7 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { completeSignUp } from '@/services/create-client';
+import { customerSignUp } from '@/services/auth-service';
 import useRegistrationStore from '@/store/registration';
 import {
   allowedCountriesArray,
@@ -103,7 +103,7 @@ export default function ShippingAddressForm({
     if (formData.billingAddressFlag) {
       setBillingAddress(address, formData.billingAddressFlag);
       try {
-        await completeSignUp({
+        await customerSignUp({
           email,
           password,
           firstName,

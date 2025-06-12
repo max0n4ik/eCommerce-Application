@@ -1,14 +1,11 @@
-import type {
-  ClientResponse,
-  ProductDiscount,
-} from '@commercetools/platform-sdk';
+import type { ProductDiscount } from '@commercetools/platform-sdk';
 
 import type { DiscountPrice } from '@/utils/interfaces';
 
 export default function mappersDiscount(
-  discount: ClientResponse<ProductDiscount[]>
+  discount: ProductDiscount[]
 ): DiscountPrice[] {
-  return discount.body.map((discount) => ({
+  return discount.map((discount) => ({
     id: discount.id,
     name: discount.key ?? '',
     description: discount.description?.en ?? '',

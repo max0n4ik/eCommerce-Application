@@ -6,47 +6,37 @@ import type {
   ProductPagedSearchResponse,
 } from '@commercetools/platform-sdk';
 
-import { apiRoot } from './create-client';
+import { apiWithClientCredentialsFlow } from './build-client';
 
 import type { FilterI } from '@/utils/interfaces';
 
-export function fetchCatalogProducts(): Promise<ClientResponse<Product[]>> {
-  return apiRoot
+export async function fetchCatalogProducts(): Promise<Product[]> {
+  const visitor = apiWithClientCredentialsFlow();
+  const response = await visitor
     .products()
-    .get()
-    .execute()
-    .then((response) => {
-      return { body: response.body.results };
-    });
+    .get({ queryArgs: { limit: 50 } })
+    .execute();
+  return response.body.results;
 }
 
 export async function fetchCatalogProductsDiscount(): Promise<
-  ClientResponse<ProductDiscount[]>
+  ProductDiscount[]
 > {
-  return apiRoot
-    .productDiscounts()
-    .get()
-    .execute()
-    .then((response) => {
-      return { body: response.body.results };
-    });
+  const visitor = apiWithClientCredentialsFlow();
+  const response = await visitor.productDiscounts().get().execute();
+  return response.body.results;
 }
 
-export async function fetchCatalogCategories(): Promise<
-  ClientResponse<Category[]>
-> {
-  return apiRoot
-    .categories()
-    .get()
-    .execute()
-    .then((response) => {
-      return { body: response.body.results };
-    });
+export async function fetchCatalogCategories(): Promise<Category[]> {
+  const visitor = apiWithClientCredentialsFlow();
+  const response = await visitor.categories().get().execute();
+  return response.body.results;
 }
 export async function fetchProductById(
   id: string
 ): Promise<ClientResponse<Product>> {
-  return apiRoot
+  const visitor = apiWithClientCredentialsFlow();
+  return visitor
     .products()
     .withId({ ID: id })
     .get()
@@ -58,7 +48,8 @@ export async function fetchProductById(
 export async function fetchProductDiscount(
   id: string
 ): Promise<ClientResponse<ProductDiscount>> {
-  return apiRoot
+  const visitor = apiWithClientCredentialsFlow();
+  return visitor
     .productDiscounts()
     .withId({ ID: id })
     .get()
@@ -71,7 +62,8 @@ export async function fetchProductDiscount(
 export async function fetchCatalogFilteredProducts(
   filter: FilterI
 ): Promise<ClientResponse<ProductPagedSearchResponse>> {
-  return apiRoot
+  const visitor = apiWithClientCredentialsFlow();
+  return visitor
     .products()
     .search()
     .post({
