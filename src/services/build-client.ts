@@ -23,7 +23,7 @@ const httpMiddlewareOptions: HttpMiddlewareOptions = {
   host: hostAPI,
   fetch,
 };
-class MyTokenCache implements TokenCache {
+class myTokenCache implements TokenCache {
   private myCache: TokenStore = {
     token: '',
     expirationTime: 0,
@@ -50,9 +50,9 @@ class MyTokenCache implements TokenCache {
   }
 }
 
-export const myToken = new MyTokenCache();
+export const myToken = new myTokenCache();
 
-export function apiwithExistingTokenFlow(): ByProjectKeyRequestBuilder {
+export function apiWithExistingTokenFlow(): ByProjectKeyRequestBuilder {
   type ExistingTokenMiddlewareOptions = {
     force?: boolean;
   };
@@ -133,7 +133,7 @@ export function apiWithClientCredentialsFlow(): ByProjectKeyRequestBuilder {
   return apiRoot;
 }
 
-export function apiwithAnonymousSessionFlow(): ByProjectKeyRequestBuilder {
+export function apiWithAnonymousSessionFlow(): ByProjectKeyRequestBuilder {
   myToken.clear();
 
   const anonymousMiddlewareOptions: AnonymousAuthMiddlewareOptions = {

@@ -19,7 +19,6 @@ interface CartState {
   error: null | string;
   success: null | string;
 
-  initCart: () => Promise<void>;
   getCart: () => Promise<void>;
   addToCart: (
     productId: string,
@@ -74,41 +73,6 @@ export const useCartStore = create<CartState>((set, get) => ({
       }
     } catch {
       set({ error: 'Error adding product to cart' });
-    }
-  },
-
-  initCart: async (): Promise<void> => {
-    const hasCartId = localStorage.getItem('cartId');
-
-    if (hasCartId) {
-      try {
-        const response = await getActiveCart();
-
-        if (response.statusCode === 200) {
-          const lineItems: LineItem[] = [...response.body.lineItems];
-          const skuSet = new Set<string>();
-
-          lineItems.forEach((item) => {
-            skuSet.add(item.variant.sku as string);
-          });
-
-          const products = getCartProducts(lineItems);
-
-          set({
-            productsInCart: [...products],
-            productsInCartSku: skuSet,
-            totalAmount: response.body.totalLineItemQuantity ?? 0,
-            totalPrice: response.body.totalPrice.centAmount,
-            error: null,
-          });
-        }
-
-        if (response.statusCode === 400) {
-          throw new Error('Unexpected error');
-        }
-      } catch {
-        set({ error: 'Error get cart' });
-      }
     }
   },
 

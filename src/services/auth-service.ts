@@ -6,7 +6,7 @@ import type {
 
 import {
   apiWithClientCredentialsFlow,
-  apiwithExistingTokenFlow,
+  apiWithExistingTokenFlow,
   apiWithPasswordFlow,
 } from './build-client';
 import { getActiveCart } from './cart-service';
@@ -21,7 +21,7 @@ export const customerLogin = async (
   const existingToken = localStorage.getItem('token');
 
   const newCustomer = existingToken
-    ? apiwithExistingTokenFlow()
+    ? apiWithExistingTokenFlow()
     : apiWithPasswordFlow(email, password);
 
   const response = await newCustomer
@@ -76,7 +76,7 @@ export const customerSignUp = async (
   const existingToken = localStorage.getItem('token');
 
   const newCustomer = existingToken
-    ? apiwithExistingTokenFlow()
+    ? apiWithExistingTokenFlow()
     : apiWithClientCredentialsFlow();
 
   const signUpCustomer = await newCustomer

@@ -7,16 +7,16 @@ import type {
 } from '@commercetools/platform-sdk';
 
 import {
-  apiwithAnonymousSessionFlow,
-  apiwithExistingTokenFlow,
+  apiWithAnonymousSessionFlow,
+  apiWithExistingTokenFlow,
 } from './build-client';
 
 export const createCart = async (): Promise<ClientResponse<Cart>> => {
   const existingToken = localStorage.getItem('token');
 
   const customer = existingToken
-    ? apiwithExistingTokenFlow()
-    : apiwithAnonymousSessionFlow();
+    ? apiWithExistingTokenFlow()
+    : apiWithAnonymousSessionFlow();
 
   const body = {
     currency: 'USD',
@@ -41,8 +41,8 @@ export const addItemToCart = async (
   let version = localStorage.getItem('cartVersion');
 
   const customer = existingToken
-    ? apiwithExistingTokenFlow()
-    : apiwithAnonymousSessionFlow();
+    ? apiWithExistingTokenFlow()
+    : apiWithAnonymousSessionFlow();
 
   if (!cartId) {
     await createCart();
@@ -79,7 +79,7 @@ export const addItemToCart = async (
 };
 
 export const getActiveCart = async (): Promise<ClientResponse<Cart>> => {
-  const customer = apiwithExistingTokenFlow();
+  const customer = apiWithExistingTokenFlow();
   const activeCart = await customer.me().activeCart().get().execute();
   const { version, id } = activeCart.body;
 
@@ -103,7 +103,7 @@ export const setLineItemQuantity = async (
   let cartId = localStorage.getItem('cartId');
   let version = localStorage.getItem('cartVersion');
 
-  const customer = apiwithExistingTokenFlow();
+  const customer = apiWithExistingTokenFlow();
 
   const body: MyCartUpdate = {
     version: +`${version}`,
@@ -133,7 +133,7 @@ export const setLineItemQuantity = async (
 };
 
 export const deleteCart = async (): Promise<ClientResponse<Cart>> => {
-  const customer = apiwithExistingTokenFlow();
+  const customer = apiWithExistingTokenFlow();
 
   const cartId = localStorage.getItem('cartId');
   const version = localStorage.getItem('cartVersion');

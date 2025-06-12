@@ -1,4 +1,4 @@
-import { apiwithExistingTokenFlow } from './build-client';
+import { apiWithExistingTokenFlow } from './build-client';
 
 import type { User, Address } from '@/utils/types';
 
@@ -6,7 +6,7 @@ export async function fetchUserProfile(): Promise<{
   user: User;
   addresses: Address[];
 }> {
-  const apiRoot = apiwithExistingTokenFlow();
+  const apiRoot = apiWithExistingTokenFlow();
   const response = await apiRoot.me().get().execute();
   const customer = response.body;
 
