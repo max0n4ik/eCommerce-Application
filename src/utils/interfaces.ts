@@ -67,6 +67,7 @@ export interface DetailedProductInterface {
   priceCurrency: string;
   category?: CategoryReference[];
   attributes?: Attribute[];
+  id: string;
 }
 export interface ProductCategoriesInterface {
   typeId: string;

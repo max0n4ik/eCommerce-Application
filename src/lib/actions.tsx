@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { loginCustomer } from '@/services/auth-service';
+import { customerLogin } from '@/services/auth-service';
 
 export const schema = z.object({
   email: z.string().email('Invalid email address'),
@@ -36,7 +36,7 @@ export async function authenticate(
   }
 
   try {
-    await loginCustomer(
+    await customerLogin(
       validatedFields.data.email,
       validatedFields.data.password
     );

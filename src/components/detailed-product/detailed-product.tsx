@@ -4,7 +4,7 @@ import { Button } from '../ui/button';
 import SyncedCarousel from '../ui/carousel/carousel';
 import { Dialog, DialogContent, DialogTitle } from '../ui/modal/modal-utils';
 
-import useUserStore from '@/store/user';
+import { useCartStore } from '@/store/cart-store';
 import { formatPrice, getDiscountedPrice } from '@/utils/catalog';
 import type { DetailedProductInterface } from '@/utils/interfaces';
 
@@ -18,11 +18,9 @@ export default function DetailedProduct({
 }: DetailedProductInterface): React.JSX.Element {
   const [currenImageIndex, setCurrentImageIndex] = useState(0);
 
-  const { addProductToCart } = useUserStore();
-
-  const handleAddToCart = (): void => {
-    addProductToCart(id);
-    console.log(`Adding ${id} to cart`);
+  const { addToCart } = useCartStore();
+  const handleAddToCart = async (): Promise<void> => {
+    await addToCart(id, 1);
   };
 
   return (

@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 
 import AddToCartIcon from '@/assets/images/add-to-cart.png';
-import useUserStore from '@/store/user';
+import { useCartStore } from '@/store/cart-store';
 import { formatPrice, getDiscountedPrice } from '@/utils/catalog';
 import type { ProductCardI } from '@/utils/interfaces';
 
@@ -14,11 +14,9 @@ export default function ProductCard({
   name,
   description,
 }: ProductCardI): React.JSX.Element {
-  const { addProductToCart } = useUserStore();
-
-  const handleAddToCart = (): void => {
-    addProductToCart(id);
-    console.log(`Adding ${id} to cart`);
+  const { addToCart } = useCartStore();
+  const handleAddToCart = async (): Promise<void> => {
+    await addToCart(id, 1);
   };
 
   return (

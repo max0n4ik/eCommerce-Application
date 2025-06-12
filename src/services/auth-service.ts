@@ -1,75 +1,126 @@
-import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
-import type { Customer } from '@commercetools/platform-sdk';
+import type {
+  ClientResponse,
+  CustomerDraft,
+  CustomerSignInResult,
+} from '@commercetools/platform-sdk';
+
 import {
-  ClientBuilder,
-  createAuthForPasswordFlow,
-  type PasswordAuthMiddlewareOptions,
-  type TokenCache,
-} from '@commercetools/sdk-client-v2';
+  apiWithClientCredentialsFlow,
+  apiwithExistingTokenFlow,
+  apiWithPasswordFlow,
+} from './build-client';
+import { getActiveCart } from './cart-service';
 
 import { useAuthStore } from '@/store/auth-store';
+import type { CustomerDataInterface } from '@/utils/interfaces';
 
-const {
-  VITE_CLIENT_ID,
-  VITE_CLIENT_SECRET,
-  VITE_API_URL,
-  VITE_AUTH_URL,
-  VITE_PROJECT_KEY,
-  VITE_SCOPES,
-} = import.meta.env;
-
-export async function loginCustomer(
+export const customerLogin = async (
   email: string,
   password: string
-): Promise<{ token: string; customer: Customer }> {
-  let capturedToken = '';
+): Promise<ClientResponse<CustomerSignInResult>> => {
+  const existingToken = localStorage.getItem('token');
 
-  const tokenCache: TokenCache = {
-    get: () => ({ token: '', expirationTime: 0 }),
-    set: (cache) => {
-      capturedToken = cache.token;
-    },
-  };
+  const newCustomer = existingToken
+    ? apiwithExistingTokenFlow()
+    : apiWithPasswordFlow(email, password);
 
-  const passwordFlowOptions: PasswordAuthMiddlewareOptions = {
-    host: VITE_AUTH_URL as string,
-    projectKey: VITE_PROJECT_KEY as string,
-    credentials: {
-      clientId: VITE_CLIENT_ID as string,
-      clientSecret: VITE_CLIENT_SECRET as string,
-      user: {
-        username: email,
+  const response = await newCustomer
+    .me()
+    .login()
+    .post({
+      body: {
+        email,
         password,
       },
-    },
-    scopes: (VITE_SCOPES as string).split(' '),
-    tokenCache,
-    fetch,
-  };
+    })
+    .execute();
 
-  const authMiddleware = createAuthForPasswordFlow(passwordFlowOptions);
+  if (response.statusCode === 200) {
+    await apiWithPasswordFlow(email, password).me().get().execute();
+    if (localStorage.getItem('cartId')) await getActiveCart();
+  }
+  useAuthStore.getState().setIsAuth(true);
+  return response;
+};
 
-  const client = new ClientBuilder()
-    .withAuthMiddleware(authMiddleware)
-    .withHttpMiddleware({ host: VITE_API_URL as string, fetch })
-    .build();
+export const customerSignUp = async (
+  data: CustomerDataInterface
+): Promise<ClientResponse<CustomerSignInResult>> => {
+  const {
+    email,
+    password,
+    firstName,
+    lastName,
+    dateOfBirth,
+    asDefaultShipping,
+    asDefaultBilling,
+    shippingAddress,
+    billingAddress,
+    anonimId,
+  } = data;
 
-  const apiRoot = createApiBuilderFromCtpClient(client).withProjectKey({
-    projectKey: VITE_PROJECT_KEY as string,
-  });
-
-  const response = await apiRoot.me().get().execute();
-  const customer: Customer = response.body;
-
-  if (!capturedToken) {
-    throw new Error('Failed to obtain access token via SDK');
+  if (!shippingAddress) {
+    throw new Error('Нужен shippingAddress для регистрации');
   }
 
-  useAuthStore.getState().setAccessToken(capturedToken);
-  useAuthStore.getState().setIsAuth(true);
+  const dob = dateOfBirth.toISOString().split('T')[0];
+  const addresses: CustomerDraft['addresses'] = [shippingAddress];
+  const shippingAddresses = [0] as number[];
+  const billingAddresses: number[] = [];
 
-  return {
-    token: capturedToken,
-    customer,
-  };
-}
+  if (billingAddress) {
+    addresses.push(billingAddress);
+    billingAddresses.push(1);
+  }
+
+  const existingToken = localStorage.getItem('token');
+
+  const newCustomer = existingToken
+    ? apiwithExistingTokenFlow()
+    : apiWithClientCredentialsFlow();
+
+  const signUpCustomer = await newCustomer
+    .customers()
+    .post({
+      body: {
+        email,
+        password,
+        firstName,
+        lastName,
+        dateOfBirth: dob,
+        addresses,
+        defaultShippingAddress: asDefaultShipping ? 0 : undefined,
+        defaultBillingAddress:
+          asDefaultBilling && billingAddress ? 1 : undefined,
+        shippingAddresses,
+        billingAddresses,
+        anonymousId: anonimId ?? undefined,
+      },
+    })
+    .execute();
+
+  if (signUpCustomer.statusCode === 201) {
+    await apiWithPasswordFlow(email, password)
+      .customers()
+      .post({
+        body: {
+          email,
+          password,
+          firstName,
+          lastName,
+          dateOfBirth: dob,
+          addresses,
+          defaultShippingAddress: asDefaultShipping ? 0 : undefined,
+          defaultBillingAddress:
+            asDefaultBilling && billingAddress ? 1 : undefined,
+          shippingAddresses,
+          billingAddresses,
+          anonymousId: anonimId ?? undefined,
+        },
+      })
+      .execute();
+    if (localStorage.getItem('cartId')) await getActiveCart();
+  }
+  useAuthStore.getState().setIsAuth(true);
+  return signUpCustomer;
+};
