@@ -7,5 +7,3 @@ export const selectAccessToken = (state: {
 }): string | null => state.accessToken;
 
 export const useIsAuth = (): boolean => useAuthStore(selectIsAuth);
-export const useAccessToken = (): string | null =>
-  useAuthStore(selectAccessToken);

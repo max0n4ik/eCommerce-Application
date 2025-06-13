@@ -1,7 +1,5 @@
 import { create } from 'zustand';
 
-import { useAuthStore } from './auth-store';
-
 import {
   fetchUserProfile,
   updateUserProfile,
@@ -22,8 +20,11 @@ type UserStore = {
   editingAddressId: string | null;
 
   fetchUser: () => Promise<void>;
+  clearUser: () => void;
+
   toggleUserEdit: () => void;
   saveUser: (updates: ProfileUpdates) => Promise<void>;
+
   toggleAddressEdit: (id: string) => void;
   saveAddress: (updates: AddressUpdates) => Promise<void>;
 };
@@ -38,13 +39,8 @@ const useUserStore = create<UserStore>((set, get) => ({
 
   fetchUser: async (): Promise<void> => {
     set({ loading: true, error: null });
-    const token = useAuthStore.getState().accessToken;
-    if (!token) {
-      set({ loading: false, error: 'Нет токена' });
-      return;
-    }
     try {
-      const { user, addresses, version } = await fetchUserProfile(token);
+      const { user, addresses, version } = await fetchUserProfile();
       set({
         user: { ...user, version },
         addresses,
@@ -55,21 +51,27 @@ const useUserStore = create<UserStore>((set, get) => ({
     }
   },
 
+  clearUser: (): void => {
+    set({
+      user: null,
+      addresses: [],
+      editingUser: false,
+      editingAddressId: null,
+    });
+  },
+
   toggleUserEdit: (): void => {
     set({ editingUser: !get().editingUser });
   },
-
-  saveUser: async (updates: ProfileUpdates): Promise<void> => {
+  saveUser: async (updates): Promise<void> => {
     set({ loading: true, error: null });
-    const token = useAuthStore.getState().accessToken;
     const current = get().user;
-    if (!token || !current) {
-      set({ loading: false, error: 'Нет пользователя или токена' });
+    if (!current) {
+      set({ loading: false, error: 'Нет пользователя' });
       return;
     }
     try {
       const updated = await updateUserProfile(
-        token,
         current.id,
         current.version,
         updates
@@ -89,18 +91,15 @@ const useUserStore = create<UserStore>((set, get) => ({
       editingAddressId: get().editingAddressId === id ? null : id,
     });
   },
-
-  saveAddress: async (updates: AddressUpdates): Promise<void> => {
+  saveAddress: async (updates): Promise<void> => {
     set({ loading: true, error: null });
-    const token = useAuthStore.getState().accessToken;
     const current = get().user;
-    if (!token || !current) {
-      set({ loading: false, error: 'Нет пользователя или токена' });
+    if (!current) {
+      set({ loading: false, error: 'Нет пользователя' });
       return;
     }
     try {
       const { addresses: updatedList, version } = await updateAddress(
-        token,
         current.id,
         current.version,
         [updates]

@@ -1,94 +1,76 @@
 import type {
   BaseAddress,
-  CustomerChangeAddressAction,
+  Customer,
   CustomerUpdate,
   CustomerUpdateAction,
   CustomerSetFirstNameAction,
   CustomerSetLastNameAction,
   CustomerSetDateOfBirthAction,
+  CustomerChangeAddressAction,
 } from '@commercetools/platform-sdk';
 
-import { createAuthenticatedApiRoot } from './create-client';
+import { apiWithExistingTokenFlow } from './build-client';
 
+import { mapCustomerToUser, mapCustomerAddresses } from '@/mappers/user';
 import type { User, Address } from '@/utils/types';
 
 export type ProfileUpdates = Partial<
   Pick<User, 'firstName' | 'lastName' | 'dateOfBirth'>
 >;
-
 export type AddressUpdates = {
   id: string;
-} & Partial<Omit<Address, 'id'>>;
+  streetName?: string;
+  streetNumber?: string;
+  city?: string;
+  region?: string;
+  postalCode?: string;
+  country?: string;
+};
 
-export async function fetchUserProfile(
-  token: string
-): Promise<{ user: User; addresses: Address[]; version: number }> {
-  const apiRoot = createAuthenticatedApiRoot(token);
-  const response = await apiRoot.me().get().execute();
-  if (!response.body) {
-    throw new Error(`Empty profile response (status ${response.statusCode})`);
+export async function fetchUserProfile(): Promise<{
+  user: User;
+  addresses: Address[];
+  version: number;
+}> {
+  const apiRoot = apiWithExistingTokenFlow();
+  const resp = await apiRoot.me().get().execute();
+  if (!resp.body) {
+    throw new Error(`Empty profile response (status ${resp.statusCode})`);
   }
-  const customer = response.body;
-
-  const user: User = {
-    id: customer.id,
-    firstName: customer.firstName ?? '',
-    lastName: customer.lastName ?? '',
-    dateOfBirth: customer.dateOfBirth ?? '',
-  };
-
-  const addresses: Address[] = (customer.addresses ?? [])
-    .filter((addr): addr is Required<typeof addr> => !!addr.id)
-    .map((addr) => ({
-      id: addr.id,
-      street: [addr.streetName, addr.streetNumber].filter(Boolean).join(' '),
-      city: addr.city ?? '',
-      state: addr.region ?? '',
-      zip: addr.postalCode ?? '',
-      country: addr.country ?? '',
-      isDefaultBilling: customer.billingAddressIds?.includes(addr.id) ?? false,
-      isDefaultShipping:
-        customer.shippingAddressIds?.includes(addr.id) ?? false,
-    }));
-
+  const customer = resp.body as Customer;
   return {
-    user,
-    addresses,
+    user: mapCustomerToUser(customer),
+    addresses: mapCustomerAddresses(customer),
     version: customer.version,
   };
 }
 
 export async function updateUserProfile(
-  token: string,
   customerId: string,
   currentVersion: number,
   updates: ProfileUpdates
 ): Promise<User & { version: number }> {
+  const apiRoot = apiWithExistingTokenFlow();
   const actions: CustomerUpdateAction[] = [];
 
   if (updates.firstName) {
-    const act: CustomerSetFirstNameAction = {
+    actions.push({
       action: 'setFirstName',
       firstName: updates.firstName,
-    };
-    actions.push(act);
+    } as CustomerSetFirstNameAction);
   }
   if (updates.lastName) {
-    const act: CustomerSetLastNameAction = {
+    actions.push({
       action: 'setLastName',
       lastName: updates.lastName,
-    };
-    actions.push(act);
+    } as CustomerSetLastNameAction);
   }
   if (updates.dateOfBirth) {
-    const dobAction: CustomerSetDateOfBirthAction = {
+    actions.push({
       action: 'setDateOfBirth',
       dateOfBirth: updates.dateOfBirth,
-    };
-    actions.push(dobAction as CustomerUpdateAction);
+    } as CustomerSetDateOfBirthAction);
   }
-
-  const apiRoot = createAuthenticatedApiRoot(token);
 
   if (actions.length === 0) {
     const getResp = await apiRoot
@@ -96,93 +78,86 @@ export async function updateUserProfile(
       .withId({ ID: customerId })
       .get()
       .execute();
-
-    if (!getResp.body) {
-      throw new Error(`Empty get response (${getResp.statusCode})`);
-    }
-    const c = getResp.body;
-
-    return {
-      id: c.id,
-      firstName: c.firstName ?? '',
-      lastName: c.lastName ?? '',
-      dateOfBirth: c.dateOfBirth ?? '',
-      version: c.version,
-    };
+    const fresh = getResp.body as Customer;
+    return { ...mapCustomerToUser(fresh), version: fresh.version };
   }
 
   const updResp = await apiRoot
     .customers()
     .withId({ ID: customerId })
-    .post({ body: { version: currentVersion, actions } })
+    .post({ body: { version: currentVersion, actions } as CustomerUpdate })
     .execute();
 
-  if (!updResp.body) {
-    throw new Error(`Empty update response (${updResp.statusCode})`);
-  }
-  const updated = updResp.body;
-
-  return {
-    id: updated.id,
-    firstName: updated.firstName ?? '',
-    lastName: updated.lastName ?? '',
-    dateOfBirth: updated.dateOfBirth ?? '',
-    version: updated.version,
-  };
+  const updated = updResp.body as Customer;
+  return { ...mapCustomerToUser(updated), version: updated.version };
 }
 
 export async function updateAddress(
-  token: string,
   customerId: string,
   currentVersion: number,
   addressUpdates: AddressUpdates[]
 ): Promise<{ addresses: Address[]; version: number }> {
-  const apiRoot = createAuthenticatedApiRoot(token);
+  const apiRoot = apiWithExistingTokenFlow();
+
+  const getResp = await apiRoot
+    .customers()
+    .withId({ ID: customerId })
+    .get()
+    .execute();
+  if (!getResp.body) {
+    throw new Error(`Empty get response (status ${getResp.statusCode})`);
+  }
+  const customer = getResp.body as Customer;
 
   const actions: CustomerChangeAddressAction[] = addressUpdates.map((upd) => {
-    const { id, streetName, streetNumber, ...rest } = upd as BaseAddress & {
-      id: string;
+    const original = customer.addresses?.find((a) => a.id === upd.id);
+    if (!original) {
+      throw new Error(`Address with id="${upd.id}" not found`);
+    }
+
+    const merged: BaseAddress = {
+      streetName: upd.streetName ?? original.streetName,
+      streetNumber: upd.streetNumber ?? original.streetNumber,
+
+      postalCode: upd.postalCode ?? original.postalCode ?? '',
+      city: upd.city ?? original.city ?? '',
+      region: upd.region ?? original.region,
+      country: upd.country ?? original.country ?? '',
+
+      additionalStreetInfo: original.additionalStreetInfo,
+      state: original.state,
+      company: original.company,
+      department: original.department,
+      building: original.building,
+      apartment: original.apartment,
+      pOBox: original.pOBox,
+      phone: original.phone,
+      mobile: original.mobile,
+      email: original.email,
+      fax: original.fax,
+      additionalAddressInfo: original.additionalAddressInfo,
+      externalId: original.externalId,
     };
+
     return {
       action: 'changeAddress',
-      addressId: id,
-      address: { streetName, streetNumber, ...rest },
+      addressId: upd.id,
+      address: merged,
     };
   });
 
-  const updateResponse = await apiRoot
+  const updResp = await apiRoot
     .customers()
     .withId({ ID: customerId })
-    .post({
-      body: {
-        version: currentVersion,
-        actions,
-      } as CustomerUpdate,
-    })
+    .post({ body: { version: currentVersion, actions } as CustomerUpdate })
     .execute();
-
-  if (!updateResponse.body) {
-    throw new Error(`Empty response (${updateResponse.statusCode})`);
+  if (!updResp.body) {
+    throw new Error(`Empty update response (status ${updResp.statusCode})`);
   }
-  const updatedCustomer = updateResponse.body;
-
-  const updatedAddresses: Address[] = (updatedCustomer.addresses ?? [])
-    .filter((a): a is Required<typeof a> => !!a.id)
-    .map((a) => ({
-      id: a.id,
-      street: [a.streetName, a.streetNumber].filter(Boolean).join(' '),
-      city: a.city ?? '',
-      state: a.region ?? '',
-      zip: a.postalCode ?? '',
-      country: a.country ?? '',
-      isDefaultBilling:
-        updatedCustomer.billingAddressIds?.includes(a.id) ?? false,
-      isDefaultShipping:
-        updatedCustomer.shippingAddressIds?.includes(a.id) ?? false,
-    }));
+  const updatedCustomer = updResp.body as Customer;
 
   return {
-    addresses: updatedAddresses,
+    addresses: mapCustomerAddresses(updatedCustomer),
     version: updatedCustomer.version,
   };
 }

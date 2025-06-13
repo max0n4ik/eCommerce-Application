@@ -1,3 +1,4 @@
+import type { ProductVariant, Image } from '@commercetools/platform-sdk';
 import type { z } from 'zod';
 
 import type { CategoryCard } from './interfaces';
@@ -53,4 +54,29 @@ export type AuthSectionProps = {
 
 export type NavLinksProps = {
   onItemClick?: () => void;
+};
+
+export type ProductType = {
+  lineItemId: string;
+  productId: string;
+  productKey: string;
+  slug: string;
+  productName: string;
+  description: string;
+  price: number;
+  priceDiscount?: number;
+  currency: string;
+  images: Image[];
+  isDiscount: boolean;
+  variants: ProductVariant[];
+  productSku?: string;
+  totalPrice?: number;
+  quantity?: number;
+  promoPrice?: number;
+  isPromo?: boolean;
+};
+
+export type DiscountCodeType = {
+  discountCodeName: string;
+  discountCodeId: string;
 };

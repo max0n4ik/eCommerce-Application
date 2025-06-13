@@ -161,6 +161,7 @@ const useCatalogStore = create<CatalogStore>((set, get) => ({
         priceCurrency: variant?.prices?.[0]?.value?.currencyCode || 'USD',
         category: categories || [],
         attributes: variant.attributes || [],
+        id,
       };
       set({ currentProduct: product, productLoading: false });
     } catch (error) {

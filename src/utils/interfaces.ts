@@ -67,6 +67,7 @@ export interface DetailedProductInterface {
   priceCurrency: string;
   category?: CategoryReference[];
   attributes?: Attribute[];
+  id: string;
 }
 export interface ProductCategoriesInterface {
   typeId: string;
@@ -83,6 +84,7 @@ export interface CustomerDataInterface {
   asDefaultBilling?: boolean;
   shippingAddress?: BaseAddress;
   billingAddress?: BaseAddress;
+  anonimId?: string;
 }
 
 export interface FilterI {
