@@ -31,7 +31,7 @@ border-border -> подставляется значение из --border и т
     --card-foreground: oklch(31% 0.01 84.57deg);
     --popover: oklch(94% 0.01 112.37deg);
     --popover-foreground: oklch(31% 0.01 84.57deg);
-    --primary: oklch(47% 0.05 164.39deg);
+    --primary: oklch(52.13% 0.0288 177.47deg);
     --primary-foreground: oklch(100% 0 0deg);
     --secondary: oklch(92% 0.01 167.16deg);
     --secondary-foreground: oklch(38% 0.04 165.64deg);
