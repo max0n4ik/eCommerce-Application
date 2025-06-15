@@ -10,12 +10,19 @@ interface CatalogProductsProps {
   products: ProductCardI[];
   filteredProductIds: { id: string }[];
 }
+const handleScrollToTop = (): void => {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth',
+  });
+};
 
 export function CatalogProducts({
   products,
   filteredProductIds,
 }: CatalogProductsProps): React.JSX.Element {
   const [currentPage, setCurrentPage] = useState(1);
+  const [showUpButton, setShowUpButton] = useState(false);
   const filteredProducts = useMemo(
     () =>
       filteredProductIds
@@ -41,8 +48,23 @@ export function CatalogProducts({
       productContainer.scrollIntoView({ behavior: 'smooth' });
     }
   }, [currentPage]);
+
+  useEffect(() => {
+    const handleScroll = (): void => {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      setShowUpButton(scrollTop > 300);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    handleScroll();
+
+    return (): void => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   return (
-    <div id="product-container" className="flex flex-col gap-6 p-4">
+    <div className="flex flex-col gap-6 p-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {paginatedProducts.map((product) => (
           <ProductCard key={product.id} {...product} />
@@ -78,6 +100,29 @@ export function CatalogProducts({
           </Button>
         </div>
       )}
+      <button
+        onClick={handleScrollToTop}
+        className={`fixed bottom-4 right-4 bg-white p-2 rounded-full shadow-md transition-opacity ${
+          showUpButton ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        }`}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="lucide lucide-circle-arrow-up-icon lucide-circle-arrow-up"
+        >
+          <circle cx="12" cy="12" r="10" />
+          <path d="m16 12-4-4-4 4" />
+          <path d="M12 16V8" />
+        </svg>
+      </button>
     </div>
   );
 }
