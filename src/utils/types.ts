@@ -76,6 +76,24 @@ export type ProductType = {
   isPromo?: boolean;
 };
 
+export type CartItem = {
+  lineItemId: string;
+  productName: string;
+  price: number;
+  priceDiscount?: number;
+  currency?: string;
+  variant?: ProductVariant;
+  images: Image[];
+  isDiscount?: boolean;
+  className?: string;
+  totalPrice?: number;
+  quantity: number;
+  isPromo?: boolean;
+  promoPrice?: number;
+  onDelete: (lineItemId: string) => void;
+  onChangeQuantity: (lineItemId: string, quantity: number) => void;
+};
+
 export type DiscountCodeType = {
   discountCodeName: string;
   discountCodeId: string;
