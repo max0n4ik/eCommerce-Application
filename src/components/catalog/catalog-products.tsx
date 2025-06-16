@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { Button } from '../ui/button';
 
@@ -10,14 +10,15 @@ import type { ProductCardI } from '@/utils/interfaces';
 interface CatalogProductsProps {
   products: ProductCardI[];
   filteredProductIds: { id: string }[];
+  topRef: React.RefObject<HTMLDivElement | null>;
 }
 
 export function CatalogProducts({
   products,
   filteredProductIds,
+  topRef,
 }: CatalogProductsProps): React.JSX.Element {
   const [currentPage, setCurrentPage] = useState(1);
-  const topRef = useRef<HTMLDivElement>(null);
   const [showUpButton, setShowUpButton] = useState(false);
   const filteredProducts = useMemo(
     () =>
@@ -40,7 +41,7 @@ export function CatalogProducts({
     if (topRef.current) {
       topRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [currentPage]);
+  }, [currentPage, topRef]);
 
   useEffect(() => {
     const handleScroll = (): void => {
@@ -57,7 +58,7 @@ export function CatalogProducts({
   }, []);
 
   return (
-    <div className="flex flex-col gap-6 p-4" ref={topRef}>
+    <div className="flex flex-col gap-6 p-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {paginatedProducts.map((product) => (
           <ProductCard key={product.id} {...product} />

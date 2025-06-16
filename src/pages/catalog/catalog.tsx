@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import {
   CatalogHeader,
@@ -29,7 +29,7 @@ export default function Catalog(): React.JSX.Element {
     fetchFilteredProducts,
     setFilters,
   } = useCatalogStore();
-
+  const topRef = useRef<HTMLDivElement>(null);
   const { initFromUrl, updateParams } = useUrlParams();
   const [temporaryFilters, setTemporaryFilters] = useState<FilterI>(filters);
 
@@ -188,11 +188,13 @@ export default function Catalog(): React.JSX.Element {
         onSearchChange={setSearchValue}
         onSearch={handleSearch}
         onKeyPress={handleKeyPress}
+        topRef={topRef}
       />
 
       <CatalogProducts
         products={products}
         filteredProductIds={filters.filteredCatalog || []}
+        topRef={topRef}
       />
     </div>
   );
