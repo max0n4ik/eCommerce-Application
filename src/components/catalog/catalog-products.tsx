@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { Button } from '../ui/button';
 
@@ -17,6 +17,7 @@ export function CatalogProducts({
   filteredProductIds,
 }: CatalogProductsProps): React.JSX.Element {
   const [currentPage, setCurrentPage] = useState(1);
+  const topRef = useRef<HTMLDivElement>(null);
   const [showUpButton, setShowUpButton] = useState(false);
   const filteredProducts = useMemo(
     () =>
@@ -36,11 +37,8 @@ export function CatalogProducts({
     }
   };
   useEffect(() => {
-    const productContainer = document.querySelector(
-      '#catalog-controls-container'
-    );
-    if (productContainer) {
-      productContainer.scrollIntoView({ behavior: 'smooth' });
+    if (topRef.current) {
+      topRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [currentPage]);
 
@@ -59,7 +57,7 @@ export function CatalogProducts({
   }, []);
 
   return (
-    <div className="flex flex-col gap-6 p-4">
+    <div className="flex flex-col gap-6 p-4" ref={topRef}>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {paginatedProducts.map((product) => (
           <ProductCard key={product.id} {...product} />
