@@ -167,9 +167,14 @@ const useCatalogStore = create<CatalogStore>((set, get) => ({
   },
 
   fetchByFilteredIDs: async (): Promise<void> => {
-    const { filters, discounts } = get();
+    const { filters } = get();
+    let { discounts } = get();
+    if (discounts.length === 0) {
+      const response = await fetchCatalogProductsDiscount();
+      discounts = mappersDiscount(response);
+    }
     if (!filters.filteredCatalog) return;
-    set({ loading: true });
+    set({ discounts: discounts, loading: true });
 
     const productPromises = filters.filteredCatalog.map(
       async (filteredProduct) => {
@@ -200,10 +205,6 @@ async function getProductById(
   id: string,
   discounts: DiscountPrice[]
 ): Promise<DetailedProductInterface> {
-  if (discounts.length === 0) {
-    const response = await fetchCatalogProductsDiscount();
-    discounts = mappersDiscount(response);
-  }
   const response = await fetchProductById(id);
   const current = response.body.masterData.current;
   const variant = current.masterVariant;
