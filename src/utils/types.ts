@@ -141,3 +141,8 @@ export type FieldId = 'firstName' | 'lastName' | 'dateOfBirth';
 export type ProfileUpdates = Partial<
   Pick<User, 'firstName' | 'lastName' | 'dateOfBirth'>
 >;
+
+export type AttributeWithVariantId = {
+  attribute: string;
+  variantId: number;
+};

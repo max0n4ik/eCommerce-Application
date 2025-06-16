@@ -1,8 +1,9 @@
 import { Check } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import AddToCartIcon from '@/assets/images/add-to-cart.png';
+import { toast } from '@/hooks/use-toast';
 import { useCartStore } from '@/store/cart-store';
 import { formatPrice, getDiscountedPrice } from '@/utils/catalog';
 import type { ProductCardI } from '@/utils/interfaces';
@@ -14,17 +15,39 @@ export default function ProductCard({
   permyriad,
   name,
   description,
+  masterVariant,
 }: ProductCardI): React.JSX.Element {
-  const { addToCart } = useCartStore();
+  const { addToCart, isProductInCart } = useCartStore();
   const [isAdded, setIsAdded] = useState(false);
+
+  useEffect(() => {
+    if (masterVariant) {
+      const initialIsInCart = isProductInCart(masterVariant.sku ?? '');
+
+      setIsAdded(initialIsInCart);
+    }
+  }, [isProductInCart, masterVariant]);
 
   const handleAddToCart = async (
     e: React.MouseEvent<HTMLButtonElement>
   ): Promise<void> => {
     e.preventDefault();
     e.stopPropagation();
-    await addToCart(id, 1);
+    await addToCart(masterVariant?.sku ?? '', 1).catch((error) => {
+      toast({
+        title: 'Error adding product to cart',
+        description: `${error} has occurred.`,
+        duration: 3000,
+        variant: 'destructive',
+      });
+    });
     setIsAdded(true);
+    toast({
+      title: 'Product added to cart',
+      description: `${name} has been added to your cart.`,
+      duration: 3000,
+      variant: 'success',
+    });
   };
 
   return (

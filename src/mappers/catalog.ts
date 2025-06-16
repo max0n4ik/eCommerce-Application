@@ -16,5 +16,6 @@ export default function mappersCatalog(products: Product[]): ProductCardI[] {
     description: product.masterData.staged.description,
     category: product.masterData.staged.categories,
     attributes: product.masterData.staged.masterVariant.attributes,
+    masterVariant: product.masterData.staged.masterVariant,
   }));
 }
