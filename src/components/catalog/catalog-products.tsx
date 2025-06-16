@@ -11,14 +11,17 @@ interface CatalogProductsProps {
   products: ProductCardI[];
   filteredProductIds: { id: string }[];
   topRef: React.RefObject<HTMLDivElement | null>;
+  currentPage: number;
+  setCurrentPage: (page: number) => void;
 }
 
 export function CatalogProducts({
   products,
   filteredProductIds,
   topRef,
+  currentPage,
+  setCurrentPage,
 }: CatalogProductsProps): React.JSX.Element {
-  const [currentPage, setCurrentPage] = useState(1);
   const [showUpButton, setShowUpButton] = useState(false);
   const filteredProducts = useMemo(
     () =>

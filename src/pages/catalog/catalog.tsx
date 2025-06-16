@@ -32,6 +32,7 @@ export default function Catalog(): React.JSX.Element {
   const topRef = useRef<HTMLDivElement>(null);
   const { initFromUrl, updateParams } = useUrlParams();
   const [temporaryFilters, setTemporaryFilters] = useState<FilterI>(filters);
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     fetchProducts();
@@ -195,6 +196,8 @@ export default function Catalog(): React.JSX.Element {
         products={products}
         filteredProductIds={filters.filteredCatalog || []}
         topRef={topRef}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
       />
     </div>
   );
