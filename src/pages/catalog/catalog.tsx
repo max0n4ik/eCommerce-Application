@@ -68,6 +68,8 @@ export default function Catalog(): React.JSX.Element {
     setFilters(updatedFilters);
     setTemporaryFilters(updatedFilters);
     updateParams(updatedFilters);
+
+    setCurrentPage(1);
     fetchFilteredProducts(updatedFilters, offset, ITEMS_PER_PAGE);
   };
 
