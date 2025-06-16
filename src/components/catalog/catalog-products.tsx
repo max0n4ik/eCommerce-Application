@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Button } from '../ui/button';
 
 import { ProductCard } from '@/components/product-card';
+import { handleScrollToTop } from '@/utils/catalog-scroll-to-top';
 import { ITEMS_PER_PAGE } from '@/utils/constantes';
 import type { ProductCardI } from '@/utils/interfaces';
 
@@ -10,12 +11,6 @@ interface CatalogProductsProps {
   products: ProductCardI[];
   filteredProductIds: { id: string }[];
 }
-const handleScrollToTop = (): void => {
-  window.scrollTo({
-    top: 0,
-    behavior: 'smooth',
-  });
-};
 
 export function CatalogProducts({
   products,
