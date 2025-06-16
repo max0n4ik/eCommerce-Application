@@ -46,7 +46,7 @@ export default function Home(): JSX.Element {
               <Link to={ROUTES.CATALOG}>
                 <button
                   className="text-[12px] sm:text-[13px] md:text-[14px] lg:text-[15px] 
-             text-white bg-[#586F69] 
+             text-white bg-primary 
              py-[10px] sm:py-[12px] md:py-[15px] lg:py-[17px] 
              px-[16px] sm:px-[20px] md:px-[24px] lg:px-[27px] 
              hover:bg-[#3d504b] transition-colors duration-200"
@@ -177,7 +177,7 @@ export default function Home(): JSX.Element {
           <Link to={ROUTES.CATALOG}>
             <button
               className="text-[12px] sm:text-[13px] md:text-[14px] lg:text-[15px] 
-             text-white bg-[#586F69] 
+             text-white bg-primary 
              py-[10px] sm:py-[12px] md:py-[15px] lg:py-[17px] 
              px-[16px] sm:px-[20px] md:px-[24px] lg:px-[27px] 
              hover:bg-[#3d504b] transition-colors duration-200"
@@ -204,7 +204,7 @@ export default function Home(): JSX.Element {
         <Link to={ROUTES.ABOUT}>
           <button
             className="text-[12px] sm:text-[13px] md:text-[14px] lg:text-[15px] 
-             text-white bg-[#586F69] 
+             text-white bg-primary 
              py-[10px] sm:py-[12px] md:py-[15px] lg:py-[17px] 
              px-[16px] sm:px-[20px] md:px-[24px] lg:px-[27px] 
              hover:bg-[#3d504b] transition-colors duration-200"
@@ -212,10 +212,10 @@ export default function Home(): JSX.Element {
             Read More
           </button>
         </Link>
-        <p className="font-serif text-[20px] font-semibold text-[#586F69]">
+        <p className="font-serif text-[20px] font-semibold text-primary">
           Share your setup with
         </p>
-        <p className="text-[30px] lg:text-[40px] text-[#586F69] font-bold font-serif">
+        <p className="text-[30px] lg:text-[40px] text-primary font-bold font-serif">
           #Petal&Pot
         </p>
       </section>
