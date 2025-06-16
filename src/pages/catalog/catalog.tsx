@@ -21,7 +21,7 @@ export default function Catalog(): React.JSX.Element {
     products,
     loading,
     error,
-    fetchProducts,
+    fetchByFilteredIDs,
     fetchCategories,
     categories,
     selectedCategory,
@@ -40,9 +40,6 @@ export default function Catalog(): React.JSX.Element {
     totalPages = Math.ceil(total / ITEMS_PER_PAGE);
   }
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
-  useEffect(() => {
-    fetchProducts(offset, ITEMS_PER_PAGE);
-  }, [fetchProducts, currentPage, offset]);
 
   useEffect(() => {
     fetchCategories();
@@ -51,9 +48,12 @@ export default function Catalog(): React.JSX.Element {
   useEffect(() => {
     const filters = initFromUrl();
     setTemporaryFilters(filters);
-    fetchFilteredProducts(filters);
-  }, [initFromUrl, fetchFilteredProducts]);
+    fetchFilteredProducts(filters, offset, ITEMS_PER_PAGE);
+  }, [initFromUrl, fetchFilteredProducts, offset]);
 
+  useEffect(() => {
+    fetchByFilteredIDs();
+  }, [filters.filteredCatalog, fetchByFilteredIDs]);
   const handleCategoryChange = (value: string): void => {
     const categoryId = value === 'all' ? null : value;
     const updatedFilters = {
@@ -68,7 +68,7 @@ export default function Catalog(): React.JSX.Element {
     setFilters(updatedFilters);
     setTemporaryFilters(updatedFilters);
     updateParams(updatedFilters);
-    fetchFilteredProducts(updatedFilters);
+    fetchFilteredProducts(updatedFilters, offset, ITEMS_PER_PAGE);
   };
 
   const handleBackCategory = (): void => {
@@ -86,7 +86,7 @@ export default function Catalog(): React.JSX.Element {
   const handleSheetClose = (): void => {
     setFilters(temporaryFilters);
     updateParams(temporaryFilters);
-    fetchFilteredProducts(temporaryFilters);
+    fetchFilteredProducts(temporaryFilters, offset, ITEMS_PER_PAGE);
   };
 
   const handleSortChange = (value: string): void => {
@@ -106,7 +106,7 @@ export default function Catalog(): React.JSX.Element {
     setTemporaryFilters(updatedFilters);
     setFilters({ filter: updatedFilters.filter });
     updateParams(updatedFilters);
-    fetchFilteredProducts(updatedFilters);
+    fetchFilteredProducts(updatedFilters, offset, ITEMS_PER_PAGE);
   };
 
   const [searchValue, setSearchValue] = useState('');
@@ -123,7 +123,7 @@ export default function Catalog(): React.JSX.Element {
     setTemporaryFilters(updatedFilters);
     setFilters({ filter: updatedFilters.filter });
     updateParams(updatedFilters);
-    fetchFilteredProducts(updatedFilters);
+    fetchFilteredProducts(updatedFilters, offset, ITEMS_PER_PAGE);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>): void => {

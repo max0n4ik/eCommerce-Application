@@ -66,7 +66,9 @@ export async function fetchProductDiscount(
 }
 
 export async function fetchCatalogFilteredProducts(
-  filter: FilterI
+  filter: FilterI,
+  offset: number,
+  limit: number
 ): Promise<ClientResponse<ProductPagedSearchResponse>> {
   const visitor = apiWithClientCredentialsFlow();
   return visitor
@@ -114,8 +116,8 @@ export async function fetchCatalogFilteredProducts(
             order: filter.filter.sort.order,
           },
         ],
-        limit: 40,
-        offset: 0,
+        limit: limit,
+        offset: offset,
       },
     })
     .execute()

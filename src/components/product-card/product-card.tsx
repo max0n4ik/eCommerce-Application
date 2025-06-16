@@ -17,7 +17,6 @@ export default function ProductCard({
 }: ProductCardI): React.JSX.Element {
   const { addToCart } = useCartStore();
   const [isAdded, setIsAdded] = useState(false);
-
   const handleAddToCart = async (
     e: React.MouseEvent<HTMLButtonElement>
   ): Promise<void> => {
