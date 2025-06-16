@@ -1,40 +1,27 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Button } from '../ui/button';
 
 import { ProductCard } from '@/components/product-card';
 import { handleScrollToTop } from '@/utils/catalog-scroll-to-top';
-import { ITEMS_PER_PAGE } from '@/utils/constantes';
 import type { ProductCardI } from '@/utils/interfaces';
 
 interface CatalogProductsProps {
   products: ProductCardI[];
-  filteredProductIds: { id: string }[];
   topRef: React.RefObject<HTMLDivElement | null>;
   currentPage: number;
   setCurrentPage: (page: number) => void;
+  totalPages: number;
 }
 
 export function CatalogProducts({
   products,
-  filteredProductIds,
   topRef,
   currentPage,
   setCurrentPage,
+  totalPages,
 }: CatalogProductsProps): React.JSX.Element {
   const [showUpButton, setShowUpButton] = useState(false);
-  const filteredProducts = useMemo(
-    () =>
-      filteredProductIds
-        .map((filtered) => products.find((p) => p.id === filtered.id))
-        .filter((p): p is ProductCardI => !!p),
-    [filteredProductIds, products]
-  );
-  const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
-  const paginatedProducts = filteredProducts.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE
-  );
   const handlePageChange = (newPage: number): void => {
     if (newPage >= 1 && newPage <= totalPages) {
       setCurrentPage(newPage);
@@ -63,7 +50,7 @@ export function CatalogProducts({
   return (
     <div className="flex flex-col gap-6 p-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {paginatedProducts.map((product) => (
+        {products.map((product) => (
           <ProductCard key={product.id} {...product} />
         ))}
       </div>

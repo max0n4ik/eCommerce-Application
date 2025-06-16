@@ -30,7 +30,8 @@ export type CatalogStore = {
   error: string | null;
   selectedCategory: string | null;
   filters: FilterI;
-  fetchProducts: () => Promise<void>;
+  total: number | null;
+  fetchProducts: (offset: number, limit: number) => Promise<void>;
   fetchCategories: () => Promise<void>;
   fetchDiscount: () => Promise<void>;
   fetchProduct: (id: string) => Promise<void>;
@@ -48,6 +49,7 @@ const useCatalogStore = create<CatalogStore>((set, get) => ({
   productLoading: true,
   error: null,
   selectedCategory: null,
+  total: null,
   filters: {
     filter: {
       price: { min: 0, max: 30000 },
@@ -58,11 +60,13 @@ const useCatalogStore = create<CatalogStore>((set, get) => ({
     },
     filteredCatalog: [],
   },
-  fetchProducts: async (): Promise<void> => {
+  fetchProducts: async (offset, limit): Promise<void> => {
     set({ loading: true, error: null });
     try {
-      const response = await fetchCatalogProducts();
-      const mappedProducts = mappersCatalog(response);
+      const response = await fetchCatalogProducts(offset, limit);
+      const fetchCatalogProductResult = response.results;
+      const fetchCatalogProductTotal = response.total;
+      const mappedProducts = mappersCatalog(fetchCatalogProductResult);
       const discountResponse = await fetchCatalogProductsDiscount();
       const mappedDiscount = mappersDiscount(discountResponse);
 
@@ -88,6 +92,7 @@ const useCatalogStore = create<CatalogStore>((set, get) => ({
       set({
         discounts: mappedDiscount,
         products: productsWithDiscount,
+        total: fetchCatalogProductTotal,
         loading: false,
       });
     } catch (error) {

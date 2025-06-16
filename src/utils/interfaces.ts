@@ -3,6 +3,7 @@ import type {
   BaseAddress,
   CategoryReference,
   LocalizedString,
+  Product,
   ProductSearchResult,
 } from '@commercetools/platform-sdk';
 
@@ -100,4 +101,9 @@ export interface FilterI {
     };
   };
   filteredCatalog?: ProductSearchResult[];
+}
+
+export interface FetchCatalogProductsInterface {
+  results: Product[];
+  total: number | undefined;
 }

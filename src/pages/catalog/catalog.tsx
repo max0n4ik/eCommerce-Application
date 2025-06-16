@@ -12,6 +12,7 @@ import {
   getSubCategories,
   shouldShowSubCategories,
 } from '@/utils/catalog';
+import { ITEMS_PER_PAGE } from '@/utils/constantes';
 import type { FilterI } from '@/utils/interfaces';
 import type { NestedCategory } from '@/utils/types';
 
@@ -28,15 +29,20 @@ export default function Catalog(): React.JSX.Element {
     filters,
     fetchFilteredProducts,
     setFilters,
+    total,
   } = useCatalogStore();
   const topRef = useRef<HTMLDivElement>(null);
   const { initFromUrl, updateParams } = useUrlParams();
   const [temporaryFilters, setTemporaryFilters] = useState<FilterI>(filters);
   const [currentPage, setCurrentPage] = useState(1);
-
+  let totalPages = 1;
+  if (total) {
+    totalPages = Math.ceil(total / ITEMS_PER_PAGE);
+  }
+  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
   useEffect(() => {
-    fetchProducts();
-  }, [fetchProducts]);
+    fetchProducts(offset, ITEMS_PER_PAGE);
+  }, [fetchProducts, currentPage, offset]);
 
   useEffect(() => {
     fetchCategories();
@@ -194,10 +200,10 @@ export default function Catalog(): React.JSX.Element {
 
       <CatalogProducts
         products={products}
-        filteredProductIds={filters.filteredCatalog || []}
         topRef={topRef}
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
+        totalPages={totalPages}
       />
     </div>
   );
