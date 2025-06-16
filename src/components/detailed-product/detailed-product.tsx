@@ -82,7 +82,7 @@ export default function DetailedProduct({
         <div>
           <Button
             onClick={handleAddToCart}
-            className="bg-transparent border border-black capitalize text-black font-inter hover:bg-[#586F69] hover:text-white hover:border-[#586F69] hover:scale-105 transition-transform duration-200 ease-in-out cursor-pointer"
+            className="bg-transparent border border-black capitalize text-black font-inter hover:bg-primary hover:text-white hover:border-primary hover:scale-105 transition-transform duration-200 ease-in-out cursor-pointer"
           >
             add to cart
           </Button>

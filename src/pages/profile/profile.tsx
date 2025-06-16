@@ -21,7 +21,7 @@ export default function Profile(): React.JSX.Element {
 
   return (
     <div className="min-h-screen bg-brand-beige p-6 flex flex-col items-center space-y-8">
-      <h1 className="text-4xl font-extrabold text-[#586F69]">User Profile</h1>
+      <h1 className="text-4xl font-extrabold text-primary">User Profile</h1>
       <div className="w-full max-w-3xl space-y-6">
         <UserInfo user={user} />
         <AddressList addresses={addresses} />

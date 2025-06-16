@@ -1,36 +1,12 @@
-import type { BaseAddress } from '@commercetools/platform-sdk';
 import React, { useState, useEffect, type FormEvent } from 'react';
 
+import { Button } from '@/components/ui/button';
 import { Tooltip } from '@/components/ui/error-message/error-message';
-import type { AddressUpdates } from '@/services/user';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import useUserStore from '@/store/user';
-import type { Address } from '@/utils/types';
-
-type AddressForm = {
-  streetName: string;
-  streetNumber: string;
-  postalCode: string;
-  city: string;
-  region: string;
-  country: string;
-} & Partial<
-  Pick<
-    BaseAddress,
-    | 'additionalStreetInfo'
-    | 'state'
-    | 'company'
-    | 'department'
-    | 'building'
-    | 'apartment'
-    | 'pOBox'
-    | 'phone'
-    | 'mobile'
-    | 'email'
-    | 'fax'
-    | 'additionalAddressInfo'
-    | 'externalId'
-  >
->;
+import type { AddressForm, Address, AddressUpdates } from '@/utils/types';
+import { validateAddressData } from '@/utils/validations';
 
 const EMPTY_ADDRESS: AddressForm = {
   streetName: '',
@@ -59,7 +35,9 @@ export function AddressCard({
   const isEditing = editingAddressId === address.id;
 
   const [form, setForm] = useState<AddressForm>(() => EMPTY_ADDRESS);
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [errors, setErrors] = useState<
+    Partial<Record<keyof AddressForm, string>>
+  >({});
 
   useEffect(() => {
     if (isEditing) {
@@ -77,61 +55,48 @@ export function AddressCard({
     }
   }, [isEditing, address]);
 
-  const validate = (): boolean => {
-    const newErrors: Record<string, string> = {};
-    ADDRESS_FIELDS.forEach(({ id, label }) => {
-      const value = form[id];
-      if (typeof value === 'string' && value.trim() === '') {
-        newErrors[id] = `${label} is required`;
-      }
-    });
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+  const handleFieldChange =
+    (field: keyof AddressForm) =>
+    (e: React.ChangeEvent<HTMLInputElement>): void => {
+      setForm((prev) => ({ ...prev, [field]: e.target.value }));
+      setErrors((prev) => {
+        const rest = Object.fromEntries(
+          Object.entries(prev).filter(([key]) => key !== field)
+        );
+        return rest as typeof prev;
+      });
+    };
+
+  const handleSubmit = (e: FormEvent): void => {
+    e.preventDefault();
+    const { isValid, errors: validationErrors } = validateAddressData(form);
+    if (!isValid) {
+      setErrors(validationErrors);
+      return;
+    }
+    saveAddress({ id: address.id, ...form } as AddressUpdates);
   };
 
   const cardBase =
     'rounded-xl border transition-transform hover:shadow-xl hover:-translate-y-1 ';
   const readOnlyBg =
     address.isDefaultBilling || address.isDefaultShipping
-      ? 'bg-[rgba(129,129,129,0.12)] border-[#586F69]'
+      ? 'bg-[rgba(129,129,129,0.12)] border-primary'
       : 'bg-white border-[#E5E7EB]';
 
   if (isEditing) {
     return (
-      <form
-        onSubmit={(e: FormEvent) => {
-          e.preventDefault();
-          if (!validate()) return;
-          saveAddress({ id: address.id, ...form } as AddressUpdates);
-        }}
-        className={`${cardBase}${readOnlyBg} p-6`}
-      >
+      <form onSubmit={handleSubmit} className={`${cardBase}${readOnlyBg} p-6`}>
         <div className="grid grid-cols-2 gap-4 mb-4">
           {ADDRESS_FIELDS.map(({ id, label }) => (
             <div key={id} className="relative">
-              <label
-                htmlFor={id}
-                className="block text-[#586F69] font-medium mb-1"
-              >
+              <Label htmlFor={id} className="mb-1">
                 {label}
-              </label>
-              <input
+              </Label>
+              <Input
                 id={id}
-                value={form[id] as string}
-                onChange={(e) => {
-                  setForm((f) => ({ ...f, [id]: e.target.value }));
-                  setErrors((prev) => {
-                    const restEntries = Object.entries(prev).filter(
-                      ([key]) => key !== id
-                    );
-                    const rest = Object.fromEntries(restEntries) as Record<
-                      string,
-                      string
-                    >;
-                    return rest;
-                  });
-                }}
-                className="w-full p-2 border border-[#E5E7EB] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#586F69]"
+                value={form[id]}
+                onChange={handleFieldChange(id)}
               />
               {errors[id] && (
                 <div className="absolute left-0 top-full mt-1">
@@ -142,19 +107,16 @@ export function AddressCard({
           ))}
         </div>
         <div className="flex gap-4">
-          <button
-            type="submit"
-            className="flex-1 bg-[#586F69] hover:opacity-90 text-white font-semibold py-2 rounded-lg"
-          >
+          <Button type="submit" className="flex-1">
             Save
-          </button>
-          <button
-            type="button"
+          </Button>
+          <Button
+            variant="outline"
+            className="flex-1"
             onClick={() => toggleAddressEdit(address.id)}
-            className="flex-1 border border-[#586F69] text-[#586F69] hover:bg-[rgba(129,129,129,0.12)] py-2 rounded-lg"
           >
             Cancel
-          </button>
+          </Button>
         </div>
       </form>
     );
@@ -164,26 +126,27 @@ export function AddressCard({
     <div className={`${cardBase}${readOnlyBg} p-5`}>
       <div className="flex justify-between items-start mb-3">
         <div>
-          <p className="text-[#586F69] font-semibold">
+          <p className="font-semibold text-primary">
             {address.street}, {address.city}, {address.state} {address.zip}
           </p>
           <p className="text-[#638179]">{address.country}</p>
         </div>
-        <button
+        <Button
+          variant="link"
+          size="sm"
           onClick={() => toggleAddressEdit(address.id)}
-          className="text-[#586F69] hover:opacity-90 text-sm font-medium"
         >
           Edit
-        </button>
+        </Button>
       </div>
       <div className="flex flex-wrap gap-2 text-xs">
         {address.isDefaultBilling && (
-          <span className="bg-[rgba(129,129,129,0.12)] text-[#586F69] px-2 py-1 rounded-full">
+          <span className="bg-[rgba(129,129,129,0.12)] text-primary px-2 py-1 rounded-full">
             Default Billing
           </span>
         )}
         {address.isDefaultShipping && (
-          <span className="bg-[rgba(129,129,129,0.12)] text-[#586F69] px-2 py-1 rounded-full">
+          <span className="bg-[rgba(129,129,129,0.12)] text-primary px-2 py-1 rounded-full">
             Default Shipping
           </span>
         )}

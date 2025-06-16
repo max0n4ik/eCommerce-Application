@@ -12,20 +12,8 @@ import type {
 import { apiWithExistingTokenFlow } from './build-client';
 
 import { mapCustomerToUser, mapCustomerAddresses } from '@/mappers/user';
-import type { User, Address } from '@/utils/types';
-
-export type ProfileUpdates = Partial<
-  Pick<User, 'firstName' | 'lastName' | 'dateOfBirth'>
->;
-export type AddressUpdates = {
-  id: string;
-  streetName?: string;
-  streetNumber?: string;
-  city?: string;
-  region?: string;
-  postalCode?: string;
-  country?: string;
-};
+import type { ProfileUpdates } from '@/utils/types';
+import type { User, Address, AddressUpdates } from '@/utils/types';
 
 export async function fetchUserProfile(): Promise<{
   user: User;
@@ -45,27 +33,42 @@ export async function fetchUserProfile(): Promise<{
   };
 }
 
-export async function updateUserProfile(
+async function patchCustomer(
   customerId: string,
-  currentVersion: number,
+  version: number,
+  actions: CustomerUpdateAction[]
+): Promise<Customer> {
+  const apiRoot = apiWithExistingTokenFlow();
+  const upd = await apiRoot
+    .customers()
+    .withId({ ID: customerId })
+    .post({ body: { version, actions } as CustomerUpdate })
+    .execute();
+  if (!upd.body) {
+    throw new Error(`Empty update response (status ${upd.statusCode})`);
+  }
+  return upd.body as Customer;
+}
+
+export async function saveUserProfile(
   updates: ProfileUpdates
 ): Promise<User & { version: number }> {
-  const apiRoot = apiWithExistingTokenFlow();
-  const actions: CustomerUpdateAction[] = [];
+  const { user, version: currentVersion } = await fetchUserProfile();
 
-  if (updates.firstName) {
+  const actions: CustomerUpdateAction[] = [];
+  if (updates.firstName != null) {
     actions.push({
       action: 'setFirstName',
       firstName: updates.firstName,
     } as CustomerSetFirstNameAction);
   }
-  if (updates.lastName) {
+  if (updates.lastName != null) {
     actions.push({
       action: 'setLastName',
       lastName: updates.lastName,
     } as CustomerSetLastNameAction);
   }
-  if (updates.dateOfBirth) {
+  if (updates.dateOfBirth != null) {
     actions.push({
       action: 'setDateOfBirth',
       dateOfBirth: updates.dateOfBirth,
@@ -73,35 +76,24 @@ export async function updateUserProfile(
   }
 
   if (actions.length === 0) {
-    const getResp = await apiRoot
-      .customers()
-      .withId({ ID: customerId })
-      .get()
-      .execute();
-    const fresh = getResp.body as Customer;
-    return { ...mapCustomerToUser(fresh), version: fresh.version };
+    return { ...user, version: currentVersion };
   }
 
-  const updResp = await apiRoot
-    .customers()
-    .withId({ ID: customerId })
-    .post({ body: { version: currentVersion, actions } as CustomerUpdate })
-    .execute();
-
-  const updated = updResp.body as Customer;
-  return { ...mapCustomerToUser(updated), version: updated.version };
+  const updatedCustomer = await patchCustomer(user.id, currentVersion, actions);
+  return {
+    ...mapCustomerToUser(updatedCustomer),
+    version: updatedCustomer.version,
+  };
 }
 
-export async function updateAddress(
-  customerId: string,
-  currentVersion: number,
+export async function saveUserAddresses(
   addressUpdates: AddressUpdates[]
 ): Promise<{ addresses: Address[]; version: number }> {
+  const { user, version: currentVersion } = await fetchUserProfile();
   const apiRoot = apiWithExistingTokenFlow();
-
   const getResp = await apiRoot
     .customers()
-    .withId({ ID: customerId })
+    .withId({ ID: user.id })
     .get()
     .execute();
   if (!getResp.body) {
@@ -114,16 +106,13 @@ export async function updateAddress(
     if (!original) {
       throw new Error(`Address with id="${upd.id}" not found`);
     }
-
     const merged: BaseAddress = {
       streetName: upd.streetName ?? original.streetName,
       streetNumber: upd.streetNumber ?? original.streetNumber,
-
       postalCode: upd.postalCode ?? original.postalCode ?? '',
       city: upd.city ?? original.city ?? '',
       region: upd.region ?? original.region,
       country: upd.country ?? original.country ?? '',
-
       additionalStreetInfo: original.additionalStreetInfo,
       state: original.state,
       company: original.company,
@@ -138,7 +127,6 @@ export async function updateAddress(
       additionalAddressInfo: original.additionalAddressInfo,
       externalId: original.externalId,
     };
-
     return {
       action: 'changeAddress',
       addressId: upd.id,
@@ -146,16 +134,7 @@ export async function updateAddress(
     };
   });
 
-  const updResp = await apiRoot
-    .customers()
-    .withId({ ID: customerId })
-    .post({ body: { version: currentVersion, actions } as CustomerUpdate })
-    .execute();
-  if (!updResp.body) {
-    throw new Error(`Empty update response (status ${updResp.statusCode})`);
-  }
-  const updatedCustomer = updResp.body as Customer;
-
+  const updatedCustomer = await patchCustomer(user.id, currentVersion, actions);
   return {
     addresses: mapCustomerAddresses(updatedCustomer),
     version: updatedCustomer.version,

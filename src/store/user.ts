@@ -1,14 +1,16 @@
 import { create } from 'zustand';
 
 import {
+  saveUserProfile,
+  saveUserAddresses,
   fetchUserProfile,
-  updateUserProfile,
-  updateAddress,
-  type ProfileUpdates,
-  type AddressUpdates,
 } from '@/services/user';
-import type { User, Address } from '@/utils/types';
-
+import type {
+  User,
+  Address,
+  ProfileUpdates,
+  AddressUpdates,
+} from '@/utils/types';
 type UserWithVersion = User & { version: number };
 
 type UserStore = {
@@ -65,22 +67,9 @@ const useUserStore = create<UserStore>((set, get) => ({
   },
   saveUser: async (updates): Promise<void> => {
     set({ loading: true, error: null });
-    const current = get().user;
-    if (!current) {
-      set({ loading: false, error: 'Нет пользователя' });
-      return;
-    }
     try {
-      const updated = await updateUserProfile(
-        current.id,
-        current.version,
-        updates
-      );
-      set({
-        user: updated,
-        editingUser: false,
-        loading: false,
-      });
+      const updated = await saveUserProfile(updates);
+      set({ user: updated, editingUser: false, loading: false });
     } catch (error) {
       set({ error: (error as Error).message, loading: false });
     }
@@ -93,22 +82,14 @@ const useUserStore = create<UserStore>((set, get) => ({
   },
   saveAddress: async (updates): Promise<void> => {
     set({ loading: true, error: null });
-    const current = get().user;
-    if (!current) {
-      set({ loading: false, error: 'Нет пользователя' });
-      return;
-    }
     try {
-      const { addresses: updatedList, version } = await updateAddress(
-        current.id,
-        current.version,
-        [updates]
-      );
+      const { addresses, version } = await saveUserAddresses([updates]);
+      const current = get().user;
       set({
-        addresses: updatedList,
+        addresses,
         editingAddressId: null,
+        user: current ? { ...current, version } : null,
         loading: false,
-        user: { ...current, version },
       });
     } catch (error) {
       set({ error: (error as Error).message, loading: false });

@@ -1,4 +1,5 @@
 import type { ProductVariant, Image } from '@commercetools/platform-sdk';
+import type { BaseAddress } from '@commercetools/platform-sdk';
 import type { z } from 'zod';
 
 import type { CategoryCard } from './interfaces';
@@ -80,3 +81,45 @@ export type DiscountCodeType = {
   discountCodeName: string;
   discountCodeId: string;
 };
+
+export type AddressForm = {
+  streetName: string;
+  streetNumber: string;
+  postalCode: string;
+  city: string;
+  region: string;
+  country: string;
+} & Partial<
+  Pick<
+    BaseAddress,
+    | 'additionalStreetInfo'
+    | 'state'
+    | 'company'
+    | 'department'
+    | 'building'
+    | 'apartment'
+    | 'pOBox'
+    | 'phone'
+    | 'mobile'
+    | 'email'
+    | 'fax'
+    | 'additionalAddressInfo'
+    | 'externalId'
+  >
+>;
+
+export type AddressUpdates = {
+  id: string;
+  streetName?: string;
+  streetNumber?: string;
+  city?: string;
+  region?: string;
+  postalCode?: string;
+  country?: string;
+};
+
+export type FieldId = 'firstName' | 'lastName' | 'dateOfBirth';
+
+export type ProfileUpdates = Partial<
+  Pick<User, 'firstName' | 'lastName' | 'dateOfBirth'>
+>;

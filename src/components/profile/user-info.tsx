@@ -1,15 +1,17 @@
 import React, { useState, useEffect, type FormEvent } from 'react';
 
+import { Button } from '@/components/ui/button';
+import { BirthdayCalendar } from '@/components/ui/calendar/birthday';
 import { Tooltip } from '@/components/ui/error-message/error-message';
-import type { ProfileUpdates } from '@/services/user';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import useUserStore from '@/store/user';
-import type { User } from '@/utils/types';
+import type { User, FieldId, ProfileUpdates } from '@/utils/types';
+import { validateProfileData, type ProfileForm } from '@/utils/validations';
 
 interface UserInfoProps {
   user: User & { version: number };
 }
-
-type FieldId = 'firstName' | 'lastName' | 'dateOfBirth';
 
 const FIELD_CONFIG: Array<{
   id: FieldId;
@@ -37,18 +39,41 @@ export function UserInfo({ user }: UserInfoProps): React.JSX.Element {
     }
   }, [editingUser, user]);
 
-  const validate = (): boolean => {
-    const newErrors: Partial<Record<FieldId, string>> = {};
-    FIELD_CONFIG.forEach(({ id, label }) => {
-      const val = form[id as keyof ProfileUpdates] as string | undefined;
-      if (!val || val.trim() === '') {
-        newErrors[id] = `${label} is required`;
-      } else if ((id === 'firstName' || id === 'lastName') && /\d/.test(val)) {
-        newErrors[id] = `${label} cannot contain numbers`;
-      }
-    });
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+  const handleSubmit = (e: FormEvent): void => {
+    e.preventDefault();
+
+    const payload = form as ProfileForm;
+    const { isValid, errors: newErrors } = validateProfileData(payload);
+
+    if (!isValid) {
+      setErrors(newErrors);
+      return;
+    }
+
+    saveUser(form);
+  };
+
+  const handleFieldChange =
+    (field: FieldId) =>
+    (e: React.ChangeEvent<HTMLInputElement>): void => {
+      const v = e.target.value;
+      setForm((f) => ({ ...f, [field]: v }));
+      // clear any previous error on this field
+      setErrors((prev) =>
+        Object.fromEntries(
+          Object.entries(prev).filter(([key]) => key !== field)
+        )
+      );
+    };
+
+  const handleDateChange = (date: Date | null): void => {
+    const iso = date ? date.toISOString().split('T')[0] : '';
+    setForm((f) => ({ ...f, dateOfBirth: iso }));
+    setErrors((prev) =>
+      Object.fromEntries(
+        Object.entries(prev).filter(([key]) => key !== 'dateOfBirth')
+      )
+    );
   };
 
   const baseCardClasses =
@@ -56,72 +81,64 @@ export function UserInfo({ user }: UserInfoProps): React.JSX.Element {
 
   if (editingUser) {
     return (
-      <div className={baseCardClasses + 'from-[#9cc3b8] to-white mb-6'}>
-        <h2 className="text-2xl font-semibold text-[#586F69] mb-4">
+      <div className={`${baseCardClasses} from-[#9cc3b8] to-white`}>
+        <h2 className="text-2xl font-semibold text-primary mb-4">
           Edit Profile
         </h2>
-        <form
-          onSubmit={(e: FormEvent) => {
-            e.preventDefault();
-            if (!validate()) return;
-            saveUser(form);
-          }}
-          className="space-y-4"
-        >
+        <form onSubmit={handleSubmit} className="space-y-4">
           {FIELD_CONFIG.map(({ id, label, type }) => {
-            const value = (form[id] || '') as string;
+            // for the DOB field we render <BirthdayCalendar>
+            if (id === 'dateOfBirth') {
+              return (
+                <div key={id} className="relative">
+                  <Label htmlFor={id}>{label}</Label>
+                  <BirthdayCalendar
+                    name={id}
+                    defaultValue={
+                      form.dateOfBirth ? new Date(form.dateOfBirth) : null
+                    }
+                    onChange={handleDateChange}
+                    required
+                  />
+                  {errors[id] && (
+                    <div className="absolute left-0 top-full mt-1">
+                      <Tooltip message={errors[id]} />
+                    </div>
+                  )}
+                </div>
+              );
+            }
+
+            // otherwise a normal text input
             return (
               <div key={id} className="relative">
-                <label
-                  htmlFor={id}
-                  className="block text-[#586F69] font-medium mb-1"
-                >
-                  {label}
-                </label>
-                <input
+                <Label htmlFor={id}>{label}</Label>
+                <Input
                   id={id}
                   type={type ?? 'text'}
-                  value={value}
-                  onChange={(e) => {
-                    const v = e.target.value;
-                    setForm((f) => ({ ...f, [id]: v }));
-                    setErrors((prev) => {
-                      const filtered = Object.entries(prev)
-                        .filter(([key]) => key !== id)
-                        .reduce(
-                          (obj, [key, msg]) => {
-                            obj[key as FieldId] = msg;
-                            return obj;
-                          },
-                          {} as Record<FieldId, string>
-                        );
-                      return filtered;
-                    });
-                  }}
-                  className="w-full rounded-lg border border-[#586F69] bg-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#586F69]"
+                  value={(form[id] as string) ?? ''}
+                  onChange={handleFieldChange(id)}
                 />
                 {errors[id] && (
                   <div className="absolute left-0 top-full mt-1">
-                    <Tooltip message={errors[id] ?? ''} />
+                    <Tooltip message={errors[id]} />
                   </div>
                 )}
               </div>
             );
           })}
+
           <div className="flex gap-3">
-            <button
-              type="submit"
-              className="flex-1 bg-[#586F69] hover:bg-[#a3c1ba] text-white font-semibold px-4 py-2 rounded-lg shadow"
-            >
+            <Button type="submit" className="flex-1">
               Save
-            </button>
-            <button
-              type="button"
+            </Button>
+            <Button
+              variant="outline"
+              className="flex-1"
               onClick={toggleUserEdit}
-              className="flex-1 bg-white border border-[#586F69] text-[#586F69] font-semibold px-4 py-2 rounded-lg hover:bg-[#e5e7e6] transition"
             >
               Cancel
-            </button>
+            </Button>
           </div>
         </form>
       </div>
@@ -129,17 +146,14 @@ export function UserInfo({ user }: UserInfoProps): React.JSX.Element {
   }
 
   return (
-    <div className={baseCardClasses + 'from-white to-green-50 mb-6'}>
+    <div className={`${baseCardClasses} from-white to-green-50`}>
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-semibold text-[#586F69]">Profile</h2>
-        <button
-          onClick={toggleUserEdit}
-          className="text-[#586F69] hover:text-[#586F69] font-medium"
-        >
+        <h2 className="text-2xl font-semibold text-primary">Profile</h2>
+        <Button variant="link" onClick={toggleUserEdit}>
           Edit
-        </button>
+        </Button>
       </div>
-      <div className="space-y-2 text-[#586F69]">
+      <div className="space-y-2 text-primary">
         <p>
           <span className="font-medium">First Name:</span> {user.firstName}
         </p>
