@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 
-import useUserStore from '@/store/user-store';
+import { useUserStore } from '@/store/user-store';
 
 describe('useUserStore toggles', () => {
   beforeEach(() => {

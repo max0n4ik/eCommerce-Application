@@ -18,6 +18,7 @@ describe('mapCustomerToUser', () => {
       firstName: 'Alice',
       lastName: 'Ivanova',
       dateOfBirth: '1988-12-05',
+      email: '',
     };
     expect(mapCustomerToUser(customer)).toEqual(expected);
   });
@@ -30,6 +31,7 @@ describe('mapCustomerToUser', () => {
       firstName: '',
       lastName: '',
       dateOfBirth: '',
+      email: '',
     });
   });
 });

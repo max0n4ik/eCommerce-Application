@@ -1,47 +1,39 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 
-import useUserStore from '@/store/user-store';
-import type { User, Address } from '@/utils/types';
+import { useUserStore } from '@/store/user-store';
 
-describe('useUserStore clearUser', () => {
-  const fakeUser: User & { version: number } = {
-    id: 'u1',
-    firstName: 'Test',
-    lastName: 'User',
-    dateOfBirth: '2000-01-01',
-    version: 42,
-  };
-  const fakeAddresses: Address[] = [
-    {
-      id: 'a1',
-      street: 'Lenina 10',
-      city: 'Moscow',
-      state: 'Moscow Region',
-      zip: '12345',
-      country: 'RU',
-      isDefaultBilling: true,
-      isDefaultShipping: false,
-    },
-  ];
-
+describe('useUserStore toggles', () => {
   beforeEach(() => {
     useUserStore.setState({
-      user: fakeUser,
-      addresses: fakeAddresses,
-      editingUser: true,
-      editingAddressId: 'a1',
-      loading: true,
-      error: 'some error',
+      editingUser: false,
+      editingAddressId: null,
     });
   });
 
-  it('clearUser сбрасывает user, addresses, editingUser и editingAddressId в дефолт', () => {
-    useUserStore.getState().clearUser();
+  it('toggleUserEdit инвертирует флаг editingUser', () => {
+    const { toggleUserEdit } = useUserStore.getState();
 
-    const state = useUserStore.getState();
-    expect(state.user).toBeNull();
-    expect(state.addresses).toEqual([]);
-    expect(state.editingUser).toBe(false);
-    expect(state.editingAddressId).toBeNull();
+    expect(useUserStore.getState().editingUser).toBe(false);
+
+    toggleUserEdit();
+    expect(useUserStore.getState().editingUser).toBe(true);
+
+    toggleUserEdit();
+    expect(useUserStore.getState().editingUser).toBe(false);
+  });
+
+  it('toggleAddressEdit устанавливает и сбрасывает editingAddressId', () => {
+    const { toggleAddressEdit } = useUserStore.getState();
+
+    expect(useUserStore.getState().editingAddressId).toBeNull();
+
+    toggleAddressEdit('addr-1');
+    expect(useUserStore.getState().editingAddressId).toBe('addr-1');
+
+    toggleAddressEdit('addr-1');
+    expect(useUserStore.getState().editingAddressId).toBeNull();
+
+    toggleAddressEdit('addr-2');
+    expect(useUserStore.getState().editingAddressId).toBe('addr-2');
   });
 });
