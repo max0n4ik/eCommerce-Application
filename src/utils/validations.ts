@@ -141,24 +141,34 @@ export const profileSchema = z.object({
     .refine((val) => /^\d{4}-\d{2}-\d{2}$/.test(val), {
       message: 'Date of Birth must be in YYYY-MM-DD format',
     }),
+  email: z
+    .string()
+    .min(1, 'Email is required')
+    .regex(
+      /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+      'Invalid email address, (e.g., example@email.com)'
+    ),
 });
 
 export type ProfileForm = z.infer<typeof profileSchema>;
 
 export function validateProfileData(data: ProfileForm): {
   isValid: boolean;
-  errors: Record<string, string>;
+  errors: Partial<Record<keyof ProfileForm, string>>;
 } {
   const result = profileSchema.safeParse(data);
   if (result.success) {
-    return { isValid: true, errors: {} };
+    return {
+      isValid: true as const,
+      errors: {} as Record<keyof ProfileForm, never>,
+    };
   }
-  const errors: Record<string, string> = {};
+  const errors: Partial<Record<keyof ProfileForm, string>> = {};
   for (const issue of result.error.issues) {
     const key = issue.path[0] as keyof ProfileForm;
     errors[key] = issue.message;
   }
-  return { isValid: false, errors };
+  return { isValid: false as const, errors };
 }
 
 export const addressFormSchema = z.object({
@@ -185,12 +195,55 @@ export function validateAddressData(data: AddressForm): {
 } {
   const result = addressFormSchema.safeParse(data);
   if (result.success) {
-    return { isValid: true, errors: {} };
+    return {
+      isValid: true as const,
+      errors: {} as Partial<Record<keyof AddressForm, never>>,
+    };
   }
   const errors: Partial<Record<keyof AddressForm, string>> = {};
   for (const issue of result.error.issues) {
     const field = issue.path[0] as keyof AddressForm;
     errors[field] = issue.message;
   }
-  return { isValid: false, errors };
+  return { isValid: false as const, errors };
+}
+
+export const emailSchema = z
+  .string()
+  .min(1, 'Email is required')
+  .regex(
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+    'Invalid email address (e.g., example@email.com)'
+  );
+
+export async function validateEmail(
+  email: string,
+  currentEmail?: string
+): Promise<{ isValid: boolean; error?: string }> {
+  const parsed = emailSchema.safeParse(email);
+  if (!parsed.success) {
+    return { isValid: false, error: parsed.error.issues[0].message };
+  }
+  if (email === currentEmail) {
+    return { isValid: true };
+  }
+  try {
+    const count = await import('@/services/user-service').then((m) =>
+      m.countCustomersByEmail(email)
+    );
+    if (count > 0) {
+      return { isValid: false, error: 'Этот e-mail уже занят' };
+    }
+    return { isValid: true };
+  } catch {
+    return { isValid: false, error: 'Ошибка проверки e-mail' };
+  }
+}
+
+export function clearFieldError<K extends string>(
+  errors: Partial<Record<K, string>>,
+  field: K
+): Partial<Record<K, string>> {
+  const filtered = Object.entries(errors).filter(([k]) => k !== field);
+  return Object.fromEntries(filtered) as Partial<Record<K, string>>;
 }

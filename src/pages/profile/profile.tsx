@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 
 import { AddressList } from '@/components/profile/address-list';
 import { UserInfo } from '@/components/profile/user-info';
-import useUserStore from '@/store/user';
+import { useUserStore } from '@/store/user-store';
 
 export default function Profile(): React.JSX.Element {
   const { user, addresses, loading, error, fetchUser } = useUserStore();

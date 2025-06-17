@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Tooltip } from '@/components/ui/error-message/error-message';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import useUserStore from '@/store/user';
+import { useUserStore } from '@/store/user-store';
 import type { AddressForm, Address, AddressUpdates } from '@/utils/types';
 import { validateAddressData } from '@/utils/validations';
 
