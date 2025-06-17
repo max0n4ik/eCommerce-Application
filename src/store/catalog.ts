@@ -32,11 +32,17 @@ export type CatalogStore = {
   error: string | null;
   selectedCategory: string | null;
   filters: FilterI;
-  fetchProducts: () => Promise<void>;
+  total: number | null;
+  fetchProducts: (offset: number, limit: number) => Promise<void>;
   fetchCategories: () => Promise<void>;
   fetchDiscount: () => Promise<void>;
   fetchProduct: (id: string) => Promise<void>;
-  fetchFilteredProducts: (filters: FilterI) => Promise<void>;
+  fetchFilteredProducts: (
+    filters: FilterI,
+    offset: number,
+    limit: number
+  ) => Promise<void>;
+  fetchByFilteredIDs: () => Promise<void>;
   setSelectedCategory: (category: string | null) => void;
   setFilters: (filter: Pick<FilterI, 'filter'>) => void;
 };
@@ -50,6 +56,7 @@ const useCatalogStore = create<CatalogStore>((set, get) => ({
   productLoading: true,
   error: null,
   selectedCategory: null,
+  total: null,
   variants: null,
   filters: {
     filter: {
@@ -61,11 +68,13 @@ const useCatalogStore = create<CatalogStore>((set, get) => ({
     },
     filteredCatalog: [],
   },
-  fetchProducts: async (): Promise<void> => {
+  fetchProducts: async (offset, limit): Promise<void> => {
     set({ loading: true, error: null });
     try {
-      const response = await fetchCatalogProducts();
-      const mappedProducts = mappersCatalog(response);
+      const response = await fetchCatalogProducts(offset, limit);
+      const fetchCatalogProductResult = response.results;
+      const fetchCatalogProductTotal = response.total;
+      const mappedProducts = mappersCatalog(fetchCatalogProductResult);
       const discountResponse = await fetchCatalogProductsDiscount();
       const mappedDiscount = mappersDiscount(discountResponse);
 
@@ -91,6 +100,7 @@ const useCatalogStore = create<CatalogStore>((set, get) => ({
       set({
         discounts: mappedDiscount,
         products: productsWithDiscount,
+        total: fetchCatalogProductTotal,
         loading: false,
       });
     } catch (error) {
@@ -119,14 +129,23 @@ const useCatalogStore = create<CatalogStore>((set, get) => ({
       });
     }
   },
-  fetchFilteredProducts: async (filters: FilterI): Promise<void> => {
+  fetchFilteredProducts: async (
+    filters: FilterI,
+    offset,
+    limit
+  ): Promise<void> => {
     try {
-      const response = await fetchCatalogFilteredProducts(filters);
+      const response = await fetchCatalogFilteredProducts(
+        filters,
+        offset,
+        limit
+      );
       set({
         filters: {
           filter: filters.filter,
           filteredCatalog: response.body.results,
         },
+        total: response.body.total,
         loading: false,
       });
     } catch (error) {
@@ -138,36 +157,9 @@ const useCatalogStore = create<CatalogStore>((set, get) => ({
 
   fetchProduct: async (id: string): Promise<void> => {
     try {
-      let { discounts } = get();
+      const { discounts } = get();
       set({ productLoading: true, error: null });
-      if (discounts.length === 0) {
-        const response = await fetchCatalogProductsDiscount();
-        discounts = mappersDiscount(response);
-      }
-      const response = await fetchProductById(id);
-      const current = response.body.masterData.current;
-      const variant = current.masterVariant;
-      const lang = 'en';
-      const images =
-        variant?.images?.map((img) => ({
-          url: img.url,
-          alt: img.label || 'Product image',
-        })) || [];
-      const categories = current.categories;
-      const productPermyriad = getDiscount(discounts, categories);
-      const product: DetailedProductInterface = {
-        name: current.name[lang] || 'Unnamed Product',
-        description: current.description && current.description[lang],
-        images,
-        variants: current.variants,
-        permyriad: productPermyriad,
-        price: variant?.prices?.[0]?.value?.centAmount || 0,
-        priceCurrency: variant?.prices?.[0]?.value?.currencyCode || 'USD',
-        category: categories || [],
-        attributes: variant.attributes || [],
-        masterVariant: variant,
-        id,
-      };
+      const product = await getProductById(id, discounts);
       set({ currentProduct: product, productLoading: false });
     } catch (error) {
       set({
@@ -176,10 +168,71 @@ const useCatalogStore = create<CatalogStore>((set, get) => ({
       });
     }
   },
+
+  fetchByFilteredIDs: async (): Promise<void> => {
+    const { filters } = get();
+    let { discounts } = get();
+    if (discounts.length === 0) {
+      const response = await fetchCatalogProductsDiscount();
+      discounts = mappersDiscount(response);
+    }
+    if (!filters.filteredCatalog) return;
+    set({ discounts: discounts, loading: true });
+
+    const productPromises = filters.filteredCatalog.map(
+      async (filteredProduct) => {
+        const detailedProduct = await getProductById(
+          filteredProduct.id,
+          discounts
+        );
+        const product: ProductCardI = {
+          ...detailedProduct,
+          imageUrl: detailedProduct.images[0].url,
+          description: { en: detailedProduct.description ?? '' },
+        };
+        return product;
+      }
+    );
+
+    const products: ProductCardI[] = await Promise.all(productPromises);
+    set({ products: products, loading: false });
+  },
+
   setSelectedCategory: (category: string | null): void =>
     set({ selectedCategory: category }),
   setFilters: (filter: Pick<FilterI, 'filter'>): void =>
     set({ filters: filter }),
 }));
+
+async function getProductById(
+  id: string,
+  discounts: DiscountPrice[]
+): Promise<DetailedProductInterface> {
+  const response = await fetchProductById(id);
+  const current = response.body.masterData.current;
+  const variant = current.masterVariant;
+  const lang = 'en';
+  const images =
+    variant?.images?.map((img) => ({
+      url: img.url,
+      alt: img.label || 'Product image',
+    })) || [];
+  const categories = current.categories;
+  const productPermyriad = getDiscount(discounts, categories);
+  const product: DetailedProductInterface = {
+    name: current.name[lang] || 'Unnamed Product',
+    description: current.description && current.description[lang],
+    images,
+    variants: current.variants,
+    permyriad: productPermyriad,
+    price: variant?.prices?.[0]?.value?.centAmount || 0,
+    priceCurrency: variant?.prices?.[0]?.value?.currencyCode || 'USD',
+    category: categories || [],
+    attributes: variant.attributes || [],
+    masterVariant: variant,
+    id,
+  };
+  return product;
+}
 
 export default useCatalogStore;

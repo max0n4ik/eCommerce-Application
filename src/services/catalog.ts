@@ -8,15 +8,21 @@ import type {
 
 import { apiWithClientCredentialsFlow } from './build-client';
 
-import type { FilterI } from '@/utils/interfaces';
+import type {
+  FetchCatalogProductsInterface,
+  FilterI,
+} from '@/utils/interfaces';
 
-export async function fetchCatalogProducts(): Promise<Product[]> {
+export async function fetchCatalogProducts(
+  offset: number,
+  limit: number
+): Promise<FetchCatalogProductsInterface> {
   const visitor = apiWithClientCredentialsFlow();
   const response = await visitor
     .products()
-    .get({ queryArgs: { limit: 50 } })
+    .get({ queryArgs: { limit: limit, offset: offset } })
     .execute();
-  return response.body.results;
+  return { results: response.body.results, total: response.body.total };
 }
 
 export async function fetchCatalogProductsDiscount(): Promise<
@@ -60,7 +66,9 @@ export async function fetchProductDiscount(
 }
 
 export async function fetchCatalogFilteredProducts(
-  filter: FilterI
+  filter: FilterI,
+  offset: number,
+  limit: number
 ): Promise<ClientResponse<ProductPagedSearchResponse>> {
   const visitor = apiWithClientCredentialsFlow();
   return visitor
@@ -108,8 +116,8 @@ export async function fetchCatalogFilteredProducts(
             order: filter.filter.sort.order,
           },
         ],
-        limit: 40,
-        offset: 0,
+        limit: limit,
+        offset: offset,
       },
     })
     .execute()

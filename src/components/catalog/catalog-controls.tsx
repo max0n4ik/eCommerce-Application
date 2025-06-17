@@ -38,6 +38,7 @@ interface CatalogControlsProps {
   onSearchChange: (value: string) => void;
   onSearch: () => void;
   onKeyPress: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  topRef: React.RefObject<HTMLDivElement | null>;
 }
 
 export function CatalogControls({
@@ -56,9 +57,14 @@ export function CatalogControls({
   onSearchChange,
   onSearch,
   onKeyPress,
+  topRef,
 }: CatalogControlsProps): React.JSX.Element {
   return (
-    <div className="flex flex-col gap-4 p-4">
+    <div
+      id="catalog-controls-container"
+      className="flex flex-col gap-4 p-4"
+      ref={topRef}
+    >
       <div className="flex flex-wrap gap-2 justify-center items-center">
         <Sheet onOpenChange={(open) => !open && onSheetClose()}>
           <SheetTrigger className="h-10 px-4 py-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0">

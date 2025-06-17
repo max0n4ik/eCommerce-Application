@@ -128,3 +128,5 @@ export const FILTER_CONSTANTS = {
     STEP: 5,
   },
 } as const;
+
+export const ITEMS_PER_PAGE = 12;
