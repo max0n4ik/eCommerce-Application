@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { HashLink as Link } from 'react-router-hash-link';
 
 import { Badge } from '../ui/badge';
@@ -21,7 +22,10 @@ export function AuthSection({
     logout();
     onItemClick?.();
   };
-  const { totalAmount } = useCartStore();
+  const { totalAmount, getCart } = useCartStore();
+  useEffect(() => {
+    getCart();
+  }, [getCart, totalAmount]);
   return (
     <>
       {isAuth ? (
