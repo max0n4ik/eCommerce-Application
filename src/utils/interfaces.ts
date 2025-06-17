@@ -5,6 +5,7 @@ import type {
   LocalizedString,
   Product,
   ProductSearchResult,
+  ProductVariant,
 } from '@commercetools/platform-sdk';
 
 export interface RegistrationAddress {
@@ -42,6 +43,7 @@ export interface ProductCardI {
   description?: LocalizedString;
   category?: CategoryReference[];
   attributes?: Attribute[];
+  masterVariant?: ProductVariant;
 }
 
 export interface CategoryCard {
@@ -69,6 +71,8 @@ export interface DetailedProductInterface {
   category?: CategoryReference[];
   attributes?: Attribute[];
   id: string;
+  variants: ProductVariant[];
+  masterVariant?: ProductVariant;
 }
 export interface ProductCategoriesInterface {
   typeId: string;

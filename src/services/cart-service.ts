@@ -32,8 +32,9 @@ export const createCart = async (): Promise<ClientResponse<Cart>> => {
 };
 
 export const addItemToCart = async (
-  productId: string,
   quantity?: number,
+  sku?: string,
+  productId?: string,
   variantId?: number
 ): Promise<ClientResponse<Cart>> => {
   const existingToken = localStorage.getItem('token');
@@ -57,6 +58,7 @@ export const addItemToCart = async (
         action: `addLineItem`,
         productId,
         variantId,
+        sku,
         quantity,
       },
     ],

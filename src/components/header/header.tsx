@@ -15,7 +15,7 @@ export default function Header(): React.JSX.Element {
     <header className="flex items-center justify-between px-4 py-3 bc-section-background">
       <Link to={ROUTES.HOME} className="flex items-center">
         <img src={Logo} alt="Logo" className="size-[51px]" />
-        <h2 className="font-bold text-[25px] sm:text-[30px] md:text-[34px] lg:text-[34px] font-serif text-[#586F69] ml-2">
+        <h2 className="font-bold text-[25px] sm:text-[30px] md:text-[34px] lg:text-[34px] font-serif text-primary ml-2">
           Petal & Pot
         </h2>
       </Link>
@@ -66,7 +66,7 @@ export default function Header(): React.JSX.Element {
 
         {!menuOpen && (
           <button
-            className="z-50 relative text-3xl text-[#586F69] transition-transform duration-200 hover:scale-110 cursor-pointer"
+            className="z-50 relative text-3xl text-primary transition-transform duration-200 hover:scale-110 cursor-pointer"
             onClick={openMenu}
           >
             <svg

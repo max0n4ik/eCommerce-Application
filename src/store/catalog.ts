@@ -1,3 +1,4 @@
+import type { ProductVariant } from '@commercetools/platform-sdk';
 import { create } from 'zustand';
 
 import mappersCatalog from '@/mappers/catalog';
@@ -25,6 +26,7 @@ export type CatalogStore = {
   categories: CategoryCard[];
   discounts: DiscountPrice[];
   currentProduct: DetailedProductInterface | null;
+  variants: ProductVariant[] | null;
   loading: boolean;
   productLoading: boolean;
   error: string | null;
@@ -55,6 +57,7 @@ const useCatalogStore = create<CatalogStore>((set, get) => ({
   error: null,
   selectedCategory: null,
   total: null,
+  variants: null,
   filters: {
     filter: {
       price: { min: 0, max: 30000 },
@@ -220,11 +223,13 @@ async function getProductById(
     name: current.name[lang] || 'Unnamed Product',
     description: current.description && current.description[lang],
     images,
+    variants: current.variants,
     permyriad: productPermyriad,
     price: variant?.prices?.[0]?.value?.centAmount || 0,
     priceCurrency: variant?.prices?.[0]?.value?.currencyCode || 'USD',
     category: categories || [],
     attributes: variant.attributes || [],
+    masterVariant: variant,
     id,
   };
   return product;

@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 import { allowedCountries, postalCodePatterns } from './constantes';
+import type { AddressForm } from './types';
 
 export const registrationAddressSchema = z
   .object({
@@ -118,5 +119,78 @@ export function validateRegistrationCredentials(
     errors[key] = issue.message;
   }
 
+  return { isValid: false, errors };
+}
+
+export const profileSchema = z.object({
+  firstName: z
+    .string()
+    .min(1, 'First Name is required')
+    .refine((val) => !/\d/.test(val), {
+      message: 'First Name cannot contain numbers',
+    }),
+  lastName: z
+    .string()
+    .min(1, 'Last Name is required')
+    .refine((val) => !/\d/.test(val), {
+      message: 'Last Name cannot contain numbers',
+    }),
+  dateOfBirth: z
+    .string()
+    .min(1, 'Date of Birth is required')
+    .refine((val) => /^\d{4}-\d{2}-\d{2}$/.test(val), {
+      message: 'Date of Birth must be in YYYY-MM-DD format',
+    }),
+});
+
+export type ProfileForm = z.infer<typeof profileSchema>;
+
+export function validateProfileData(data: ProfileForm): {
+  isValid: boolean;
+  errors: Record<string, string>;
+} {
+  const result = profileSchema.safeParse(data);
+  if (result.success) {
+    return { isValid: true, errors: {} };
+  }
+  const errors: Record<string, string> = {};
+  for (const issue of result.error.issues) {
+    const key = issue.path[0] as keyof ProfileForm;
+    errors[key] = issue.message;
+  }
+  return { isValid: false, errors };
+}
+
+export const addressFormSchema = z.object({
+  streetName: z.string().min(1, 'Street Name is required'),
+  streetNumber: z
+    .string()
+    .min(1, 'House Number is required')
+    .regex(/^\d+$/, 'House Number must be numeric'),
+  city: z
+    .string()
+    .min(1, 'City is required')
+    .regex(/^[A-Za-z\s-]+$/, 'City must contain only letters'),
+  region: z
+    .string()
+    .min(1, 'Region is required')
+    .regex(/^[A-Za-z\s-]+$/, 'Region must contain only letters'),
+  postalCode: z.string().min(1, 'Postal Code is required'),
+  country: z.string().min(1, 'Country is required'),
+});
+
+export function validateAddressData(data: AddressForm): {
+  isValid: boolean;
+  errors: Partial<Record<keyof AddressForm, string>>;
+} {
+  const result = addressFormSchema.safeParse(data);
+  if (result.success) {
+    return { isValid: true, errors: {} };
+  }
+  const errors: Partial<Record<keyof AddressForm, string>> = {};
+  for (const issue of result.error.issues) {
+    const field = issue.path[0] as keyof AddressForm;
+    errors[field] = issue.message;
+  }
   return { isValid: false, errors };
 }

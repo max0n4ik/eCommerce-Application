@@ -21,8 +21,9 @@ interface CartState {
 
   getCart: () => Promise<void>;
   addToCart: (
-    productId: string,
+    sku: string,
     quantity?: number,
+    productId?: string,
     variantId?: number
   ) => Promise<void>;
   removeFromCart: (lineItemId: string) => Promise<void>;
@@ -48,19 +49,20 @@ export const useCartStore = create<CartState>((set, get) => ({
   success: null,
 
   addToCart: async (
-    productId: string,
+    sku: string,
     quantity?: number,
-    variantId?: number
+    productId?: string
   ): Promise<void> => {
     try {
-      const response = await addItemToCart(productId, quantity, variantId);
+      const response = await addItemToCart(quantity, sku, productId);
 
       if (response.statusCode === 200) {
         const lineItems: LineItem[] = [...response.body.lineItems];
         const products = getCartProducts(lineItems);
 
-        set(() => ({
+        set((state) => ({
           productsInCart: [...products],
+          productsInCartSku: new Set([...state.productsInCartSku, sku]),
           totalAmount: response.body.totalLineItemQuantity ?? 0,
           totalPrice: response.body.totalPrice.centAmount,
           success: 'Product added to cart successfully',
@@ -131,6 +133,7 @@ export const useCartStore = create<CartState>((set, get) => ({
 
   getLineItemIdBySku: (sku: string): string => {
     const { productsInCart } = get();
+
     return (
       productsInCart.find((item) => item.variants[0].sku === sku)?.lineItemId ??
       ''
@@ -140,6 +143,7 @@ export const useCartStore = create<CartState>((set, get) => ({
   removeProductFromCart: (sku: string): void => {
     const { getLineItemIdBySku, removeFromCart, removeProductToCartSku } =
       get();
+
     const lineItemId = getLineItemIdBySku(sku);
 
     if (lineItemId) {
