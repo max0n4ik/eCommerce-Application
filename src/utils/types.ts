@@ -28,6 +28,7 @@ export type User = {
   firstName: string;
   lastName: string;
   dateOfBirth: string;
+  email?: string;
 };
 
 export type Address = {
@@ -136,10 +137,10 @@ export type AddressUpdates = {
   country?: string;
 };
 
-export type FieldId = 'firstName' | 'lastName' | 'dateOfBirth';
+export type FieldId = 'firstName' | 'lastName' | 'email' | 'dateOfBirth';
 
 export type ProfileUpdates = Partial<
-  Pick<User, 'firstName' | 'lastName' | 'dateOfBirth'>
+  Pick<User, 'firstName' | 'lastName' | 'dateOfBirth' | 'email'>
 >;
 
 export type AttributeWithVariantId = {

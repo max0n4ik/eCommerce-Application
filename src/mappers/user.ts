@@ -5,6 +5,7 @@ import type { User, Address } from '@/utils/types';
 export function mapCustomerToUser(customer: Customer): User {
   return {
     id: customer.id,
+    email: customer.email ?? '',
     firstName: customer.firstName ?? '',
     lastName: customer.lastName ?? '',
     dateOfBirth: customer.dateOfBirth ?? '',
