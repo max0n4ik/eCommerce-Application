@@ -45,6 +45,7 @@ export type CatalogStore = {
   fetchByFilteredIDs: () => Promise<void>;
   setSelectedCategory: (category: string | null) => void;
   setFilters: (filter: Pick<FilterI, 'filter'>) => void;
+  resetFilters: () => void;
 };
 
 const useCatalogStore = create<CatalogStore>((set, get) => ({
@@ -68,6 +69,17 @@ const useCatalogStore = create<CatalogStore>((set, get) => ({
     },
     filteredCatalog: [],
   },
+  resetFilters: (): void => {
+    const defaultFilter: FilterI['filter'] = {
+      price: { min: 0, max: 0 },
+      sort: { field: 'name', language: 'en', order: 'asc' },
+      category: null,
+      search: '',
+      attributes: {},
+    };
+    set({ filters: { filter: defaultFilter } });
+  },
+
   fetchProducts: async (offset, limit): Promise<void> => {
     set({ loading: true, error: null });
     try {

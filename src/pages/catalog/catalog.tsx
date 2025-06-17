@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
 import {
   CatalogHeader,
@@ -29,6 +30,7 @@ export default function Catalog(): React.JSX.Element {
     filters,
     fetchFilteredProducts,
     setFilters,
+    resetFilters,
     total,
   } = useCatalogStore();
   const topRef = useRef<HTMLDivElement>(null);
@@ -153,6 +155,17 @@ export default function Catalog(): React.JSX.Element {
     () => getSubCategories(currentCategory, parentCategory),
     [currentCategory, parentCategory]
   );
+
+  const location = useLocation();
+
+  useEffect(() => {
+    return (): void => {
+      if (location.pathname === '/catalog') {
+        setSelectedCategory(null);
+        resetFilters();
+      }
+    };
+  }, [location.pathname, setSelectedCategory, resetFilters]);
 
   if (loading) {
     return (
