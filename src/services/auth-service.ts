@@ -1,7 +1,7 @@
 import type {
   ClientResponse,
-  CustomerDraft,
   CustomerSignInResult,
+  MyCustomerDraft,
 } from '@commercetools/platform-sdk';
 
 import {
@@ -56,22 +56,47 @@ export const customerSignUp = async (
     asDefaultBilling,
     shippingAddress,
     billingAddress,
-    anonimId,
   } = data;
 
   if (!shippingAddress) {
     throw new Error('Нужен shippingAddress для регистрации');
   }
 
-  const dob = dateOfBirth.toISOString().split('T')[0];
-  const addresses: CustomerDraft['addresses'] = [shippingAddress];
-  const shippingAddresses = [0] as number[];
-  const billingAddresses: number[] = [];
+  const shippingAddressObj = {
+    firstName: `${firstName}`,
+    lastName: `${lastName}`,
+    country: `${shippingAddress.country}`,
+    streetName: `${shippingAddress.streetName}`,
+    postalCode: `${shippingAddress.postalCode}`,
+    city: `${shippingAddress.city}`,
+    email: `${email}`,
+  };
 
-  if (billingAddress) {
-    addresses.push(billingAddress);
-    billingAddresses.push(1);
-  }
+  const billingAddressObj = billingAddress
+    ? {
+        firstName: `${firstName}`,
+        lastName: `${lastName}`,
+        country: `${billingAddress.country}`,
+        streetName: `${billingAddress.streetName}`,
+        postalCode: `${billingAddress.postalCode}`,
+        city: `${billingAddress.city}`,
+        email: `${email}`,
+      }
+    : shippingAddress;
+
+  const requestBody: MyCustomerDraft = {
+    email: `${email}`,
+    password: `${password}`,
+    firstName: `${firstName}`,
+    lastName: `${lastName}`,
+    dateOfBirth: `${dateOfBirth.toISOString().split('T')[0]}`,
+    addresses: [shippingAddressObj, billingAddressObj],
+    defaultShippingAddress: asDefaultShipping ? 0 : undefined,
+    defaultBillingAddress:
+      asDefaultBilling || (asDefaultShipping && !billingAddress)
+        ? 1
+        : undefined,
+  };
 
   const existingToken = localStorage.getItem('token');
 
@@ -80,22 +105,10 @@ export const customerSignUp = async (
     : apiWithClientCredentialsFlow();
 
   const signUpCustomer = await newCustomer
-    .customers()
+    .me()
+    .signup()
     .post({
-      body: {
-        email,
-        password,
-        firstName,
-        lastName,
-        dateOfBirth: dob,
-        addresses,
-        defaultShippingAddress: asDefaultShipping ? 0 : undefined,
-        defaultBillingAddress:
-          asDefaultBilling && billingAddress ? 1 : undefined,
-        shippingAddresses,
-        billingAddresses,
-        anonymousId: anonimId ?? undefined,
-      },
+      body: requestBody,
     })
     .execute();
 

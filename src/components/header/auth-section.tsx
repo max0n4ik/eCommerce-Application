@@ -18,11 +18,13 @@ export function AuthSection({
 }: AuthSectionProps): React.JSX.Element {
   const isAuth = useIsAuth();
   const logout = useAuthStore((state) => state.logout);
+  const { totalAmount, getCart, clearCart } = useCartStore();
   const handleLogout = (): void => {
     logout();
     onItemClick?.();
+    clearCart();
   };
-  const { totalAmount, getCart } = useCartStore();
+
   useEffect(() => {
     getCart();
   }, [getCart, totalAmount]);

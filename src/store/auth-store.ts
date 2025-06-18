@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+import { myToken } from '@/services/build-client';
+
 interface AuthState {
   isAuth: boolean;
   setIsAuth: (value: boolean) => void;
@@ -13,7 +15,12 @@ export const useAuthStore = create<AuthState>()(
       isAuth: false,
       setIsAuth: (value): void => set({ isAuth: value }),
       logout: (): void => {
-        localStorage.setItem('token', '');
+        localStorage.removeItem('loggedIn');
+        localStorage.removeItem('token');
+        localStorage.removeItem('cart');
+        localStorage.removeItem('cartId');
+        localStorage.removeItem('cartVersion');
+        myToken.clear();
         set({ isAuth: false });
       },
     }),
