@@ -53,12 +53,14 @@ export default function Home(): JSX.Element {
               </Link>
             </div>
           </div>
-          <div>
-            <Link to={ROUTES.CATALOG}>
+          <div className="group w-fit mx-auto">
+            <Link to={`/product/3c0097d7-6432-4064-b8ee-ab97a3af1422`}>
               <img
                 src={MainPlantImage}
                 alt="MainPlantImage"
-                className="size-[200px] sm:size-[325px]  md:size-[325px] lg:size-[525px] mb-5"
+                className="size-[200px] sm:size-[325px]  md:size-[325px] lg:size-[525px] mb-5  transition-all duration-300 ease-in-out
+                 group-hover:scale-105 group-hover:-translate-y-2 group-hover:drop-shadow-xl
+                 group-hover:saturate-125 rounded-2xl"
               />
             </Link>
           </div>
