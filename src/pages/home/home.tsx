@@ -1,8 +1,7 @@
 import type { JSX } from 'react';
 import { Link } from 'react-router-dom';
 
-// import Bonsai from '@/assets/images/bonsai.png';
-// import Cactus from '@/assets/images/cactus.png';
+import Cactus from '@/assets/images/cactus.png';
 import ExcellentServices from '@/assets/images/excellent-services.png';
 import FastDelivery from '@/assets/images/fast-delivery.png';
 import Grid1 from '@/assets/images/grid1.png';
@@ -14,9 +13,10 @@ import Grid6 from '@/assets/images/grid6.png';
 import Grid7 from '@/assets/images/grid7.png';
 import Grid8 from '@/assets/images/grid8.png';
 import HighQuality from '@/assets/images/high-quality.png';
-// import IndoorPlants from '@/assets/images/indoor-plants.png';
+import IndoorPlants from '@/assets/images/indoors.png';
 import MainPlantImage from '@/assets/images/main-banner-image.png';
-// import Succulent from '@/assets/images/succulent.png';
+import Pots from '@/assets/images/pot.png';
+import Succulent from '@/assets/images/succulents.png';
 import WidePlant from '@/assets/images/wide-plant.png';
 import { ROUTES } from '@/utils/constantes';
 
@@ -131,40 +131,40 @@ export default function Home(): JSX.Element {
           </div>
         </div>
       </section>
-      {/* <section className="pt-[40px] bg-white pb-[100px] flex flex-col md:flex-row md:justify-between text-[23px] font-medium font-sans text-[#2A2A2A] items-center shadow-[inset_0_6px_30px_-6px_rgba(0,0,0,0.25)]">
+      <section className="pt-[40px] bg-white pb-[100px] flex flex-col md:flex-row md:justify-evenly text-[23px] font-medium font-sans text-[#2A2A2A] items-center shadow-[inset_0_6px_30px_-6px_rgba(0,0,0,0.25)]">
         <div className="text-center w-fit">
           <img
             src={Cactus}
             alt="Cactus"
-            className="size-[200px] lg:size-[300px] mb-5"
+            className="w-[200px] h-[200px] lg:w-[200px] lg:h-[300px] mb-5"
           />
-          <p>Cactus →</p>
+          <p className="mt-5">Cactus →</p>
         </div>
         <div className="text-center w-fit">
           <img
             src={Succulent}
             alt="Succulent"
-            className="size-[200px] lg:size-[300px] mb-5"
+            className="w-[200px] h-[200px] lg:w-[200px] lg:h-[300px] mb-5"
           />
-          <p>Succulent →</p>
+          <p className="mt-5">Succulent →</p>
         </div>
         <div className="text-center w-fit">
           <img
             src={IndoorPlants}
             alt="Indoor Plants"
-            className="size-[200px] lg:size-[300px] mb-5"
+            className="w-[200px] h-[200px] lg:w-[250px] lg:h-[250px] mb-5"
           />
-          <p>Indoor Plants →</p>
+          <p className="mt-[4rem]">Indoor Plants →</p>
         </div>
         <div className="text-center w-fit">
           <img
-            src={Bonsai}
-            alt="Bonsai"
-            className="size-[200px] lg:size-[300px] mb-5"
+            src={Pots}
+            alt="Pots"
+            className="w-[200px] h-[200px] lg:w-[250px] lg:h-[250px] mb-5"
           />
-          <p>Pots →</p>
+          <p className="mt-[4rem]">Pots →</p>
         </div>
-      </section> */}
+      </section>
       <section className="font-sans pb-[100px] pt-[21px] px-[20px] lg:px-[50px] bc-section-background">
         <h2 className="text-[30px] lg:text-[43px] font-bold font-serif mb-5 text-[#2A2A2A]">
           Promotional codes for today
@@ -196,10 +196,11 @@ export default function Home(): JSX.Element {
           New York.
         </p>
         <p className="text-[14.5px] font-medium text-[#676867] text-center">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum
-          suspendisse ultrices gravida. Risus commodo viverra maecenas accumsan
-          lacus vel facilisis.
+          Petal & Pot is a plant nursery that blends nature with modern design,
+          offering curated greenery for homes, offices, and outdoor spaces.
+          Every plant is grown with expert care to ensure exceptional quality,
+          beauty, and vitality. From concept to cultivation, we help your green
+          spaces thrive.
         </p>
         <Link to={ROUTES.ABOUT}>
           <button
