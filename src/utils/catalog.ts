@@ -1,9 +1,11 @@
+import type { ProductVariant } from '@commercetools/platform-sdk';
+
 import type {
   CategoryCard,
   DiscountPrice,
   ProductCategoriesInterface,
 } from './interfaces';
-import type { NestedCategory } from './types';
+import type { AttributeWithVariantId, NestedCategory } from './types';
 
 export const getCategoryName = (
   categoryId: string,
@@ -111,3 +113,32 @@ export const shouldShowSubCategories = (
         (parentCategory?.children && parentCategory.children.length > 0))
   );
 };
+
+export function getSku(
+  variants: ProductVariant[] | undefined,
+  variantId: number
+): string | undefined {
+  return variants?.filter((variant) => variant.id === variantId)[0].sku;
+}
+
+export function extractSizesWithVariantId(
+  variants: ProductVariant[]
+): AttributeWithVariantId[] {
+  const sizesMap: Map<string, number> = new Map();
+
+  variants.forEach((variant) => {
+    if (variant.attributes) {
+      const sizeAttribute = variant.attributes.find(
+        (attr) => attr.name === 'hight'
+      );
+      if (sizeAttribute) {
+        sizesMap.set(sizeAttribute.value.label, variant.id);
+      }
+    }
+  });
+
+  return [...sizesMap.entries()].map(([attribute, variantId]) => ({
+    attribute,
+    variantId,
+  }));
+}

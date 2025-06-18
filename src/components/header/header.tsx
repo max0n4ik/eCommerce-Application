@@ -15,7 +15,7 @@ export default function Header(): React.JSX.Element {
     <header className="flex items-center justify-between px-4 py-3 bc-section-background">
       <Link to={ROUTES.HOME} className="flex items-center">
         <img src={Logo} alt="Logo" className="size-[51px]" />
-        <h2 className="font-bold text-[25px] sm:text-[30px] md:text-[34px] lg:text-[34px] font-serif text-[#586F69] ml-2">
+        <h2 className="font-bold text-[25px] sm:text-[30px] md:text-[34px] lg:text-[34px] font-serif text-primary ml-2">
           Petal & Pot
         </h2>
       </Link>
@@ -39,10 +39,24 @@ export default function Header(): React.JSX.Element {
         >
           <button
             id="close-burger"
-            className="absolute top-4 right-4 text-3xl z-50 transition-transform duration-200 hover:scale-110 cursor-pointer"
+            className="absolute top-6 right-2 text-3xl z-50 transition-transform duration-200 hover:scale-110 cursor-pointer"
             onClick={closeMenu}
           >
-            <span className="icon-cross text-[25px] text-accent"></span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="30"
+              height="30"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="var(--accent)"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="lucide lucide-x-icon lucide-x mt-2"
+            >
+              <path d="M18 6 6 18" />
+              <path d="m6 6 12 12" />
+            </svg>
           </button>
           <div className="pt-8 flex flex-col gap-6 pl-6 pr-6">
             <NavLinks onItemClick={closeMenu} />
@@ -52,10 +66,25 @@ export default function Header(): React.JSX.Element {
 
         {!menuOpen && (
           <button
-            className="z-50 relative text-3xl text-[#586F69] transition-transform duration-200 hover:scale-110 cursor-pointer"
+            className="z-50 relative text-3xl text-primary transition-transform duration-200 hover:scale-110 cursor-pointer"
             onClick={openMenu}
           >
-            <span className="icon-burger text-[30px]"></span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="30"
+              height="30"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#586F69"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="lucide lucide-menu-icon lucide-menu mt-1"
+            >
+              <path d="M4 12h16" />
+              <path d="M4 18h16" />
+              <path d="M4 6h16" />
+            </svg>
           </button>
         )}
       </div>

@@ -1,23 +1,19 @@
-import { createAuthenticatedApiRoot } from './create-client';
+import type { Customer } from '@commercetools/platform-sdk';
 
 import type { User, Address } from '@/utils/types';
 
-export async function fetchUserProfile(token: string): Promise<{
-  user: User;
-  addresses: Address[];
-}> {
-  const apiRoot = createAuthenticatedApiRoot(token);
-  const response = await apiRoot.me().get().execute();
-  const customer = response.body;
-
-  const user: User = {
+export function mapCustomerToUser(customer: Customer): User {
+  return {
     id: customer.id,
+    email: customer.email ?? '',
     firstName: customer.firstName ?? '',
     lastName: customer.lastName ?? '',
     dateOfBirth: customer.dateOfBirth ?? '',
   };
+}
 
-  const addresses: Address[] = (customer.addresses ?? [])
+export function mapCustomerAddresses(customer: Customer): Address[] {
+  return (customer.addresses ?? [])
     .filter((addr): addr is Required<typeof addr> => !!addr.id)
     .map((addr) => ({
       id: addr.id,
@@ -30,6 +26,4 @@ export async function fetchUserProfile(token: string): Promise<{
       isDefaultShipping:
         customer.shippingAddressIds?.includes(addr.id) ?? false,
     }));
-
-  return { user, addresses };
 }

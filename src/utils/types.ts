@@ -1,3 +1,5 @@
+import type { ProductVariant, Image } from '@commercetools/platform-sdk';
+import type { BaseAddress } from '@commercetools/platform-sdk';
 import type { z } from 'zod';
 
 import type { CategoryCard } from './interfaces';
@@ -26,6 +28,7 @@ export type User = {
   firstName: string;
   lastName: string;
   dateOfBirth: string;
+  email?: string;
 };
 
 export type Address = {
@@ -53,4 +56,94 @@ export type AuthSectionProps = {
 
 export type NavLinksProps = {
   onItemClick?: () => void;
+};
+
+export type ProductType = {
+  lineItemId: string;
+  productId: string;
+  productKey: string;
+  slug: string;
+  productName: string;
+  description: string;
+  price: number;
+  priceDiscount?: number;
+  currency: string;
+  images: Image[];
+  isDiscount: boolean;
+  variants: ProductVariant[];
+  productSku?: string;
+  totalPrice?: number;
+  quantity?: number;
+  promoPrice?: number;
+  isPromo?: boolean;
+};
+
+export type CartItem = {
+  lineItemId: string;
+  productName: string;
+  price: number;
+  priceDiscount?: number;
+  currency?: string;
+  variant?: ProductVariant;
+  images: Image[];
+  isDiscount?: boolean;
+  className?: string;
+  totalPrice?: number;
+  quantity: number;
+  isPromo?: boolean;
+  promoPrice?: number;
+  onDelete: (lineItemId: string) => void;
+  onChangeQuantity: (lineItemId: string, quantity: number) => void;
+};
+
+export type DiscountCodeType = {
+  discountCodeName: string;
+  discountCodeId: string;
+};
+
+export type AddressForm = {
+  streetName: string;
+  streetNumber: string;
+  postalCode: string;
+  city: string;
+  region: string;
+  country: string;
+} & Partial<
+  Pick<
+    BaseAddress,
+    | 'additionalStreetInfo'
+    | 'state'
+    | 'company'
+    | 'department'
+    | 'building'
+    | 'apartment'
+    | 'pOBox'
+    | 'phone'
+    | 'mobile'
+    | 'email'
+    | 'fax'
+    | 'additionalAddressInfo'
+    | 'externalId'
+  >
+>;
+
+export type AddressUpdates = {
+  id: string;
+  streetName?: string;
+  streetNumber?: string;
+  city?: string;
+  region?: string;
+  postalCode?: string;
+  country?: string;
+};
+
+export type FieldId = 'firstName' | 'lastName' | 'email' | 'dateOfBirth';
+
+export type ProfileUpdates = Partial<
+  Pick<User, 'firstName' | 'lastName' | 'dateOfBirth' | 'email'>
+>;
+
+export type AttributeWithVariantId = {
+  attribute: string;
+  variantId: number;
 };

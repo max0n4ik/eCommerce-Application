@@ -1,11 +1,9 @@
-import type { Category, ClientResponse } from '@commercetools/platform-sdk';
+import type { Category } from '@commercetools/platform-sdk';
 
 import type { CategoryCard } from '@/utils/interfaces';
 
-export default function mappersCategory(
-  category: ClientResponse<Category[]>
-): CategoryCard[] {
-  return category.body.map((category) => ({
+export default function mappersCategory(category: Category[]): CategoryCard[] {
+  return category.map((category) => ({
     id: category.id,
     name: category.name.en,
     description: category.description?.en ?? '',

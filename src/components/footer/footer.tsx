@@ -14,13 +14,13 @@ export default function Footer(): React.JSX.Element {
           <div className="flex flex-col gap-5">
             <Link to={ROUTES.HOME} className="flex items-center">
               <img src={Logo} alt="Logo" className="size-[51px]" />
-              <p className="font-bold lg:text-[34px] text-[26px] font-serif text-[#586F69]">
+              <p className="font-bold lg:text-[34px] text-[26px] font-serif text-primary">
                 Petal & Pot
               </p>
             </Link>
             <p className="lg:pl-[50px] font-sans text-[14.5px] text-[#676867F2]">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-              eiusmod tempor incididunt ut labore.
+              Everything&ndash;s better with Petal & Pot — cleaner air, calmer
+              minds, greener spaces. Add plants, add life.
             </p>
           </div>
 
@@ -28,7 +28,7 @@ export default function Footer(): React.JSX.Element {
             <p className="font-serif text-[19.2px] font-medium text-[#011C14]">
               Quick Links
             </p>
-            <nav className="font-medium flex gap-4 font-sans text-[14.5px] text-[#586F69] flex-col leading-3">
+            <nav className="font-medium flex gap-4 font-sans text-[14.5px] text-primary flex-col leading-3">
               <Link to={`${ROUTES.HOME}#home`}>Home</Link>
               <Link to={ROUTES.CART}>Cart</Link>
               <Link to={ROUTES.CATALOG}>Catalog</Link>
@@ -45,21 +45,33 @@ export default function Footer(): React.JSX.Element {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <img src={Facebook} alt="Facebook" className="size-[34px]" />
+                <img
+                  src={Facebook}
+                  alt="Facebook"
+                  className="size-[34px] transition-transform duration-300 hover:scale-[1.03] hover:-translate-y-1"
+                />
               </a>
               <a
                 href="https://www.instagram.com"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <img src={Instagram} alt="Instagram" className="size-[34px]" />
+                <img
+                  src={Instagram}
+                  alt="Instagram"
+                  className="size-[34px] transition-transform duration-300 hover:scale-[1.03] hover:-translate-y-1"
+                />
               </a>
               <a
                 href="https://www.twitter.com"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <img src={Twitter} alt="Twitter" className="size-[34px]" />
+                <img
+                  src={Twitter}
+                  alt="Twitter"
+                  className="size-[34px] transition-transform duration-300 hover:scale-[1.03] hover:-translate-y-1"
+                />
               </a>
             </div>
           </div>

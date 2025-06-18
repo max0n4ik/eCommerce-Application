@@ -3,7 +3,9 @@ import type {
   BaseAddress,
   CategoryReference,
   LocalizedString,
+  Product,
   ProductSearchResult,
+  ProductVariant,
 } from '@commercetools/platform-sdk';
 
 export interface RegistrationAddress {
@@ -41,6 +43,7 @@ export interface ProductCardI {
   description?: LocalizedString;
   category?: CategoryReference[];
   attributes?: Attribute[];
+  masterVariant?: ProductVariant;
 }
 
 export interface CategoryCard {
@@ -67,6 +70,9 @@ export interface DetailedProductInterface {
   priceCurrency: string;
   category?: CategoryReference[];
   attributes?: Attribute[];
+  id: string;
+  variants: ProductVariant[];
+  masterVariant?: ProductVariant;
 }
 export interface ProductCategoriesInterface {
   typeId: string;
@@ -83,6 +89,7 @@ export interface CustomerDataInterface {
   asDefaultBilling?: boolean;
   shippingAddress?: BaseAddress;
   billingAddress?: BaseAddress;
+  anonimId?: string;
 }
 
 export interface FilterI {
@@ -98,4 +105,9 @@ export interface FilterI {
     };
   };
   filteredCatalog?: ProductSearchResult[];
+}
+
+export interface FetchCatalogProductsInterface {
+  results: Product[];
+  total: number | undefined;
 }

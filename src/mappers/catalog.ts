@@ -1,11 +1,9 @@
-import type { ClientResponse, Product } from '@commercetools/platform-sdk';
+import type { Product } from '@commercetools/platform-sdk';
 
 import type { ProductCardI } from '@/utils/interfaces';
 
-export default function mappersCatalog(
-  products: ClientResponse<Product[]>
-): ProductCardI[] {
-  return products.body.map((product) => ({
+export default function mappersCatalog(products: Product[]): ProductCardI[] {
+  return products.map((product) => ({
     id: product.id,
     name: product.masterData.staged.name.en,
     price:
@@ -18,5 +16,6 @@ export default function mappersCatalog(
     description: product.masterData.staged.description,
     category: product.masterData.staged.categories,
     attributes: product.masterData.staged.masterVariant.attributes,
+    masterVariant: product.masterData.staged.masterVariant,
   }));
 }

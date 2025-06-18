@@ -1,8 +1,19 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
+import { Button } from '../ui/button';
 import SyncedCarousel from '../ui/carousel/carousel';
 import { Dialog, DialogContent, DialogTitle } from '../ui/modal/modal-utils';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../ui/select';
+import { Toaster } from '../ui/toaster';
 
+import { useToast } from '@/hooks/use-toast';
+import { useCartStore } from '@/store/cart-store';
 import { formatPrice, getDiscountedPrice } from '@/utils/catalog';
 import type { DetailedProductInterface } from '@/utils/interfaces';
 
@@ -12,8 +23,69 @@ export default function DetailedProduct({
   description,
   permyriad,
   images = [],
+  variants,
+  masterVariant,
 }: DetailedProductInterface): React.JSX.Element {
   const [currenImageIndex, setCurrentImageIndex] = useState(0);
+  const [isInCart, setIsInCart] = useState<boolean>(false);
+  const [selectedVariant, setSelectedVariant] = useState<string>(
+    masterVariant?.sku || ''
+  );
+  const { toast } = useToast();
+  const { addToCart, removeProductFromCart, isProductInCart } = useCartStore();
+
+  useEffect(() => {
+    if (selectedVariant) {
+      const initialIsInCart = isProductInCart(selectedVariant);
+
+      setIsInCart(initialIsInCart);
+    }
+  }, [isProductInCart, selectedVariant, variants]);
+
+  const handleAddToCart = async (): Promise<void> => {
+    const sku = selectedVariant || masterVariant?.sku;
+    if (!sku) return;
+
+    await addToCart(sku, 1).catch((error) => {
+      toast({
+        variant: 'destructive',
+        title: 'Error adding to cart',
+        description: error instanceof Error ? error.message : 'Unknown error',
+      });
+    });
+
+    const tempIsInCart = isProductInCart(sku);
+
+    setIsInCart(tempIsInCart);
+    toast({
+      variant: 'success',
+      title: 'Product added to cart',
+      duration: 500,
+      description: `${name} has been added to your cart.`,
+    });
+  };
+  const handleRemoveFromCart = (): void => {
+    removeProductFromCart(selectedVariant);
+
+    const tempIsInCart = isProductInCart(selectedVariant);
+
+    setIsInCart(tempIsInCart);
+    toast({
+      variant: 'success',
+      title: 'Product removed from cart',
+      duration: 500,
+      description: `${name} has been removed from your cart.`,
+    });
+  };
+  const handleHeightChange = (selectedVariant: string): void => {
+    setSelectedVariant(selectedVariant);
+
+    if (selectedVariant) {
+      const tempIsInCart = isProductInCart(selectedVariant);
+      setIsInCart(tempIsInCart);
+    }
+  };
+
   return (
     <div className="flex flex-row max-[780px]:flex-col  max-[780px]:items-center justify-center gap-10 p-[50px] max-w-screen-xl mx-auto">
       <div className="w-1/2 max-[780px]:w-full flex flex-col gap-4">
@@ -25,7 +97,7 @@ export default function DetailedProduct({
           />
           <DialogContent
             aria-describedby={undefined}
-            className="flex justify-center items-center w-full max-w-[385px] max-h-[55vh] p-4  sm:p-4 md:p-8 max-w-sm sm:max-w-sm md:max-w-2xl  md:[max-height:fit-content] overflow-y-auto"
+            className="flex justify-center items-center w-full max-w-[385px] max-h-[55vh] p-4  sm:p-4 md:p-8 sm:max-w-sm md:max-w-2xl  md:[max-height:fit-content] overflow-y-auto"
           >
             <DialogTitle></DialogTitle>
             <div className="w-full">
@@ -70,7 +142,51 @@ export default function DetailedProduct({
           {description}
         </p>
         <span className=" inline-block h-[1px] w-full bg-[color:var(--light-bar-color)]"></span>
+        <div className="flex gap-2">
+          <Select
+            onValueChange={(value) => handleHeightChange(value)}
+            defaultValue={masterVariant?.sku || ''}
+          >
+            <SelectTrigger className="w-full max-w-[200px]">
+              <SelectValue placeholder="Select Height" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value={masterVariant?.sku || ''}>
+                {masterVariant?.attributes?.find(
+                  (attr) => attr.name === 'height'
+                )?.value || 'Default Height'}
+              </SelectItem>
+              {variants.map((variant) => (
+                <SelectItem
+                  key={variant.id}
+                  value={variant.sku || ''}
+                  className="capitalize"
+                >
+                  {variant.attributes?.find((attr) => attr.name === 'height')
+                    ?.value || 'Default Height'}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {isInCart ? (
+            <>
+              <Button className="bg-destructive" onClick={handleRemoveFromCart}>
+                Remove from cart
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button
+                onClick={handleAddToCart}
+                className="bg-transparent border border-black capitalize text-black font-inter hover:bg-primary hover:text-white hover:border-primary hover:scale-105 transition-transform duration-200 ease-in-out cursor-pointer"
+              >
+                add to cart
+              </Button>
+            </>
+          )}
+        </div>
       </div>
+      <Toaster />
     </div>
   );
 }

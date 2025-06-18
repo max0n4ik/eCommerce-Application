@@ -12,6 +12,17 @@ export const ROUTES = {
   NOTFOUND: '*',
   PRODUCT: 'product/:id',
   CONTACTS: '/contacts',
+  catalogWithCategory: (categoryId: string) => ({
+    pathname: '/catalog',
+    search: `?category=${categoryId}`,
+  }),
+} as const;
+
+export const CATEGORY_IDS = {
+  CACTUS: 'f8d92e57-18d1-4f86-a4a8-99dc73f7e258',
+  SUCCULENT: '1f6cb990-0c3a-46a3-8d86-98b5a5fb6adc',
+  INDOOR_PLANTS: '0b5c05ce-6397-4c2b-9c32-74d2ff6db986',
+  POTS: '3745e29f-f543-44dd-949e-39b122144bda',
 } as const;
 
 export const allowedCountries = new Set([
@@ -128,3 +139,5 @@ export const FILTER_CONSTANTS = {
     STEP: 5,
   },
 } as const;
+
+export const ITEMS_PER_PAGE = 12;
