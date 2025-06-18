@@ -1,7 +1,6 @@
 import type { JSX } from 'react';
 import { Link } from 'react-router-dom';
 
-import Cactus from '@/assets/images/cactus.png';
 import ExcellentServices from '@/assets/images/excellent-services.png';
 import FastDelivery from '@/assets/images/fast-delivery.png';
 import Grid1 from '@/assets/images/grid1.png';
@@ -13,11 +12,9 @@ import Grid6 from '@/assets/images/grid6.png';
 import Grid7 from '@/assets/images/grid7.png';
 import Grid8 from '@/assets/images/grid8.png';
 import HighQuality from '@/assets/images/high-quality.png';
-import IndoorPlants from '@/assets/images/indoors.png';
 import MainPlantImage from '@/assets/images/main-banner-image.png';
-import Pots from '@/assets/images/pot.png';
-import Succulent from '@/assets/images/succulents.png';
 import WidePlant from '@/assets/images/wide-plant.png';
+import { QuickCategory } from '@/components/quick-category';
 import { ROUTES } from '@/utils/constantes';
 
 export default function Home(): JSX.Element {
@@ -131,40 +128,7 @@ export default function Home(): JSX.Element {
           </div>
         </div>
       </section>
-      <section className="pt-[40px] bg-white pb-[100px] flex flex-col md:flex-row md:justify-evenly text-[23px] font-medium font-sans text-[#2A2A2A] items-center shadow-[inset_0_6px_30px_-6px_rgba(0,0,0,0.25)]">
-        <div className="text-center w-fit">
-          <img
-            src={Cactus}
-            alt="Cactus"
-            className="w-[200px] h-[200px] lg:w-[200px] lg:h-[300px] mb-5"
-          />
-          <p className="mt-5">Cactus →</p>
-        </div>
-        <div className="text-center w-fit">
-          <img
-            src={Succulent}
-            alt="Succulent"
-            className="w-[200px] h-[200px] lg:w-[200px] lg:h-[300px] mb-5"
-          />
-          <p className="mt-5">Succulent →</p>
-        </div>
-        <div className="text-center w-fit">
-          <img
-            src={IndoorPlants}
-            alt="Indoor Plants"
-            className="w-[200px] h-[200px] lg:w-[250px] lg:h-[250px] mb-5"
-          />
-          <p className="mt-[4rem]">Indoor Plants →</p>
-        </div>
-        <div className="text-center w-fit">
-          <img
-            src={Pots}
-            alt="Pots"
-            className="w-[200px] h-[200px] lg:w-[250px] lg:h-[250px] mb-5"
-          />
-          <p className="mt-[4rem]">Pots →</p>
-        </div>
-      </section>
+      <QuickCategory />
       <section className="font-sans pb-[100px] pt-[21px] px-[20px] lg:px-[50px] bc-section-background">
         <h2 className="text-[30px] lg:text-[43px] font-bold font-serif mb-5 text-[#2A2A2A]">
           Promotional codes for today
