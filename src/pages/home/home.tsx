@@ -1,8 +1,6 @@
 import type { JSX } from 'react';
 import { Link } from 'react-router-dom';
 
-// import Bonsai from '@/assets/images/bonsai.png';
-// import Cactus from '@/assets/images/cactus.png';
 import ExcellentServices from '@/assets/images/excellent-services.png';
 import FastDelivery from '@/assets/images/fast-delivery.png';
 import Grid1 from '@/assets/images/grid1.png';
@@ -14,10 +12,9 @@ import Grid6 from '@/assets/images/grid6.png';
 import Grid7 from '@/assets/images/grid7.png';
 import Grid8 from '@/assets/images/grid8.png';
 import HighQuality from '@/assets/images/high-quality.png';
-// import IndoorPlants from '@/assets/images/indoor-plants.png';
 import MainPlantImage from '@/assets/images/main-banner-image.png';
-// import Succulent from '@/assets/images/succulent.png';
 import WidePlant from '@/assets/images/wide-plant.png';
+import { QuickCategory } from '@/components/quick-category';
 import { ROUTES } from '@/utils/constantes';
 
 export default function Home(): JSX.Element {
@@ -56,12 +53,14 @@ export default function Home(): JSX.Element {
               </Link>
             </div>
           </div>
-          <div>
-            <Link to={ROUTES.CATALOG}>
+          <div className="group w-fit mx-auto">
+            <Link to={`/product/3c0097d7-6432-4064-b8ee-ab97a3af1422`}>
               <img
                 src={MainPlantImage}
                 alt="MainPlantImage"
-                className="size-[200px] sm:size-[325px]  md:size-[325px] lg:size-[525px] mb-5"
+                className="size-[200px] sm:size-[325px]  md:size-[325px] lg:size-[525px] mb-5  transition-all duration-300 ease-in-out
+                 group-hover:scale-105 group-hover:-translate-y-2 group-hover:drop-shadow-xl
+                 group-hover:saturate-125 rounded-2xl"
               />
             </Link>
           </div>
@@ -131,40 +130,7 @@ export default function Home(): JSX.Element {
           </div>
         </div>
       </section>
-      {/* <section className="pt-[40px] bg-white pb-[100px] flex flex-col md:flex-row md:justify-between text-[23px] font-medium font-sans text-[#2A2A2A] items-center shadow-[inset_0_6px_30px_-6px_rgba(0,0,0,0.25)]">
-        <div className="text-center w-fit">
-          <img
-            src={Cactus}
-            alt="Cactus"
-            className="size-[200px] lg:size-[300px] mb-5"
-          />
-          <p>Cactus →</p>
-        </div>
-        <div className="text-center w-fit">
-          <img
-            src={Succulent}
-            alt="Succulent"
-            className="size-[200px] lg:size-[300px] mb-5"
-          />
-          <p>Succulent →</p>
-        </div>
-        <div className="text-center w-fit">
-          <img
-            src={IndoorPlants}
-            alt="Indoor Plants"
-            className="size-[200px] lg:size-[300px] mb-5"
-          />
-          <p>Indoor Plants →</p>
-        </div>
-        <div className="text-center w-fit">
-          <img
-            src={Bonsai}
-            alt="Bonsai"
-            className="size-[200px] lg:size-[300px] mb-5"
-          />
-          <p>Pots →</p>
-        </div>
-      </section> */}
+      <QuickCategory />
       <section className="font-sans pb-[100px] pt-[21px] px-[20px] lg:px-[50px] bc-section-background">
         <h2 className="text-[30px] lg:text-[43px] font-bold font-serif mb-5 text-[#2A2A2A]">
           Promotional codes for today
@@ -196,10 +162,11 @@ export default function Home(): JSX.Element {
           New York.
         </p>
         <p className="text-[14.5px] font-medium text-[#676867] text-center">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum
-          suspendisse ultrices gravida. Risus commodo viverra maecenas accumsan
-          lacus vel facilisis.
+          Petal & Pot is a plant nursery that blends nature with modern design,
+          offering curated greenery for homes, offices, and outdoor spaces.
+          Every plant is grown with expert care to ensure exceptional quality,
+          beauty, and vitality. From concept to cultivation, we help your green
+          spaces thrive.
         </p>
         <Link to={ROUTES.ABOUT}>
           <button

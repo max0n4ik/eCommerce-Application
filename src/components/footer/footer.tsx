@@ -19,8 +19,8 @@ export default function Footer(): React.JSX.Element {
               </p>
             </Link>
             <p className="lg:pl-[50px] font-sans text-[14.5px] text-[#676867F2]">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-              eiusmod tempor incididunt ut labore.
+              Everything&ndash;s better with Petal & Pot — cleaner air, calmer
+              minds, greener spaces. Add plants, add life.
             </p>
           </div>
 
@@ -45,21 +45,33 @@ export default function Footer(): React.JSX.Element {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <img src={Facebook} alt="Facebook" className="size-[34px]" />
+                <img
+                  src={Facebook}
+                  alt="Facebook"
+                  className="size-[34px] transition-transform duration-300 hover:scale-[1.03] hover:-translate-y-1"
+                />
               </a>
               <a
                 href="https://www.instagram.com"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <img src={Instagram} alt="Instagram" className="size-[34px]" />
+                <img
+                  src={Instagram}
+                  alt="Instagram"
+                  className="size-[34px] transition-transform duration-300 hover:scale-[1.03] hover:-translate-y-1"
+                />
               </a>
               <a
                 href="https://www.twitter.com"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <img src={Twitter} alt="Twitter" className="size-[34px]" />
+                <img
+                  src={Twitter}
+                  alt="Twitter"
+                  className="size-[34px] transition-transform duration-300 hover:scale-[1.03] hover:-translate-y-1"
+                />
               </a>
             </div>
           </div>
