@@ -9,12 +9,9 @@ export function CartItem({
   lineItemId,
   productName,
   images,
-
   price,
-
   totalPrice,
   quantity,
-
   onDelete,
   onChangeQuantity,
 }: CartItem & {

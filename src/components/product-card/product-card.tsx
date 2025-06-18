@@ -2,8 +2,10 @@ import { Check } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
+import { Toaster } from '../ui/toaster';
+
 import AddToCartIcon from '@/assets/images/add-to-cart.png';
-import { toast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import { useCartStore } from '@/store/cart-store';
 import { formatPrice, getDiscountedPrice } from '@/utils/catalog';
 import type { ProductCardI } from '@/utils/interfaces';
@@ -19,6 +21,7 @@ export default function ProductCard({
 }: ProductCardI): React.JSX.Element {
   const { addToCart, isProductInCart } = useCartStore();
   const [isAdded, setIsAdded] = useState(false);
+  const { toast } = useToast();
 
   useEffect(() => {
     if (masterVariant) {
@@ -102,6 +105,7 @@ export default function ProductCard({
           </div>
         </div>
       </div>
+      <Toaster />
     </Link>
   );
 }
