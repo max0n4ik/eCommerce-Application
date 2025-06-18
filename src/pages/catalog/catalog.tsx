@@ -13,7 +13,7 @@ import {
   getSubCategories,
   shouldShowSubCategories,
 } from '@/utils/catalog';
-import { ITEMS_PER_PAGE } from '@/utils/constantes';
+import { ITEMS_PER_PAGE, ROUTES } from '@/utils/constantes';
 import type { FilterI } from '@/utils/interfaces';
 import type { NestedCategory } from '@/utils/types';
 
@@ -159,8 +159,9 @@ export default function Catalog(): React.JSX.Element {
   const location = useLocation();
 
   useEffect(() => {
+    const isCatalog = location.pathname === ROUTES.CATALOG;
     return (): void => {
-      if (location.pathname === '/catalog') {
+      if (isCatalog) {
         setSelectedCategory(null);
         resetFilters();
       }
