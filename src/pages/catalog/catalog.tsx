@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
 import {
   CatalogHeader,
@@ -12,7 +13,7 @@ import {
   getSubCategories,
   shouldShowSubCategories,
 } from '@/utils/catalog';
-import { ITEMS_PER_PAGE } from '@/utils/constantes';
+import { ITEMS_PER_PAGE, ROUTES } from '@/utils/constantes';
 import type { FilterI } from '@/utils/interfaces';
 import type { NestedCategory } from '@/utils/types';
 
@@ -29,6 +30,7 @@ export default function Catalog(): React.JSX.Element {
     filters,
     fetchFilteredProducts,
     setFilters,
+    resetFilters,
     total,
   } = useCatalogStore();
   const topRef = useRef<HTMLDivElement>(null);
@@ -153,6 +155,18 @@ export default function Catalog(): React.JSX.Element {
     () => getSubCategories(currentCategory, parentCategory),
     [currentCategory, parentCategory]
   );
+
+  const location = useLocation();
+
+  useEffect(() => {
+    const isCatalog = location.pathname === ROUTES.CATALOG;
+    return (): void => {
+      if (isCatalog) {
+        setSelectedCategory(null);
+        resetFilters();
+      }
+    };
+  }, [location.pathname, setSelectedCategory, resetFilters]);
 
   if (loading) {
     return (
