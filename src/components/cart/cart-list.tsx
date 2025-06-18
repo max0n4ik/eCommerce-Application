@@ -114,12 +114,12 @@ export function CartList({
                 <Button>Clear all cart</Button>
               </DialogTrigger>
               <DialogContent className="border rounded-sm p-6 pt-2 min-w-[300px] flex flex-col justify-center">
-                <div>
+                <div className="pt-4">
                   <DialogHeader>
                     <DialogTitle className="text-center">
                       Clear Cart?
                     </DialogTitle>
-                    <DialogDescription className="text-center">
+                    <DialogDescription className="text-center my-2">
                       Do you want to clear all items from the cart?
                     </DialogDescription>
                   </DialogHeader>
