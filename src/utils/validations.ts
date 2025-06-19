@@ -1,7 +1,11 @@
+import type { CustomerChangePassword } from '@commercetools/platform-sdk';
 import { z } from 'zod';
 
 import { allowedCountries, postalCodePatterns } from './constantes';
-import type { AddressForm } from './types';
+import type { AddressForm, PasswordForm } from './types';
+
+import { apiWithExistingTokenFlow } from '@/services/build-client';
+import { fetchCustomerRaw } from '@/services/user-service';
 
 export const registrationAddressSchema = z
   .object({
@@ -246,4 +250,60 @@ export function clearFieldError<K extends string>(
 ): Partial<Record<K, string>> {
   const filtered = Object.entries(errors).filter(([k]) => k !== field);
   return Object.fromEntries(filtered) as Partial<Record<K, string>>;
+}
+
+export async function validateCurrentPassword(
+  customerId: string,
+  currentPassword: string
+): Promise<{ isValid: boolean; error?: string }> {
+  if (currentPassword.trim() === '') {
+    return { isValid: false, error: 'Current password is required' };
+  }
+
+  try {
+    const customer = await fetchCustomerRaw();
+    await apiWithExistingTokenFlow()
+      .customers()
+      .password()
+      .post({
+        body: {
+          id: customerId,
+          version: customer.version,
+          currentPassword,
+          newPassword: currentPassword,
+        } as CustomerChangePassword,
+      })
+      .execute();
+    return { isValid: true };
+  } catch {
+    return { isValid: false, error: 'Current password is incorrect' };
+  }
+}
+
+export const passwordSchema = z
+  .string()
+  .min(8, 'Password must be at least 8 characters')
+  .regex(
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).*$/,
+    'Must contain at least 1 uppercase letter, 1 lowercase letter, and 1 number'
+  );
+
+export function validatePasswordData(data: PasswordForm): {
+  isValid: boolean;
+  errors: Partial<Record<keyof PasswordForm, string>>;
+} {
+  const errors: Partial<Record<keyof PasswordForm, string>> = {};
+
+  if (data.currentPassword.trim() === '') {
+    errors.currentPassword = 'Current password is required';
+  }
+  const newPassParse = passwordSchema.safeParse(data.newPassword);
+  if (!newPassParse.success) {
+    errors.newPassword = newPassParse.error.issues[0].message;
+  }
+  if (data.confirmPassword !== data.newPassword) {
+    errors.confirmPassword = 'Passwords do not match';
+  }
+  const isValid = Object.keys(errors).length === 0;
+  return { isValid, errors };
 }

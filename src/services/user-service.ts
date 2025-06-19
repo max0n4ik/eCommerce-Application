@@ -2,6 +2,7 @@ import type {
   Customer,
   CustomerUpdate,
   CustomerUpdateAction,
+  CustomerChangePassword,
 } from '@commercetools/platform-sdk';
 
 import { apiWithExistingTokenFlow } from './build-client';
@@ -39,4 +40,26 @@ export async function countCustomersByEmail(email: string): Promise<number> {
     .get({ queryArgs: { where: `email="${email}"` } })
     .execute();
   return resp.body.count ?? 0;
+}
+
+export async function changePasswordService(
+  customerId: string,
+  version: number,
+  currentPassword: string,
+  newPassword: string
+): Promise<Customer> {
+  const apiRoot = apiWithExistingTokenFlow();
+  const body: CustomerChangePassword = {
+    id: customerId,
+    version,
+    currentPassword,
+    newPassword,
+  };
+
+  const resp = await apiRoot.customers().password().post({ body }).execute();
+
+  if (!resp.body) {
+    throw new Error(`Password change failed (status ${resp.statusCode})`);
+  }
+  return resp.body as Customer;
 }

@@ -147,3 +147,9 @@ export type AttributeWithVariantId = {
   attribute: string;
   variantId: number;
 };
+
+export type PasswordForm = {
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+};
