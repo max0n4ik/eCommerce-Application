@@ -133,7 +133,8 @@ export default function Home(): JSX.Element {
       <QuickCategory />
       <section className="font-sans pb-[100px] pt-[21px] px-[20px] lg:px-[50px] bc-section-background">
         <h2 className="text-[30px] lg:text-[43px] font-bold font-serif mb-5 text-[#2A2A2A]">
-          Promotional codes for today
+          Promotional codes for today{' '}
+          <span className="font-bold text-primary underline">SALE-15</span>
         </h2>
         <div className="flex lg:flex-row flex-col gap-5 lg:justify-between">
           <p className="max-w-[700px] text-[15.6px] text-[#5A5A5A] font-sans">

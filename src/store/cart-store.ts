@@ -4,11 +4,15 @@ import { create } from 'zustand';
 import { getCartProducts } from '../mappers/cart';
 import {
   addItemToCart,
+  addPromoCode,
   deleteCart,
   getActiveCart,
+  removePromoCode,
   setLineItemQuantity,
 } from '../services/cart-service';
 import type { DiscountCodeType, ProductType } from '../utils/types';
+
+import { promoCode } from '@/utils/constantes';
 
 interface CartState {
   productsInCart: ProductType[];
@@ -31,8 +35,11 @@ interface CartState {
   changeQuantity: (lineItemId: string, quantity: number) => Promise<void>;
   isProductInCart: (sku: string) => boolean;
   getLineItemIdBySku: (sku: string) => string;
+  addPromoCodeToCart: (code: string) => Promise<void>;
   addProductToCartSku: (sku: string) => void;
   removeProductToCartSku: (sku: string) => void;
+  deletePromoCode: () => Promise<void>;
+  resetCartPromoCode: () => void;
   clearCart: () => Promise<void>;
   resetCart: () => void;
   clearError: () => void;
@@ -95,11 +102,21 @@ export const useCartStore = create<CartState>((set, get) => ({
 
           const products = getCartProducts(lineItems);
 
+          let discountPromo = {} as DiscountCodeType;
+          if (response.body.discountCodes.length > 0) {
+            const discountId = response.body.discountCodes[0].discountCode.id;
+            discountPromo = {
+              discountCodeName: promoCode,
+              discountCodeId: discountId,
+            };
+          }
+
           set({
             productsInCart: [...products],
             productsInCartSku: skuSet,
             totalAmount: response.body.totalLineItemQuantity ?? 0,
             totalPrice: response.body.totalPrice.centAmount,
+            discountPromo,
             error: null,
           });
         }
@@ -221,6 +238,47 @@ export const useCartStore = create<CartState>((set, get) => ({
     } catch {
       set({ error: 'Error get cart' });
     }
+  },
+
+  addPromoCodeToCart: async (code: string): Promise<void> => {
+    try {
+      const response = await addPromoCode(code);
+
+      if (response.statusCode === 200) {
+        await get().getCart();
+        set({ success: 'Promo code successfully applied', error: null });
+      }
+
+      if (response.statusCode === 400) {
+        throw new Error('Unexpected error');
+      }
+    } catch {
+      set({ error: 'Error adding promo code' });
+    }
+  },
+
+  deletePromoCode: async (): Promise<void> => {
+    try {
+      const { discountPromo } = get();
+      const promoCodeId = discountPromo.discountCodeId;
+      const response = await removePromoCode(promoCodeId);
+
+      if (response.statusCode === 200) {
+        set({ discountPromo: {} as DiscountCodeType });
+        await get().getCart();
+        set({ success: 'Promo code successfully removed', error: null });
+      }
+
+      if (response.statusCode === 400) {
+        throw new Error('Unexpected error');
+      }
+    } catch {
+      set({ error: 'Error removing promo code' });
+    }
+  },
+
+  resetCartPromoCode: (): void => {
+    set({ discountPromo: {} as DiscountCodeType });
   },
 
   clearCart: async (): Promise<void> => {

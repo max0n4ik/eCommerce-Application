@@ -141,3 +141,5 @@ export const FILTER_CONSTANTS = {
 } as const;
 
 export const ITEMS_PER_PAGE = 12;
+
+export const promoCode = 'SALE-15';
