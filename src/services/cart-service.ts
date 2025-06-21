@@ -152,3 +152,73 @@ export const deleteCart = async (): Promise<ClientResponse<Cart>> => {
 
   return response;
 };
+
+export const addPromoCode = async (
+  code: string
+): Promise<ClientResponse<Cart>> => {
+  const existingToken = localStorage.getItem('token');
+  const cartId = localStorage.getItem('cartId');
+  let version = localStorage.getItem('cartVersion');
+
+  const customer = existingToken
+    ? apiWithExistingTokenFlow()
+    : apiWithAnonymousSessionFlow();
+
+  const body: MyCartUpdate = {
+    version: +`${version}`,
+    actions: [
+      {
+        action: 'addDiscountCode',
+        code,
+      },
+    ],
+  };
+
+  const response = await customer
+    .me()
+    .carts()
+    .withId({ ID: `${cartId}` })
+    .post({ body })
+    .execute();
+
+  version = `${response.body.version}`;
+
+  localStorage.setItem('cartVersion', `${version}`);
+
+  return response;
+};
+
+export const removePromoCode = async (
+  promoCodeId: string
+): Promise<ClientResponse<Cart>> => {
+  const cartId = localStorage.getItem('cartId');
+  let version = localStorage.getItem('cartVersion');
+
+  const customer = apiWithExistingTokenFlow();
+
+  const body: MyCartUpdate = {
+    version: +`${version}`,
+    actions: [
+      {
+        action: 'removeDiscountCode',
+        discountCode: {
+          typeId: 'discount-code',
+          id: `${promoCodeId}`,
+        },
+      },
+    ],
+  };
+
+  const response = await customer
+    .me()
+    .carts()
+    .withId({ ID: `${cartId}` })
+    .post({ body })
+    .execute();
+
+  version = `${response.body.version}`;
+
+  localStorage.setItem('cartVersion', `${version}`);
+
+  return response;
+};

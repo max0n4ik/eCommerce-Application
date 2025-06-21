@@ -1,3 +1,6 @@
+import { X } from 'lucide-react';
+import { useState } from 'react';
+
 import { Button } from '../ui/button';
 import {
   Dialog,
@@ -7,8 +10,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '../ui/modal/modal-utils';
+import { Toaster } from '../ui/toaster';
 
 import { CartItem } from './cart-item';
+import PromoCode from './cart-promocode';
 
 import { useCartStore } from '@/store/cart-store';
 import { FILTER_CONSTANTS } from '@/utils/constantes';
@@ -19,11 +24,27 @@ export function CartList({
 }: {
   productsInCart: ProductType[];
 }): React.JSX.Element {
-  const { removeFromCart, changeQuantity, clearCart } = useCartStore();
+  const [isPromoCodeVisible, setIsPromoCodeVisible] = useState(false);
+
+  const {
+    removeFromCart,
+    changeQuantity,
+    clearCart,
+    discountPromo,
+    deletePromoCode,
+    addPromoCodeToCart,
+    totalPrice,
+  } = useCartStore();
   const deleteItemFromCart = (lineItemId: string): void => {
     removeFromCart(lineItemId);
   };
-
+  const handlePromoCode = (code: string): void => {
+    try {
+      addPromoCodeToCart(code);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const onChangeQuantity = (lineItemId: string, quantity: number): void => {
     changeQuantity(lineItemId, quantity);
   };
@@ -82,7 +103,7 @@ export function CartList({
       </div>
       <div>
         {productsInCart.length > 0 && (
-          <div className="border rounded-sm p-6 pt-2 min-w-[300px] flex flex-col">
+          <div className="border rounded-sm p-6 pt-2 min-w-[300px] flex flex-col ">
             <div className="mb-4 border-b pb-2">
               <p className="font-serif font-bold text-lg">Cart totals</p>
             </div>
@@ -99,16 +120,29 @@ export function CartList({
             <p className="flex justify-between py-2 border-t">
               Total
               <span>
-                {productsInCart.reduce(
-                  (acc, item) => acc + (item.totalPrice ?? 0),
-                  0
-                ) / FILTER_CONSTANTS.PRICE.DIVIDE}
+                {totalPrice / FILTER_CONSTANTS.PRICE.DIVIDE}
                 {'$'}
               </span>
             </p>
-            <button className="text-gray-400 border-none mt-4 text-sm">
-              Have a coupon?
-            </button>
+            {isPromoCodeVisible ? (
+              discountPromo.discountCodeName ? (
+                <div className="flex items-center gap-2 my-4 p-3 bg-secondary rounded-full w-fit">
+                  <p>{discountPromo.discountCodeName}</p>
+                  <button onClick={deletePromoCode}>
+                    <X />
+                  </button>
+                </div>
+              ) : (
+                <PromoCode onChange={handlePromoCode} />
+              )
+            ) : (
+              <button
+                onClick={() => setIsPromoCodeVisible(true)}
+                className="text-gray-400 border-none mt-4 text-sm"
+              >
+                Have a coupon?
+              </button>
+            )}
             <Dialog>
               <DialogTrigger asChild>
                 <Button>Clear all cart</Button>
@@ -134,6 +168,7 @@ export function CartList({
           </div>
         )}
       </div>
+      <Toaster />
     </div>
   );
 }
